@@ -2,4 +2,4 @@
 .godot/
 
 #ignore the git plug-in but won't ignore any other add-ons we may add
-.addons/godot-git-plugin
+addons/godot-git-plugin
