@@ -1,0 +1,18 @@
+[gd_scene load_steps=3 format=3 uid="uid://druqdgw6mxrbv"]
+
+[ext_resource type="Script" path="res://Assets/Cards/CardData.gd" id="1_nwoyy"]
+[ext_resource type="Texture2D" uid="uid://bm7ps6vqkeiyy" path="res://Assets/Cards/border-transparent.png" id="2_t470b"]
+
+[node name="Test" type="Node2D"]
+
+[node name="CardBase" type="MarginContainer" parent="."]
+offset_right = 175.0
+offset_bottom = 250.0
+script = ExtResource("1_nwoyy")
+
+[node name="Card" type="Sprite2D" parent="CardBase"]
+centered = false
+
+[node name="Border" type="Sprite2D" parent="CardBase"]
+texture = ExtResource("2_t470b")
+centered = false
