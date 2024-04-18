@@ -1,0 +1,45 @@
+[gd_scene load_steps=6 format=3 uid="uid://c37ukuwq6so48"]
+
+[ext_resource type="Script" path="res://Scenes3D/MoveCard3D.cs" id="1_7mhem"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_wligv"]
+size = Vector3(0.275, 0.035, 0.41)
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_jbem2"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_od776"]
+size = Vector3(60, 1, 60)
+
+[sub_resource type="BoxMesh" id="BoxMesh_obpbq"]
+size = Vector3(60, 1, 80)
+
+[node name="GameBoard" type="Node3D"]
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.0208377, 0.999783, 0, -0.999783, 0.0208377, 0, 1.87935, 0)
+script = ExtResource("1_7mhem")
+
+[node name="CardBody" type="RigidBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.1443, 0)
+
+[node name="CardCollider" type="CollisionShape3D" parent="CardBody"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.0760013, 0)
+shape = SubResource("BoxShape3D_wligv")
+
+[node name="Board" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
+physics_material_override = SubResource("PhysicsMaterial_jbem2")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Board"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.499506, 0)
+visible = false
+shape = SubResource("BoxShape3D_od776")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Board"]
+visible = false
+mesh = SubResource("BoxMesh_obpbq")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -0.00918031, 0.999958, 0, -0.999958, -0.00918031, 0, 5.21265, 0)
+light_energy = 0.244
+shadow_enabled = true
