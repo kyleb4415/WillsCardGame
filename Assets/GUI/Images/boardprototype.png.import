@@ -2,26 +2,27 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://ce3llq61ah5h5"
-path="res://.godot/imported/battlebackground.jpg-a803110ade3548f4c6765760bed4bc25.ctex"
+uid="uid://ciqwbi1c5c5cf"
+path.s3tc="res://.godot/imported/boardprototype.png-3d37ba50a88f18f5979e539cd6a61ac7.s3tc.ctex"
 metadata={
-"vram_texture": false
+"imported_formats": ["s3tc_bptc"],
+"vram_texture": true
 }
 
 [deps]
 
-source_file="res://Assets/GUI/battlebackground.jpg"
-dest_files=["res://.godot/imported/battlebackground.jpg-a803110ade3548f4c6765760bed4bc25.ctex"]
+source_file="res://Assets/GUI/Images/boardprototype.png"
+dest_files=["res://.godot/imported/boardprototype.png-3d37ba50a88f18f5979e539cd6a61ac7.s3tc.ctex"]
 
 [params]
 
-compress/mode=0
+compress/mode=2
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/hdr_compression=1
 compress/normal_map=0
 compress/channel_pack=0
-mipmaps/generate=false
+mipmaps/generate=true
 mipmaps/limit=-1
 roughness/mode=0
 roughness/src_normal=""
@@ -31,4 +32,4 @@ process/normal_map_invert_y=false
 process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
-detect_3d/compress_to=1
+detect_3d/compress_to=0

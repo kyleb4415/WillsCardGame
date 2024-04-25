@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://rgjt1u5dta0b"]
 
 [ext_resource type="Script" path="res://Scenes/Boards/BoardTest.gd" id="1_8j0nh"]
-[ext_resource type="Texture2D" uid="uid://ce3llq61ah5h5" path="res://Assets/GUI/battlebackground.jpg" id="1_dfb3b"]
+[ext_resource type="Texture2D" uid="uid://ce3llq61ah5h5" path="res://Assets/GUI/Images/battlebackground.jpg" id="1_dfb3b"]
 
 [node name="BoardTest" type="Node2D"]
 script = ExtResource("1_8j0nh")
