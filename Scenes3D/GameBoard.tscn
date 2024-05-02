@@ -1,0 +1,96 @@
+[gd_scene load_steps=12 format=3 uid="uid://c37ukuwq6so48"]
+
+[ext_resource type="Script" path="res://Scripts/MoveCard3D.cs" id="1_7mhem"]
+[ext_resource type="Script" path="res://Scripts/Card.cs" id="2_fpd0q"]
+[ext_resource type="Texture2D" uid="uid://ciqwbi1c5c5cf" path="res://Assets/GUI/Images/boardprototype.png" id="2_pcu2q"]
+[ext_resource type="Texture2D" uid="uid://u2w5tqesdpjg" path="res://Assets/Cards/Images/greedygrinner.png" id="3_dqwsv"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_wligv"]
+size = Vector3(0.275, 0.035, 0.41)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ubx32"]
+albedo_texture = ExtResource("3_dqwsv")
+uv1_scale = Vector3(1.9, 1.53, 1)
+uv1_offset = Vector3(-0.545, -0.6, 0)
+
+[sub_resource type="BoxMesh" id="BoxMesh_ev2sm"]
+material = SubResource("StandardMaterial3D_ubx32")
+size = Vector3(0.64, 0.035, 1.02)
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_jbem2"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_od776"]
+size = Vector3(60, 1, 60)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_0mmj6"]
+albedo_texture = ExtResource("2_pcu2q")
+uv1_scale = Vector3(0.125, 0.125, 0.2)
+uv1_offset = Vector3(0.505, 0.035, -0.485)
+uv1_triplanar = true
+
+[sub_resource type="BoxMesh" id="BoxMesh_obpbq"]
+lightmap_size_hint = Vector2i(64, 56)
+material = SubResource("StandardMaterial3D_0mmj6")
+size = Vector3(8, 1, 4)
+
+[node name="GameBoard" type="Node3D"]
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.0208377, 0.999783, 0, -0.999783, 0.0208377, 0, 1.17635, 0)
+script = ExtResource("1_7mhem")
+
+[node name="CardBody" type="RigidBody3D" parent="."]
+transform = Transform3D(1, -0.000422989, 7.75004e-05, 0.000422622, 0.999989, 0.00469273, -7.94815e-05, -0.00469269, 0.999989, 0, 0.1443, 0)
+script = ExtResource("2_fpd0q")
+
+[node name="CardCollider" type="CollisionShape3D" parent="CardBody"]
+shape = SubResource("BoxShape3D_wligv")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="CardBody"]
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 0, 0)
+layers = 3
+mesh = SubResource("BoxMesh_ev2sm")
+
+[node name="Board" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
+physics_material_override = SubResource("PhysicsMaterial_jbem2")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Board"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
+shape = SubResource("BoxShape3D_od776")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Board"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0.0385028)
+layers = 2
+mesh = SubResource("BoxMesh_obpbq")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -0.00918031, 0.999958, 0, -0.999958, -0.00918031, 0, 5.21265, 0)
+light_energy = 0.244
+shadow_enabled = true
+
+[node name="BoardPositions" type="Node" parent="."]
+
+[node name="Space" type="Node3D" parent="BoardPositions"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.273, -1, 0.478)
+
+[node name="Space2" type="Node3D" parent="BoardPositions"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.698, -1, 0.478)
+
+[node name="Space3" type="Node3D" parent="BoardPositions"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.111, -1, 0.478)
+
+[node name="Space4" type="Node3D" parent="BoardPositions"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.733, -1, 0.478)
+
+[node name="Space5" type="Node3D" parent="BoardPositions"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.204, -1, 0.478)
+
+[node name="Space6" type="Node3D" parent="BoardPositions"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.212, -1, 1.607)
+
+[node name="Space7" type="Node3D" parent="BoardPositions"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.344, -1, 1.607)
+
+[node name="Space8" type="Node3D" parent="BoardPositions"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.615, -1, 1.607)
