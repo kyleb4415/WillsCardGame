@@ -2,11 +2,15 @@ using Godot;
 using Godot.Collections;
 using System;
 using System.CodeDom;
+using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
+using System.Threading.Tasks;
 
 public partial class MoveCard3D : Camera3D
 {
+	//reconfig later to use signals to avoid setting colliders to null
 	public readonly Script gameSpaceScript = ResourceLoader.Load<Script>("res://Scripts/MoveCard3D.cs");
 	public readonly PackedScene cardSpace = ResourceLoader.Load<PackedScene>("res://Scenes3D/CardSpaceBase.tscn");
 
@@ -17,24 +21,26 @@ public partial class MoveCard3D : Camera3D
 	public Vector2 mouse;
 	public Vector2 screenSize;
 
-	//do we want mouse velocity or not?
-
-	// Called when the node enters the scene tree for the first time.
-	public override void _Ready()
+	//TODO: separate out instancing board spaces
+    public override void _Ready()
 	{
-		cardSpaceInstances = new List<Node3D>();
-		cardSpaceInstanceParent = cardSpace.Instantiate() as Node3D;
-		cardSpaceInstanceChild = cardSpaceInstanceParent.GetChild(0) as Area3D;
-        cardSpaceInstances.Add(cardSpaceInstanceParent);
+        var gameSpace = this.GetParentNode3D();
+        cardSpaceInstances = new List<Node3D>();
+		foreach (var space in GetNode("/root/GameBoard/BoardPositions").GetChildren())
+		{
+			GD.Print("Adding space");
+            cardSpaceInstanceParent = cardSpace.Instantiate() as Node3D;
+            cardSpaceInstanceChild = cardSpaceInstanceParent.GetChild(0) as Area3D;
+            cardSpaceInstances.Add(cardSpaceInstanceParent);
+			space.CallDeferred("add_child", cardSpaceInstanceParent);
+        }
 
 		if(cardSpaceInstances is not null)
 		{
-			var gameSpace = this.GetParentNode3D();
-			gameSpace.CallDeferred("add_child", cardSpaceInstances[0]);
-			cardSpaceInstances[0].Position = new Vector3(0, -0.5f, 0);
-			foreach(var s in  cardSpaceInstances)
+			foreach(var s in cardSpaceInstances)
 			{
 				//attaches event for each cardspace
+
 				var sChild = s.GetChild(0) as Area3D;
                 sChild.BodyEntered += _OnBodyEntered;
 				sChild.BodyExited += _OnBodyExited;
@@ -54,8 +60,7 @@ public partial class MoveCard3D : Camera3D
         }
 	}
 
-	//this hopefully will be able to intersect with objects using ray casting from camera and mouse position in the world space
-    public override void _Input(InputEvent @event)
+    public override async void _Input(InputEvent @event)
     {
 		//checking to see if mouse is moving
 
@@ -71,19 +76,16 @@ public partial class MoveCard3D : Camera3D
 		else if (@event is InputEventMouseButton && @event.IsActionReleased("leftclick") && colliders is not null && colliders["collider"].AsGodotObject().GetType() != typeof(StaticBody3D))
 		{
 			Card colliderToMove = (Card)colliders["collider"];
-			colliderToMove.Set("gravity_scale", 1);
-			//LerpToSpace();
-			colliderToMove.Position = colliderToMove.Position.Lerp(ProjectPosition(mouse, 1.7f), (float)GetPhysicsProcessDeltaTime() * 10);
-			colliders = null;
-		}
-		else if (@event is not InputEventMouseMotion && @event is not InputEventMouseButton)
-		{
-			GD.Print("Input event not type of mouse!");
-		}
+            colliderToMove.IsPickedUp = false;
+			//colliderToMove.Position = colliderToMove.Position.Lerp(ProjectPosition(mouse, 1.7f), (float)GetPhysicsProcessDeltaTime() * 10);
+			Tween tween = CreateTween();
+			GD.Print($"Card moving to {colliderToMove.PlacedPos}");
+            tween.TweenProperty(colliderToMove, "position", colliderToMove.PlacedPos, 0.5f).SetTrans(Tween.TransitionType.Quad);
+            colliders = null;
+        }
 		base._Input(@event);
     }
 
-	//fix when object is being picked up it's still being affected by gravity, if held for too long then it clips through ground
 	private void MoveColliders(Dictionary colliders, double delta)
 	{
 		try
@@ -98,6 +100,7 @@ public partial class MoveCard3D : Camera3D
                     {
                         //translating coordinates to screen space - the problem now is it's not taking into account angles so idk
                         colliderToMove.Set("gravity_scale", 0);
+						colliderToMove.IsPickedUp = true;
                         colliderToMove.Position = colliderToMove.Position.Lerp(ProjectPosition(mouse, 2.5f), (float)delta * 10);
                     }
                 }
@@ -113,16 +116,24 @@ public partial class MoveCard3D : Camera3D
     //this is the event for the area3d colliders, should lerp card to space
     private void _OnBodyEntered(Node3D body)
     {
-		GD.Print("Card body entered!");
+		//reconfigure to use signals
+		foreach(var s in cardSpaceInstances)
+		{
+			Area3D area = s.GetChild(0) as Area3D;
+
+			if(area.GetOverlappingBodies().Count > 1)
+			{
+				Card bodyAsCard = body as Card;
+				bodyAsCard.PlacedPos = new Vector3(area.GetParentNode3D().GetParentNode3D().Position.X, -1.5f, area.GetParentNode3D().GetParentNode3D().Position.Z);
+			}
+		}
     }
 
     private void _OnBodyExited(Node3D body)
     {
-		GD.Print("Card body exited!");
+		Card cardBody = (Card)body;
+		cardBody.PlacedPos = new Vector3(0, 0, 0);
     }
-
-
-    //probably write separate function here for dropping into spots
 
     public override void _ExitTree()
     {
