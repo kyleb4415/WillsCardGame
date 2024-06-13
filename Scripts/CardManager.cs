@@ -18,7 +18,7 @@ public static class CardManager
 
 	private static void ShuffleCards(List<Card> cards)
 	{
-		Random rand = new Random();
+		Random rand = new();
 		for(int i = 0; i < cards.Count; i++)
 		{
 			Card temp = cards[i];
@@ -29,28 +29,39 @@ public static class CardManager
 
 	public static void LoadCardsFromDB()
 	{
-
-		List<Card> CardList = new List<Card>();
-		using (SQLiteConnection conn = new SQLiteConnection("res://DataStore/CardData.db"))
+		List<Card> CardList = new();
+		using (SQLiteConnection conn = new SQLiteConnection($"Data Source=DataStore/CardData.db"))
 		{
+			conn.Open();
 			using(var command = new SQLiteCommand(conn))
 			{
-				command.CommandText = @"SELECT * FROM CARDS";
-				using (var reader = command.ExecuteReader())
+				command.CommandText = @"SELECT rowid, * FROM Card";
+				using (SQLiteDataReader reader = command.ExecuteReader(CommandBehavior.KeyInfo))
 				{
                     while (reader.Read())
 					{
 						//use factory with reader values as inputs and then put into list that is returned at the end the method
-						reader.GetInt32(1); //ID
-						reader.GetString(2); //Name
-						reader.GetBlob(3, true); //Image
-						reader.GetString(4); //Description
-						reader.GetString(5); //Type
-						reader.GetBlob(6, true); //TypeImage
-						reader.GetInt32(7); //Damage
-						reader.GetInt32(8); //HP
-						reader.GetInt32(9); //Unlocked
-						reader.GetInt32(10); //ManaCost
+						//rewrite GetBlobs to call a separate method that creates an appropriate buffer and loads the image
+						if(reader.GetValue(3) != null)
+						{
+							try
+							{
+                                CardList.Add(new UnitCard(reader.GetInt32(1), reader.GetString(2), reader.GetBlob(3, true), reader.GetString(4), reader.GetString(5), reader.GetBlob(6, true), reader.GetInt32(7), reader.GetInt32(8), reader.GetInt32(9), reader.GetInt32(10)));
+                            }
+							catch(Exception e)
+							{
+								GD.Print(e.Message);
+							}
+                        }
+						else
+						{
+						
+                            CardList.Add(new UnitCard(reader.GetInt32(0), reader.GetString(2), reader.GetString(4), reader.GetString(5), reader.GetInt32(7), reader.GetInt32(8), reader.GetInt32(9), reader.GetInt32(10)));
+                        }
+						if(CardList.Count > 0)
+						{
+							GD.Print("Card added!");
+						}
 					}
                 }
 			}
