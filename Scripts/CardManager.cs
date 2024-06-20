@@ -8,6 +8,9 @@ using System.Runtime.CompilerServices;
 
 public static class CardManager
 {
+
+    [Signal]
+    public delegate void CardInteractionEventHandler(Card c, Card d);
     private static void InitialDealCards(List<Card> cards)
     {
         foreach (Card card in cards)
@@ -27,7 +30,7 @@ public static class CardManager
 		}
 	}
 
-	public static void LoadCardsFromDB()
+	public static List<Card> LoadCardsFromDB()
 	{
 		List<Card> CardList = new();
 		using (SQLiteConnection conn = new SQLiteConnection($"Data Source=DataStore/CardData.db"))
@@ -65,6 +68,9 @@ public static class CardManager
 					}
                 }
 			}
+			return CardList;
 		}
 	}
+
+
 }

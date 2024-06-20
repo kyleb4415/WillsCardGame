@@ -4,7 +4,7 @@ using System.Reflection.Metadata;
 
 public interface ICard
 {
-    string CardName { get; set; }
+    string Name { get; set; }
 
 #nullable enable
     System.Data.SQLite.SQLiteBlob CardImage { get; set; }

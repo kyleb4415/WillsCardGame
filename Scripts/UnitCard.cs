@@ -11,8 +11,17 @@ public partial class UnitCard : Card, ICard
 
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()
-	{
-	}
+    {
+		Image img = new Image();
+		byte[] bytes = new byte[CardImage.GetCount()];
+		CardImage.Read(bytes, CardImage.GetCount(), 0);
+        img.LoadPngFromBuffer(bytes);
+		StandardMaterial3D material3D = new StandardMaterial3D();
+        GetNode("Damage").Set("text", Damage);
+        GetNode("HP").Set("text", HP);
+		GetNode("CardMesh").Set("material", material3D);
+        base._Ready();
+    }
 
 	public UnitCard()
 	{
@@ -37,7 +46,7 @@ public partial class UnitCard : Card, ICard
     public UnitCard(int id, string name, string desc, string type, int damage, int hp, int unlockedFlag, int manaCost)
 	{
 		this.ID = id;
-		this.CardName = name;
+		this.Name = name;
 		this.Description = desc;
 		this.Type = type;
 		this.Damage = damage;

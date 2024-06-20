@@ -40,7 +40,9 @@ transform = Transform3D(1, 0, 0, 0, 0.0208377, 0.999783, 0, -0.999783, 0.0208377
 script = ExtResource("1_7mhem")
 
 [node name="CardBody" type="RigidBody3D" parent="."]
-transform = Transform3D(1, -0.000422989, 7.75004e-05, 0.000422622, 0.999989, 0.00469273, -7.94815e-05, -0.00469269, 0.999989, 0, 0.1443, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.1443, 0)
+collision_layer = 3
+collision_mask = 3
 script = ExtResource("2_fpd0q")
 
 [node name="CardCollider" type="CollisionShape3D" parent="CardBody"]

@@ -13,30 +13,41 @@ public partial class MoveCard3D : Camera3D
 	//reconfig later to use signals to avoid setting colliders to null
 	public readonly Script gameSpaceScript = ResourceLoader.Load<Script>("res://Scripts/MoveCard3D.cs");
 	public readonly PackedScene cardSpace = ResourceLoader.Load<PackedScene>("res://Scenes3D/CardSpaceBase.tscn");
+	public readonly PackedScene cardBase = ResourceLoader.Load<PackedScene>("res://Scenes3D/CardBase.tscn");
 
-    public Dictionary colliders; 
+    public Dictionary colliders;
+	public Card LastCardSelected { get; set; }
 	public Node3D cardSpaceInstanceParent;
 	public Area3D cardSpaceInstanceChild;
 	public List<Node3D> cardSpaceInstances;
 	public Vector2 mouse;
 	public Vector2 screenSize;
+	public bool MouseOverCard { get; set; }
+
+	[Signal]
+	public delegate void HoverCardEventHandler(Card c);
 
     //TODO: separate out instancing board spaces
     public override void _Ready()
 	{
         var gameSpace = this.GetParentNode3D();
         cardSpaceInstances = new List<Node3D>();
+        mouse = new Vector2();
 
-		foreach (var space in GetNode("/root/GameBoard/BoardPositions").GetChildren())
+        //loading card spaces onto the points defined on the board
+        //-------------------------------------------------------------------------------
+        foreach (var space in GetNode("/root/GameBoard/BoardPositions").GetChildren())
 		{
-			GD.Print("Adding space");
             cardSpaceInstanceParent = cardSpace.Instantiate() as Node3D;
             cardSpaceInstanceChild = cardSpaceInstanceParent.GetChild(0) as Area3D;
             cardSpaceInstances.Add(cardSpaceInstanceParent);
 			space.CallDeferred("add_child", cardSpaceInstanceParent);
         }
+        //-------------------------------------------------------------------------------
 
-		if(cardSpaceInstances is not null)
+        //attaching events for card spaces
+        //-------------------------------------------------------------------------------
+        if (cardSpaceInstances is not null)
 		{
 			foreach(var s in cardSpaceInstances)
 			{
@@ -47,13 +58,28 @@ public partial class MoveCard3D : Camera3D
 				sChild.BodyExited += Area_OnBodyExited;
             }
         }
-		mouse = new Vector2();
+        //-------------------------------------------------------------------------------
 
-		Card card = (Card)GetNode("/root/GameBoard/CardBody");
+
+        //attaching events for card
+        //-------------------------------------------------------------------------------
+        Card card = (Card)GetNode("/root/GameBoard/CardBody");
+
         card.MouseEntered += Card_MouseEntered;
+        card.MouseExited += Card_MouseExited;
+        //-------------------------------------------------------------------------------
 
-		CardManager.LoadCardsFromDB();
-	}
+
+        //instancing cards from db [move after testing]
+        //-------------------------------------------------------------------------------
+        List<Card> cards = CardManager.LoadCardsFromDB();
+		foreach(var c in cards)
+		{
+			cardBase.Instantiate();
+
+		}
+        //-------------------------------------------------------------------------------
+    }
 
     // Called every frame. 'delta' is the elapsed time since the previous frame.
     public override void _Process(double delta)
@@ -64,7 +90,13 @@ public partial class MoveCard3D : Camera3D
 		{
             MoveColliders(colliders, delta);
         }
-	}
+
+		if(MouseOverCard == true && LastCardSelected.CanPickUp == false)
+		{
+			Vector3 collisionPoint = (Vector3)RaycastHelper.GetCollisionPoint(this, mouse, 3.0f)["position"];
+            RotationHelper.RotateCard(LastCardSelected, collisionPoint, this.GetTree());
+        }
+    }
 
     public override async void _Input(InputEvent @event)
     {
@@ -86,9 +118,11 @@ public partial class MoveCard3D : Camera3D
 			Card colliderToMove = (Card)colliders["collider"];
 			if(colliderToMove.CanPickUp)
 			{
-                colliderToMove.EmitSignal(Card.SignalName.PlaceCard, colliderToMove);
                 Tween tween = CreateTween();
                 tween.TweenProperty(colliderToMove, "position", colliderToMove.PlacedPos, 0.5f).SetTrans(Tween.TransitionType.Quad);
+				tween.Finished += () => {
+					colliderToMove.EmitSignal(Card.SignalName.PlaceCard, colliderToMove);
+				};
             }
             colliders = null;
         }
@@ -139,21 +173,32 @@ public partial class MoveCard3D : Camera3D
 		}
     }
 
+	
     private void Area_OnBodyExited(Node3D body)
     {
-		Card cardBody = (Card)body;
-		cardBody.PlacedPos = new Vector3(0, 0, 0);
+		//Card cardBody = (Card)body;
+		//cardBody.PlacedPos = new Vector3(0, 0, 0);
     }
 	
+
     private void Card_MouseEntered()
     {
-        throw new NotImplementedException();
+        LastCardSelected = (Card)RaycastHelper.GetCollisionPoint(this, mouse, 3.0f)["collider"];
+        if (LastCardSelected != null && LastCardSelected.CanPickUp == false)
+        {
+            MouseOverCard = true;
+        }
     }
 
-	private void Card_MouseExited()
-	{
-
-	}
+    private void Card_MouseExited()
+    {
+		Card c = LastCardSelected;
+        if (c != null && LastCardSelected.CanPickUp == false)
+        {
+            MouseOverCard = false;
+            RotationHelper.ResetRotation(c, this.GetTree());
+        }
+    }
 
     public override void _ExitTree()
     {
