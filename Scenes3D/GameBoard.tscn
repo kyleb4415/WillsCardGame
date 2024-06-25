@@ -1,7 +1,7 @@
 [gd_scene load_steps=12 format=3 uid="uid://c37ukuwq6so48"]
 
 [ext_resource type="Script" path="res://Scripts/MoveCard3D.cs" id="1_7mhem"]
-[ext_resource type="Script" path="res://Scripts/Card.cs" id="2_fpd0q"]
+[ext_resource type="Script" path="res://Scripts/UnitCard.cs" id="2_2m2vc"]
 [ext_resource type="Texture2D" uid="uid://ciqwbi1c5c5cf" path="res://Assets/GUI/Images/boardprototype.png" id="2_pcu2q"]
 [ext_resource type="Texture2D" uid="uid://u2w5tqesdpjg" path="res://Assets/Cards/Images/greedygrinner.png" id="3_dqwsv"]
 
@@ -43,7 +43,7 @@ script = ExtResource("1_7mhem")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.1443, 0)
 collision_layer = 3
 collision_mask = 3
-script = ExtResource("2_fpd0q")
+script = ExtResource("2_2m2vc")
 
 [node name="CardCollider" type="CollisionShape3D" parent="CardBody"]
 shape = SubResource("BoxShape3D_wligv")
@@ -52,6 +52,10 @@ shape = SubResource("BoxShape3D_wligv")
 transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 0, 0)
 layers = 3
 mesh = SubResource("BoxMesh_ev2sm")
+
+[node name="SelectedLight" type="OmniLight3D" parent="CardBody"]
+layers = 0
+omni_range = 0.778
 
 [node name="Board" type="StaticBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)

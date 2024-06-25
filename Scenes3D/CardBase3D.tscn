@@ -1,29 +1,59 @@
 [gd_scene load_steps=5 format=3 uid="uid://bqe4y0kfsdcsm"]
 
-[ext_resource type="Script" path="res://Scripts/Card.cs" id="1_lmy7q"]
+[ext_resource type="Script" path="res://Scripts/UnitCard.cs" id="1_f3fyc"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_62a8p"]
 size = Vector3(0.275, 0.035, 0.41)
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_khpe1"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_21we6"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_gic02"]
-material = SubResource("StandardMaterial3D_khpe1")
+material = SubResource("StandardMaterial3D_21we6")
 size = Vector3(0.275, 0.002, 0.41)
 
 [node name="CardBase3d" type="Node3D"]
 
 [node name="CardBody" type="RigidBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.1443, 0)
-script = ExtResource("1_lmy7q")
+script = ExtResource("1_f3fyc")
 
 [node name="CardCollider" type="CollisionShape3D" parent="CardBody"]
 shape = SubResource("BoxShape3D_62a8p")
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="CardBody"]
+[node name="CardMesh" type="MeshInstance3D" parent="CardBody"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.000343561, 0)
 mesh = SubResource("BoxMesh_gic02")
 
-[node name="Label3D" type="Label3D" parent="CardBody"]
+[node name="Name" type="Label3D" parent="CardBody"]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0.00351089, -0.132415)
 text = "fort"
 font_size = 12
+
+[node name="Description" type="Label3D" parent="CardBody"]
+transform = Transform3D(0.585, 0, 0, 0, -2.55712e-08, 0.585, 0, -0.585, -2.55712e-08, 0, 0.00351089, 0.0738633)
+text = "fort"
+font_size = 12
+
+[node name="Type" type="Label3D" parent="CardBody"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0.00351089, -0.0247653)
+text = "fort"
+font_size = 12
+
+[node name="ManaCost" type="Label3D" parent="CardBody"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0.136746, 0.00351089, -0.132415)
+text = "fort"
+font_size = 12
+
+[node name="Damage" type="Label3D" parent="CardBody"]
+transform = Transform3D(0.585, 0, 0, 0, -2.55712e-08, 0.585, 0, -0.585, -2.55712e-08, -0.0859057, 0.00351089, 0.178114)
+text = "fort"
+font_size = 12
+
+[node name="HP" type="Label3D" parent="CardBody"]
+transform = Transform3D(0.585, 0, 0, 0, -2.55712e-08, 0.585, 0, -0.585, -2.55712e-08, 0.0899721, 0.00351089, 0.174245)
+text = "fort"
+font_size = 12
+
+[node name="SelectedLight" type="OmniLight3D" parent="CardBody"]
+layers = 0
+omni_range = 0.21309

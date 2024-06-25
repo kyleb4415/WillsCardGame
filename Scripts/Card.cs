@@ -1,24 +1,23 @@
 using Godot;
 using System;
-using System.Collections.Generic;
 using System.Data.SQLite;
-using System.Reflection.Metadata;
 
 
 public partial class Card : RigidBody3D, ICard
 {
     public bool IsPickedUp { get; set; }
     public bool CanPickUp { get; set; }
+    public bool Released { get; set; }
+    public bool Selected { get; set; } = false;
     public Vector3 OriginPos { get; set; }
     public Vector3 PlacedPos { get; set; }
-    public SQLiteBlob CardImage { get; set; }
+    public SQLiteBlob CardImage { get; set; } = null;
     public SQLiteBlob TypeImage { get; set; }
     public string Name { get; set; }
     public string Description { get; set; }
     public string Type { get; set; }
     public int ManaCost { get; set; }
     public int UnlockedFlag { get; set; }
-    public bool Selected { get; set; }
 
     public Vector2 MousePos { get; set; }
 
@@ -26,11 +25,13 @@ public partial class Card : RigidBody3D, ICard
     public delegate void PlaceCardEventHandler(Card c);
 
     [Signal]
+    public delegate void CardReleasedEventHandler(Card c);
+
+    [Signal]
     public delegate void CardSelectedEventHandler(Card c);
 
     [Signal]
     public delegate void CardAttackEventHandler(Card attacker, Card defender);
-
 
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()
@@ -39,15 +40,24 @@ public partial class Card : RigidBody3D, ICard
         this.InputRayPickable = true;
         this.OriginPos = new Vector3();
         this.CanPickUp = true;
-        GetNode("Name").Set("text", Name);
-        GetNode("Description").Set("text", Description);
-        GetNode("ManaCost").Set("text", ManaCost.ToString());
+        if (Name is not null && Description is not null)
+        {
+            GetNode("Name").Set("text", Name);
+            GetNode("Description").Set("text", Description);
+            GetNode("ManaCost").Set("text", ManaCost.ToString());
+        }
+        if(CardImage is not null)
+        {
+            PngImageLoader.LoadPngFromDatabase(this, 200, 200);
+        }
+
+        (GetNode("SelectedLight") as OmniLight3D).SetLayerMaskValue(1, true);
     }
 
     //implement method for dragging here (can change isRayPickable and such)
     public void PickUp(Card card)
     {
-        
+
     }
 
     //implement method for dropped card here
@@ -56,24 +66,15 @@ public partial class Card : RigidBody3D, ICard
         this.CanPickUp = false;
     }
 
-    
-
-    /*
-    public Card(bool isPickedUp, Vector3 originPos, Vector3 placedPos)
+    public void Release(Card c)
     {
-        IsPickedUp = isPickedUp;
-        OriginPos = originPos;
-        PlacedPos = placedPos;
+        this.Released = true;
     }
 
-    public Card(Card card)
+    public void Select(Card c)
     {
-        this.IsPickedUp = card.IsPickedUp;
-        this.OriginPos = card.OriginPos;
-        this.PlacedPos = card.PlacedPos;
+        this.Selected = !Selected;
     }
-    */
-
     // Called every frame. 'delta' is the elapsed time since the previous frame.
     public override void _Process(double delta)
     {

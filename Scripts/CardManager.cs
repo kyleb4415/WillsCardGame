@@ -30,9 +30,9 @@ public static class CardManager
 		}
 	}
 
-	public static List<Card> LoadCardsFromDB()
+	public static List<UnitCard> LoadCardsFromDB()
 	{
-		List<Card> CardList = new();
+		List<UnitCard> CardList = new();
 		using (SQLiteConnection conn = new SQLiteConnection($"Data Source=DataStore/CardData.db"))
 		{
 			conn.Open();
