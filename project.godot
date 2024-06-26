@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="Project W"
-run/main_scene="res://Scenes3D/GameBoard.tscn"
+run/main_scene="res://Scenes/Main Menu/MainMenu.tscn"
 config/features=PackedStringArray("4.2", "C#", "Forward Plus")
 config/icon="res://icon.svg"
 

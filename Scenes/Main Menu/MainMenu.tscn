@@ -1,3 +1,36 @@
-[gd_scene format=3 uid="uid://din32e4wl66dy"]
+[gd_scene load_steps=2 format=3 uid="uid://din32e4wl66dy"]
+
+[ext_resource type="Script" path="res://Scenes/Main Menu/Menu.gd" id="1_q7eu4"]
 
 [node name="MainMenu" type="Node2D"]
+
+[node name="Control" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="MarginContainer" type="MarginContainer" parent="Control"]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Control/MarginContainer"]
+layout_mode = 2
+
+[node name="Play" type="Button" parent="Control/MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "Play"
+script = ExtResource("1_q7eu4")
+
+[node name="Options" type="Button" parent="Control/MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "Options"
+
+[node name="Quit" type="Button" parent="Control/MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "Quit"
+
+[connection signal="pressed" from="Control/MarginContainer/VBoxContainer/Play" to="Control/MarginContainer/VBoxContainer/Play" method="_on_pressed"]
+[connection signal="pressed" from="Control/MarginContainer/VBoxContainer/Options" to="Control/MarginContainer/VBoxContainer/Play" method="_on_options_pressed"]
+[connection signal="pressed" from="Control/MarginContainer/VBoxContainer/Quit" to="Control/MarginContainer/VBoxContainer/Play" method="_on_quit_pressed"]
