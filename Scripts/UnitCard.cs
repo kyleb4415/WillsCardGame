@@ -10,6 +10,9 @@ public partial class UnitCard : Card, ICard
 	public int HP { get; set; } = 0;
 	public int Damage { get; set; } = 0;
 
+    [Signal]
+    public delegate void CardHitEventHandler(UnitCard c);
+
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()
     {
@@ -57,5 +60,14 @@ public partial class UnitCard : Card, ICard
     public override void _Process(double delta)
 	{
 
+	}
+
+	//TODO: Death animation
+	public void TakeDamage(UnitCard c)
+	{
+		if(c.HP <= 0)
+		{
+			this.QueueFree();
+		}
 	}
 }

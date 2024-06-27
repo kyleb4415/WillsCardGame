@@ -22,7 +22,7 @@ public partial class Card : RigidBody3D, ICard
     public Vector2 MousePos { get; set; }
 
     [Signal]
-    public delegate void PlaceCardEventHandler(Card c);
+    public delegate void PlaceCardEventHandler(Card c, TextureProgressBar t);
 
     [Signal]
     public delegate void CardReleasedEventHandler(Card c);
@@ -61,9 +61,10 @@ public partial class Card : RigidBody3D, ICard
     }
 
     //implement method for dropped card here
-    public void Place(Card c)
+    public void Place(Card c, TextureProgressBar t)
     {
         this.CanPickUp = false;
+        t.Value -= c.ManaCost * 100;
     }
 
     public void Release(Card c)
@@ -71,7 +72,7 @@ public partial class Card : RigidBody3D, ICard
         this.Released = true;
     }
 
-    public void Select(Card c)
+    public void Select(ICard c)
     {
         this.Selected = !Selected;
     }

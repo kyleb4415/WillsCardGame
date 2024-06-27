@@ -19,10 +19,12 @@ public static class RotationHelper
         (c.GetNode("SelectedLight") as OmniLight3D).SetLayerMaskValue(1, true);
     }
 
+    //error when object gets disposed and tries to run animation
     public static void ResetRotation(Card c, SceneTree s)
     {
         if(c.Selected == false)
         {
+            c.InputRayPickable = false;
             Tween tween = s.CreateTween();
             Tween tween2 = s.CreateTween();
             tween.TweenProperty(c, "position", new Vector3(c.PlacedPos.X, c.PlacedPos.Y, c.PlacedPos.Z), 0.1f);
@@ -35,6 +37,7 @@ public static class RotationHelper
                 float z = c.PlacedPos.Z;
                 c.Set("position", new Vector3(x, y, z));
                 (c.GetNode("SelectedLight") as OmniLight3D).SetLayerMaskValue(1, false);
+                c.InputRayPickable = true;
             };
         }
         else
@@ -42,5 +45,6 @@ public static class RotationHelper
             Tween tween = s.CreateTween();
             tween.TweenProperty(c, "rotation", new Vector3(0f, 0f, 0f), 0.25f).SetTrans(Tween.TransitionType.Quad);
         }
+        
     }
 }

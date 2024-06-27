@@ -1,6 +1,7 @@
-[gd_scene load_steps=12 format=3 uid="uid://c37ukuwq6so48"]
+[gd_scene load_steps=15 format=3 uid="uid://c37ukuwq6so48"]
 
 [ext_resource type="Script" path="res://Scripts/MoveCard3D.cs" id="1_7mhem"]
+[ext_resource type="Script" path="res://Scripts/BoardController.cs" id="1_y1f3f"]
 [ext_resource type="Script" path="res://Scripts/UnitCard.cs" id="2_2m2vc"]
 [ext_resource type="Texture2D" uid="uid://ciqwbi1c5c5cf" path="res://Assets/GUI/Images/boardprototype.png" id="2_pcu2q"]
 [ext_resource type="Texture2D" uid="uid://u2w5tqesdpjg" path="res://Assets/Cards/Images/greedygrinner.png" id="3_dqwsv"]
@@ -33,10 +34,18 @@ lightmap_size_hint = Vector2i(64, 56)
 material = SubResource("StandardMaterial3D_0mmj6")
 size = Vector3(8, 1, 4)
 
+[sub_resource type="Gradient" id="Gradient_3ka8j"]
+interpolation_color_space = 2
+colors = PackedColorArray(0, 0, 0.686275, 1, 0.433571, 0.631927, 0.705991, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_6rbho"]
+gradient = SubResource("Gradient_3ka8j")
+
 [node name="GameBoard" type="Node3D"]
+script = ExtResource("1_y1f3f")
 
 [node name="Camera3D" type="Camera3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 0.0208377, 0.999783, 0, -0.999783, 0.0208377, 0, 1.17635, 0)
+transform = Transform3D(1, 0, 0, 0, 0.0208377, 0.999783, 0, -0.999783, 0.0208377, 0, 1.17267, 0)
 script = ExtResource("1_7mhem")
 
 [node name="CardBody" type="RigidBody3D" parent="."]
@@ -100,3 +109,17 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.344, -1, 1.607)
 
 [node name="Space8" type="Node3D" parent="BoardPositions"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.615, -1, 1.607)
+
+[node name="ManaBar" type="TextureProgressBar" parent="."]
+offset_right = 610.0
+offset_bottom = 30.0
+scale = Vector2(1.37, 1.37)
+max_value = 10000.0
+nine_patch_stretch = true
+texture_progress = SubResource("GradientTexture2D_6rbho")
+
+[node name="Label" type="Label" parent="ManaBar"]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 23.0
+text = "Mana"

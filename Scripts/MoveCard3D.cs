@@ -85,11 +85,12 @@ public partial class MoveCard3D : Camera3D
 			var cardBaseInstance = cardBase.Instantiate();
 			cardGameObjects.Add(cardBaseInstance);
 			CardFactory.CreateUnitCard(c, cardBaseInstance);
-			card = cardBaseInstance.GetChild(0) as UnitCard;
-			card.MouseEntered += Card_MouseEntered;
-			card.MouseExited += Card_MouseExited;
-			card.CardReleased += card.Release;
-			card.CardSelected += card.Select;
+			UnitCard unitCard = cardBaseInstance.GetChild(0) as UnitCard;
+            unitCard.MouseEntered += Card_MouseEntered;
+            unitCard.MouseExited += Card_MouseExited;
+            unitCard.CardReleased += unitCard.Release;
+            unitCard.CardSelected += unitCard.Select;
+            unitCard.CardHit += unitCard.TakeDamage;
             //cardBaseInstance.SetScript(cardScript);
 			this.GetParent().CallDeferred("add_child", cardBaseInstance);
         }
@@ -137,10 +138,11 @@ public partial class MoveCard3D : Camera3D
 			if(colliders["collider"].AsGodotObject().GetType() != typeof(StaticBody3D))
 			{
 				Card c = (Card)colliders["collider"];
-				//TODO: Separate this out into its own method
+				//!!!!TODO: Separate this out into its own method!!!!
 				if(c.CanPickUp == false)
 				{
 					c.EmitSignal(Card.SignalName.CardSelected, c);
+					GD.Print(c.Selected);
 					if(!SelectedCards.Contains((UnitCard)c) && c.Selected == true)
 					{
                         SelectedCards.Add((UnitCard)c);
@@ -150,20 +152,20 @@ public partial class MoveCard3D : Camera3D
                     {
 						c.Selected = false;
                         SelectedCards.Remove((UnitCard)c);
-                        foreach (var card in SelectedCards)
-                        {
-                            GD.Print($"Cards remaining {card.Name}");
-                        }
                     }
                     if (SelectedCards.Count > 1 && SelectedCards.Count < 3)
 					{
 						SelectedCards[1].HP = SelectedCards[1].HP - SelectedCards[0].Damage;
 						SelectedCards[1].GetNode("HP").Set("text", SelectedCards[1].HP);
 						GD.Print(SelectedCards[0].Name + " did " + SelectedCards[0].Damage + " damage to " + SelectedCards[1].Name + "!");
+						SelectedCards[1].EmitSignal(UnitCard.SignalName.CardHit, SelectedCards[1]);
 						foreach(var card in SelectedCards)
 						{
 							card.Selected = false;
-							RotationHelper.ResetRotation(card, GetTree());
+							if(card.HP > 0)
+							{
+                                RotationHelper.ResetRotation(card, GetTree());
+                            }
 						}
 						SelectedCards.Clear();
                     }
@@ -183,7 +185,7 @@ public partial class MoveCard3D : Camera3D
 					tween.TweenProperty(card, "position", card.PlacedPos, 0.5f).SetTrans(Tween.TransitionType.Quad);
 					tween.Finished += () =>
 					{
-						card.EmitSignal(Card.SignalName.PlaceCard, card);
+						card.EmitSignal(Card.SignalName.PlaceCard, card, this.GetParent().GetNode("ManaBar"));
 					};
 				}
 				else
