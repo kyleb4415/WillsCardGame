@@ -9,8 +9,8 @@ public partial class Card : RigidBody3D, ICard
     public bool CanPickUp { get; set; }
     public bool Released { get; set; }
     public bool Selected { get; set; } = false;
-    public Vector3 OriginPos { get; set; }
-    public Vector3 PlacedPos { get; set; }
+    public bool MouseOver { get; set; } = false;
+    public Vector3 PlacedPos { get; set; } = new Vector3();
     public SQLiteBlob CardImage { get; set; } = null;
     public SQLiteBlob TypeImage { get; set; }
     public string Name { get; set; }
@@ -36,9 +36,11 @@ public partial class Card : RigidBody3D, ICard
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()
     {
+        this.GravityScale = 0;
         this.PlaceCard += Place;
+        this.MouseExited += Card_MouseExited;
+        this.MouseEntered += Card_MouseEntered;
         this.InputRayPickable = true;
-        this.OriginPos = new Vector3();
         this.CanPickUp = true;
         if (Name is not null && Description is not null)
         {
@@ -54,6 +56,7 @@ public partial class Card : RigidBody3D, ICard
         (GetNode("SelectedLight") as OmniLight3D).SetLayerMaskValue(1, true);
     }
 
+
     //implement method for dragging here (can change isRayPickable and such)
     public void PickUp(Card card)
     {
@@ -63,8 +66,15 @@ public partial class Card : RigidBody3D, ICard
     //implement method for dropped card here
     public void Place(Card c, TextureProgressBar t)
     {
-        this.CanPickUp = false;
-        t.Value -= c.ManaCost * 100;
+        if(t.Value >= c.ManaCost * 100)
+        {
+            this.CanPickUp = false;
+            t.Value -= c.ManaCost * 100;
+        }
+        else
+        {
+            //print something or give some notification that they don't have enough mana
+        }
     }
 
     public void Release(Card c)
@@ -72,25 +82,69 @@ public partial class Card : RigidBody3D, ICard
         this.Released = true;
     }
 
-    public void Select(ICard c)
+    public void Select(Card c)
     {
         this.Selected = !Selected;
+        if(Selected == true)
+        {
+            this.GravityScale = 0;
+        }
+        else
+        {
+            this.GravityScale = 1;
+        }
+        //OpenContextMenu(c);
     }
     // Called every frame. 'delta' is the elapsed time since the previous frame.
-    public override void _Process(double delta)
+    public override void _PhysicsProcess(double delta)
     {
-
+        if (this.MouseOver == true && this.CanPickUp == false)
+        {
+            try
+            {
+                MoveCard3D instance = GetNode("/root/GameBoard/Camera3D") as MoveCard3D;
+                Vector3 collisionPoint = (Vector3)RaycastHelper.GetCollisionPoint((Camera3D)instance, instance.mouse, 3.0f)["position"];
+                RotationHelper.RotateCard(this, collisionPoint, this.GetTree());
+            }
+            catch (Exception e)
+            {
+                GD.Print(e.Message);
+            }
+        }
     }
 
-    /*
-	public override void OnBodyEntered(RigidBody3D body)
-	{
-        
+    public void OpenContextMenu(Card c)
+    {
+        Node2D contextMenuParent = ResourceLoader.Load<PackedScene>("res://Scenes/CardContextMenu.tscn").Instantiate<Node2D>();
+        PopupMenu contextMenuChild = contextMenuParent.GetChild(0) as PopupMenu;
+        contextMenuChild.Set("position", new Vector2(c.GlobalPosition.X, c.GlobalPosition.Y));
+        c.AddChild(contextMenuParent);
     }
-	*/
 
     public override void _ExitTree()
     {
         base._ExitTree();
     }
+
+    public void Card_MouseEntered()
+    {
+        this.MouseOver = true;
+    }
+
+    //handles logic for card animation on hover before & after selection
+    public void Card_MouseExited()
+    {
+        if (this.Selected == true && this.CanPickUp == false)
+        {
+            RotationHelper.ResetRotation(this, this.GetTree());
+        }
+        else if(this.Selected == false && this.CanPickUp == false)
+        {
+            RotationHelper.ResetRotation(this, this.GetTree());
+            Tween tween = CreateTween();
+            tween.TweenProperty(this, "position", this.PlacedPos, 0.2f).SetTrans(Tween.TransitionType.Quad);
+        }
+        this.MouseOver = false;
+    }
+
 }

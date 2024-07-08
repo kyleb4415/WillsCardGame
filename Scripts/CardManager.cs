@@ -4,20 +4,62 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.SQLite;
 using System.Linq;
+using System.Reflection.Metadata.Ecma335;
 using System.Runtime.CompilerServices;
+using System.Security.Cryptography.X509Certificates;
+using System.Xml;
 
 public static class CardManager
 {
-
     [Signal]
     public delegate void CardInteractionEventHandler(Card c, Card d);
-    private static void InitialDealCards(List<Card> cards)
+    public static void InitialDealCards(BoardController b, SceneTree s)
     {
-        foreach (Card card in cards)
-        {
-
-        }
+		InitialDealCardsAnimation(b, new Vector3(0,0,0), s);
     }
+
+	//dealing cards from hand
+	public static void InitialDealCardsAnimation(BoardController b, Vector3 dealPosition, SceneTree s)
+	{
+        Vector3 fanPositionLeft = new Vector3(-0.1f, -1f, 1f);
+        Vector3 fanPositionRight = new Vector3(0.1f, -1f, 1f);
+
+		//maybe change positions to accommodate more cards if necessary?
+		if(b.Hand.Count > 4)
+		{
+
+		}
+
+        Vector3 fanRotationLeft = new Vector3(0, 0.25f, 0);
+        Vector3 fanRotationRight = new Vector3(0, -0.25f, 0);
+
+		float idx = 0;
+
+        foreach (Card c in b.Hand)
+		{
+            float alignmentWeight = CalculateCardAlignment(b.Hand, idx);
+			float timeCalculation = 2f * (c.Position.X - fanPositionLeft.X);
+            GD.Print($"Fan alignment {alignmentWeight}");
+            c.GravityScale = 0;
+			Tween t = s.CreateTween();
+			Tween t2 = s.CreateTween();
+            t.TweenProperty(c, "position", fanPositionLeft.Lerp(fanPositionRight, alignmentWeight), timeCalculation).SetTrans(Tween.TransitionType.Quad);
+			t2.TweenProperty(c, "rotation", fanRotationLeft.Lerp(fanRotationRight, alignmentWeight), 0.25f).SetTrans(Tween.TransitionType.Quad);
+			c.PlacedPos = c.Position;
+			idx += 1;
+        }
+	}
+
+	//gets weight by setting index over count
+	private static float CalculateCardAlignment(List<Card> cardList, float idx)
+	{
+		if(cardList.Count != 0)
+		{
+            return idx / (cardList.Count - 1f);
+        }
+		return 0.5f;
+	}
+
 
 	private static void ShuffleCards(List<Card> cards)
 	{
@@ -49,6 +91,17 @@ public static class CardManager
 						{
 							try
 							{
+								//For UnitCard Constructor
+								//1 - ID
+								//2 - Name
+								//3 - Image
+								//4 - Description
+								//5 - Type
+								//6 - TypeImage
+								//7 - Damage
+								//8 - HP
+								//9 - UnlockedFlag
+								//10 - ManaCost
                                 CardList.Add(new UnitCard(reader.GetInt32(1), reader.GetString(2), reader.GetBlob(3, true), reader.GetString(4), reader.GetString(5), reader.GetBlob(6, true), reader.GetInt32(7), reader.GetInt32(8), reader.GetInt32(9), reader.GetInt32(10)));
                             }
 							catch(Exception e)
@@ -58,7 +111,7 @@ public static class CardManager
                         }
 						else
 						{
-						
+							//UnitCard Constructor Overload w/o CardImage TypeImage
                             CardList.Add(new UnitCard(reader.GetInt32(0), reader.GetString(2), reader.GetString(4), reader.GetString(5), reader.GetInt32(7), reader.GetInt32(8), reader.GetInt32(9), reader.GetInt32(10)));
                         }
 						if(CardList.Count > 0)
@@ -72,5 +125,24 @@ public static class CardManager
 		}
 	}
 
+	public static Delegate GetCardMethod(Card c)
+	{
+		return cardAttackMethodDict[c.Name];
+	}
 
+	private static Dictionary<string, Delegate> cardAttackMethodDict = new Dictionary<string, Delegate>
+	{
+		{ "Burner", BurnAttack},
+		{ "Boiler", BoilAttack}
+	};
+
+	public static void BurnAttack(Card c)
+	{
+		
+	}
+
+	public static void BoilAttack(Card c)
+	{
+
+	}
 }

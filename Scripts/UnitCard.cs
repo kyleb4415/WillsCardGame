@@ -67,7 +67,8 @@ public partial class UnitCard : Card, ICard
 	{
 		if(c.HP <= 0)
 		{
-			this.QueueFree();
+			this.Visible = false;
+			this.Position = new Vector3(100, 100, 100);
 		}
 	}
 }

@@ -45,11 +45,12 @@ gradient = SubResource("Gradient_3ka8j")
 script = ExtResource("1_y1f3f")
 
 [node name="Camera3D" type="Camera3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 0.0208377, 0.999783, 0, -0.999783, 0.0208377, 0, 1.17267, 0)
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 1.17267, 0)
 script = ExtResource("1_7mhem")
 
 [node name="CardBody" type="RigidBody3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.1443, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.08472, 0.1443, 0)
+rotation_edit_mode = 1
 collision_layer = 3
 collision_mask = 3
 script = ExtResource("2_2m2vc")
@@ -110,6 +111,13 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.344, -1, 1.607)
 [node name="Space8" type="Node3D" parent="BoardPositions"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.615, -1, 1.607)
 
+[node name="TurnButton" type="Button" parent="."]
+offset_left = 1017.0
+offset_top = 29.0
+offset_right = 1095.0
+offset_bottom = 60.0
+text = "End Turn"
+
 [node name="ManaBar" type="TextureProgressBar" parent="."]
 offset_right = 610.0
 offset_bottom = 30.0
@@ -123,3 +131,26 @@ layout_mode = 0
 offset_right = 40.0
 offset_bottom = 23.0
 text = "Mana"
+
+[node name="TurnLabel" type="Label" parent="."]
+offset_left = 1027.0
+offset_top = 1.0
+offset_right = 1067.0
+offset_bottom = 24.0
+text = "Turn"
+
+[node name="TurnNumber" type="Label" parent="TurnLabel"]
+layout_mode = 0
+offset_left = 45.0
+offset_top = -1.0
+offset_right = 85.0
+offset_bottom = 22.0
+text = "0"
+
+[node name="TimerDisplay" type="Label" parent="."]
+offset_left = 646.0
+offset_top = 4.0
+offset_right = 686.0
+offset_bottom = 27.0
+
+[node name="Timer" type="Timer" parent="TimerDisplay"]
