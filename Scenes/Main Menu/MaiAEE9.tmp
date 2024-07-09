@@ -1,7 +1,8 @@
-[gd_scene load_steps=4 format=3 uid="uid://din32e4wl66dy"]
+[gd_scene load_steps=5 format=3 uid="uid://din32e4wl66dy"]
 
 [ext_resource type="FontFile" uid="uid://cew6diln7mk5e" path="res://Assets/Fonts/BirchLeaf.ttf" id="1_b81ow"]
 [ext_resource type="Script" path="res://Scenes/Main Menu/Menu.gd" id="1_q7eu4"]
+[ext_resource type="Texture2D" uid="uid://dqq1vmaqjcdab" path="res://Assets/MainMenu/Images/Main_Menu_.png" id="2_36gf3"]
 
 [sub_resource type="GDScript" id="GDScript_5ml5l"]
 script/source = "extends Button
@@ -23,29 +24,20 @@ position = Vector2(394, 249)
 [node name="Control" type="Control" parent="."]
 layout_mode = 3
 anchors_preset = 0
-offset_left = -276.0
-offset_top = -10.0
-offset_right = -236.0
-offset_bottom = 30.0
-
-[node name="ColorRect" type="ColorRect" parent="Control"]
-offset_left = -117.0
-offset_top = -239.0
-offset_right = 1161.0
-offset_bottom = 480.0
-color = Color(1, 0.858824, 0.67451, 1)
+offset_right = 40.0
+offset_bottom = 40.0
 
 [node name="MarginContainer" type="MarginContainer" parent="Control"]
 layout_mode = 1
-anchors_preset = -1
-anchor_left = 1.848
-anchor_top = 0.725
-anchor_right = 1.848
-anchor_bottom = 0.725
-offset_left = 348.08
-offset_top = -104.0
-offset_right = 408.08
-offset_bottom = 136.0
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 72.0
+offset_top = -95.0
+offset_right = 306.0
+offset_bottom = 145.0
 grow_horizontal = 2
 grow_vertical = 2
 
@@ -70,6 +62,10 @@ script = SubResource("GDScript_5ml5l")
 layout_mode = 2
 theme_override_fonts/font = ExtResource("1_b81ow")
 text = "Quit"
+
+[node name="MainMenu" type="Sprite2D" parent="."]
+position = Vector2(572, -19)
+texture = ExtResource("2_36gf3")
 
 [connection signal="focus_entered" from="Control/MarginContainer/VBoxContainer" to="Control/MarginContainer/VBoxContainer/Play" method="_on_v_box_container_focus_entered"]
 [connection signal="pressed" from="Control/MarginContainer/VBoxContainer/Play" to="Control/MarginContainer/VBoxContainer/Play" method="_on_pressed"]

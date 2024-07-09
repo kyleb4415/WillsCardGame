@@ -1,0 +1,66 @@
+[gd_scene load_steps=4 format=3 uid="uid://b5vy8jmyuj7wh"]
+
+[ext_resource type="Script" path="res://Scenes/Main Menu/Menu.gd" id="1_sp7kc"]
+[ext_resource type="FontFile" uid="uid://cew6diln7mk5e" path="res://Assets/Fonts/BirchLeaf.ttf" id="1_tedu4"]
+[ext_resource type="FontFile" uid="uid://bcnn0qyprynm7" path="res://Assets/Fonts/BirchLeaf.otf" id="3_gxug2"]
+
+[node name="Options" type="Node2D"]
+position = Vector2(117, 240)
+
+[node name="Control" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="ColorRect" type="ColorRect" parent="Control"]
+offset_left = -117.0
+offset_top = -239.0
+offset_right = 1163.0
+offset_bottom = 480.0
+color = Color(1, 0.858824, 0.67451, 1)
+
+[node name="MarginContainer" type="MarginContainer" parent="Control"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -137.0
+offset_top = -260.0
+offset_right = 1143.0
+offset_bottom = 460.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Control/MarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="Resolutions" type="OptionButton" parent="Control/MarginContainer/VBoxContainer"]
+layout_mode = 2
+item_count = 3
+popup/item_0/text = "1920x1080"
+popup/item_0/id = 0
+popup/item_1/text = "1600x900"
+popup/item_1/id = 1
+popup/item_2/text = "1280x720"
+popup/item_2/id = 2
+script = ExtResource("1_sp7kc")
+
+[node name="Audio" type="Button" parent="Control/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("3_gxug2")
+text = "Audio"
+script = ExtResource("1_sp7kc")
+
+[node name="Back" type="Button" parent="Control/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("1_tedu4")
+text = "Back"
+script = ExtResource("1_sp7kc")
+
+[connection signal="item_selected" from="Control/MarginContainer/VBoxContainer/Resolutions" to="Control/MarginContainer/VBoxContainer/Resolutions" method="_on_item_selected"]
+[connection signal="pressed" from="Control/MarginContainer/VBoxContainer/Back" to="Control/MarginContainer/VBoxContainer/Back" method="back_on_pressed"]
