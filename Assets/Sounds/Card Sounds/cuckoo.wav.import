@@ -1,0 +1,24 @@
+[remap]
+
+importer="wav"
+type="AudioStreamWAV"
+uid="uid://dpjfbhyhqby06"
+path="res://.godot/imported/cuckoo.wav-653418ddbfdb3763cc67a52bd3c49057.sample"
+
+[deps]
+
+source_file="res://Assets/Sounds/Card Sounds/cuckoo.wav"
+dest_files=["res://.godot/imported/cuckoo.wav-653418ddbfdb3763cc67a52bd3c49057.sample"]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
+compress/mode=0

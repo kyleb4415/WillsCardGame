@@ -1,0 +1,24 @@
+[remap]
+
+importer="wav"
+type="AudioStreamWAV"
+uid="uid://n8u1xv5impji"
+path="res://.godot/imported/tap.wav-6760eba74908d10efd882172383bf8bb.sample"
+
+[deps]
+
+source_file="res://Assets/Sounds/Card Sounds/tap.wav"
+dest_files=["res://.godot/imported/tap.wav-6760eba74908d10efd882172383bf8bb.sample"]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
+compress/mode=0

@@ -10,6 +10,7 @@ func _on_options_pressed():
 
 func _on_quit_pressed():
 	get_tree().quit()
+	
 
 func _on_item_selected(index):
 	match index: 
@@ -23,3 +24,12 @@ func _on_item_selected(index):
 
 func back_on_pressed():
 	get_tree().change_scene_to_file("res://Scenes/Main Menu/MainMenu.tscn")
+	# AudioStreamPlaybackPolyphonic.play_stream("")
+
+
+func audioback_on_pressed():
+	get_tree().change_scene_to_file("res://Scenes/Main Menu/Options.tscn")
+
+
+func _on_audio_pressed():
+	get_tree().change_scene_to_file("res://Scenes/Main Menu/Audio.tscn")

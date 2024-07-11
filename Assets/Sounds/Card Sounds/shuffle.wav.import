@@ -1,0 +1,24 @@
+[remap]
+
+importer="wav"
+type="AudioStreamWAV"
+uid="uid://borcspyeymlrs"
+path="res://.godot/imported/shuffle.wav-922295bfb45dd08c52b59d08e0c8c1b3.sample"
+
+[deps]
+
+source_file="res://Assets/Sounds/Card Sounds/shuffle.wav"
+dest_files=["res://.godot/imported/shuffle.wav-922295bfb45dd08c52b59d08e0c8c1b3.sample"]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
+compress/mode=0

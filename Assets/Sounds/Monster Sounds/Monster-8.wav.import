@@ -1,0 +1,24 @@
+[remap]
+
+importer="wav"
+type="AudioStreamWAV"
+uid="uid://m0n8v40hwwvx"
+path="res://.godot/imported/Monster-8.wav-89d6aa4c4077b8bde951aa1a41e55fce.sample"
+
+[deps]
+
+source_file="res://Assets/Sounds/Monster Sounds/Monster-8.wav"
+dest_files=["res://.godot/imported/Monster-8.wav-89d6aa4c4077b8bde951aa1a41e55fce.sample"]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
+compress/mode=0

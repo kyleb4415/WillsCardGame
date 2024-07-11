@@ -21,16 +21,22 @@ offset_right = 1163.0
 offset_bottom = 480.0
 color = Color(1, 0.858824, 0.67451, 1)
 
+[node name="ColorRect2" type="ColorRect" parent="Control"]
+offset_left = 477.0
+offset_right = 637.0
+offset_bottom = 232.0
+color = Color(1, 0.81252, 0.561791, 1)
+
 [node name="MarginContainer" type="MarginContainer" parent="Control"]
 layout_mode = 1
 anchors_preset = -1
 anchor_top = 0.5
 anchor_right = 1.0
 anchor_bottom = 0.5
-offset_left = 427.0
-offset_top = 36.0
-offset_right = 514.0
-offset_bottom = 123.0
+offset_left = 496.0
+offset_top = 55.0
+offset_right = 583.0
+offset_bottom = 142.0
 grow_horizontal = 2
 grow_vertical = 2
 metadata/_edit_group_ = true
@@ -64,4 +70,5 @@ text = "Back"
 script = ExtResource("1_sp7kc")
 
 [connection signal="item_selected" from="Control/MarginContainer/VBoxContainer/Resolutions" to="Control/MarginContainer/VBoxContainer/Resolutions" method="_on_item_selected"]
+[connection signal="pressed" from="Control/MarginContainer/VBoxContainer/Audio" to="Control/MarginContainer/VBoxContainer/Resolutions" method="_on_audio_pressed"]
 [connection signal="pressed" from="Control/MarginContainer/VBoxContainer/Back" to="Control/MarginContainer/VBoxContainer/Back" method="back_on_pressed"]
