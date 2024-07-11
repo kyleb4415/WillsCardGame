@@ -29,25 +29,27 @@ offset_right = -236.0
 offset_bottom = 30.0
 
 [node name="ColorRect" type="ColorRect" parent="Control"]
-offset_left = -117.0
+layout_mode = 0
+offset_left = -116.0
 offset_top = -239.0
-offset_right = 1161.0
+offset_right = 1162.0
 offset_bottom = 480.0
 color = Color(1, 0.858824, 0.67451, 1)
 
 [node name="MarginContainer" type="MarginContainer" parent="Control"]
 layout_mode = 1
 anchors_preset = -1
-anchor_left = 1.848
-anchor_top = 0.725
-anchor_right = 1.848
-anchor_bottom = 0.725
-offset_left = 348.08
-offset_top = -104.0
-offset_right = 408.08
-offset_bottom = 136.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = 480.0
+offset_top = 30.0
+offset_right = 540.0
+offset_bottom = 110.0
 grow_horizontal = 2
 grow_vertical = 2
+pivot_offset = Vector2(32, 10)
+metadata/_edit_group_ = true
 
 [node name="VBoxContainer" type="VBoxContainer" parent="Control/MarginContainer"]
 layout_mode = 2
