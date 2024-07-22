@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3 uid="uid://dxkoujxy5gm1n"]
+
+[ext_resource type="AudioStream" uid="uid://bbjmsq5bkv27n" path="res://Assets/Sounds/Music/infebis-8-bit-lo-fi-mix-225330.mp3" id="1_v3ncc"]
+
+[node name="MenuMusic" type="AudioStreamPlayer"]
+stream = ExtResource("1_v3ncc")
+volume_db = -15.0
+autoplay = true

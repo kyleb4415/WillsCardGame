@@ -1,15 +1,18 @@
 extends Control
 
 func _on_pressed():
+	SelectSFX.play()
 	get_tree().change_scene_to_file("res://Scenes3D/GameBoard.tscn") # Replace with function body.
-	
+	MenuMusic.stop()
 
 func _on_options_pressed():
+	SelectSFX.play()
 	get_tree().change_scene_to_file("res://Scenes/Main Menu/Options.tscn")
 
-
 func _on_quit_pressed():
+	SelectSFX.play()
 	get_tree().quit()
+	
 	
 
 func _on_item_selected(index):
@@ -23,13 +26,32 @@ func _on_item_selected(index):
 
 
 func back_on_pressed():
+	SelectSFX.play()
 	get_tree().change_scene_to_file("res://Scenes/Main Menu/MainMenu.tscn")
+	
 	# AudioStreamPlaybackPolyphonic.play_stream("")
 
-
 func audioback_on_pressed():
+	SelectSFX.play()
 	get_tree().change_scene_to_file("res://Scenes/Main Menu/Options.tscn")
+	
 
 
 func _on_audio_pressed():
+	SelectSFX.play()
 	get_tree().change_scene_to_file("res://Scenes/Main Menu/Audio.tscn")
+	
+
+
+func display_on_pressed():
+	SelectSFX.play()
+	get_tree().change_scene_to_file("res://Scenes/Main Menu/Display.tscn")
+	
+
+
+func dmode_on_item_selected(index):
+	match index: 
+		0: 
+			DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_FULLSCREEN)
+		1: 
+			DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_WINDOWED)
