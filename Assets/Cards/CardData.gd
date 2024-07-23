@@ -22,16 +22,23 @@ func _ready():
 	var card_hp = str(card_info[0]["HP"])
 	var card_mana = str(card_info[0]["ManaCost"])
 	
-	$Bars/TopBar/Name/CenterContainer/Name.text = card_name
-	$Bars/TopBar/Cost/CenterContainer/Cost.text = card_mana
-	$Bars/CardDesc/DescContainer/CenterContainer/Desc.text = card_description
-	$Bars/BottomBar/AttackContainer/CenterContainer/Attack.text = card_attack
-	$Bars/BottomBar/HealthContainer/CenterContainer/Health.text = card_hp
+	##$Bars/TopBar/Name/CenterContainer/Name.text = card_name
+	##$Bars/TopBar/Cost/CenterContainer/Cost.text = card_mana
+	##$Bars/CardDesc/DescContainer/CenterContainer/Desc.text = card_description
+	##$Bars/BottomBar/AttackContainer/CenterContainer/Attack.text = card_attack
+	##$Bars/BottomBar/HealthContainer/CenterContainer/Health.text = card_hp
+	
+	$ManaNumber.text = card_mana
+	$AttackNumber.text = card_attack
+	$HealthNumber.text = card_hp
+	$Name.text = card_name
+	$Description.text = card_description
+	
 	
 	#resizing card to fit container
-	$Card.texture = load(card_image_path)
-	$Border.scale *= card_size/$Border.texture.get_size()
-	$Card.scale *= card_size/$Card.texture.get_size()
+	$CardImage.texture = load(card_image_path)
+	##$Border.scale *= card_size/$Border.texture.get_size()
+	##$Card.scale *= card_size/$Card.texture.get_size()
 	pass
 
 

@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://mo4ouhmg6syk"]
+[gd_scene load_steps=13 format=3 uid="uid://mo4ouhmg6syk"]
 
 [ext_resource type="Script" path="res://Assets/Cards/CardData.gd" id="1_0eeqi"]
 [ext_resource type="Texture2D" uid="uid://bdmrr4wouev0e" path="res://Assets/Cards/CardBackgrounds/goblin-border.png" id="2_7wxdq"]
@@ -8,55 +8,166 @@
 [ext_resource type="Texture2D" uid="uid://dfpive2yl5415" path="res://Assets/Cards/CardAssets/ability-txt-box.png" id="6_4xqgb"]
 [ext_resource type="Texture2D" uid="uid://c3rlipdc0n8mh" path="res://Assets/Cards/CardAssets/mana.png" id="7_hjqwq"]
 [ext_resource type="Texture2D" uid="uid://b8kj44wmmyd56" path="res://Assets/Cards/CardAssets/atkbook.png" id="8_whux6"]
+[ext_resource type="FontFile" uid="uid://ca34cim5cdy0m" path="res://Assets/Cards/CardAssets/windows_command_prompt.ttf" id="9_bdlwn"]
 
-[node name="CardBase" type="MarginContainer"]
-custom_minimum_size = Vector2(175, 250)
-offset_right = 190.0
-offset_bottom = 306.0
+[sub_resource type="Theme" id="Theme_b0xbc"]
+
+[sub_resource type="SystemFont" id="SystemFont_nu3yc"]
+font_names = PackedStringArray("Windows")
+
+[sub_resource type="ImageTexture" id="ImageTexture_mbfcw"]
+
+[node name="CardBase" type="Node"]
 script = ExtResource("1_0eeqi")
 
 [node name="Card" type="Sprite2D" parent="."]
 visible = false
 centered = false
 
-[node name="Border" type="Sprite2D" parent="."]
+[node name="Card Images" type="Node2D" parent="."]
+
+[node name="Border" type="Sprite2D" parent="Card Images"]
 texture = ExtResource("2_7wxdq")
 centered = false
 
-[node name="LayerBehind" type="Sprite2D" parent="."]
+[node name="LayerBehind" type="Sprite2D" parent="Card Images"]
 position = Vector2(94.5, 154.518)
 scale = Vector2(1.01786, 1.01786)
 texture = ExtResource("3_ajtbf")
 
-[node name="NameBox" type="Sprite2D" parent="."]
+[node name="NameBox" type="Sprite2D" parent="Card Images"]
 position = Vector2(94, 24)
 scale = Vector2(1.07857, 1.07857)
 texture = ExtResource("4_0nlo5")
 
-[node name="Heart" type="Sprite2D" parent="."]
-position = Vector2(149.431, 183.939)
-scale = Vector2(0.183942, 0.180763)
+[node name="Heart" type="Sprite2D" parent="Card Images"]
+position = Vector2(149.931, 184.465)
+scale = Vector2(0.193318, 0.189977)
 texture = ExtResource("5_qb5st")
 
-[node name="AbilityTextBox" type="Sprite2D" parent="."]
+[node name="AtkBook" type="Sprite2D" parent="Card Images"]
+position = Vector2(35.4375, 187.438)
+scale = Vector2(0.0496826, 0.0496826)
+texture = ExtResource("8_whux6")
+
+[node name="AbilityTextBox" type="Sprite2D" parent="Card Images"]
 position = Vector2(95, 245)
 scale = Vector2(1.01807, 1.01807)
 texture = ExtResource("6_4xqgb")
 
-[node name="ManaCrystal" type="Sprite2D" parent="."]
+[node name="ManaCrystal" type="Sprite2D" parent="Card Images"]
 position = Vector2(162, 24)
 scale = Vector2(0.0584717, 0.0584717)
 texture = ExtResource("7_hjqwq")
 
-[node name="AtkBook" type="Sprite2D" parent="."]
-position = Vector2(35.4375, 185.438)
-scale = Vector2(0.0496826, 0.0496826)
-texture = ExtResource("8_whux6")
+[node name="ManaNumber" type="Label" parent="."]
+anchors_preset = -1
+anchor_left = 0.13
+anchor_top = 0.012
+anchor_right = 0.154
+anchor_bottom = 0.066
+offset_left = -0.76001
+offset_top = 0.223999
+offset_right = -0.40802
+offset_bottom = 1.232
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.12549)
+theme_override_constants/shadow_offset_y = 2
+theme_override_fonts/font = ExtResource("9_bdlwn")
+theme_override_font_sizes/font_size = 40
+text = "5"
+horizontal_alignment = 1
+vertical_alignment = 1
+clip_text = true
+
+[node name="AttackNumber" type="Label" parent="."]
+anchors_preset = -1
+anchor_left = 0.021
+anchor_top = 0.256
+anchor_right = 0.043
+anchor_bottom = 0.307
+offset_left = 1.808
+offset_top = 3.112
+offset_right = -0.536003
+offset_bottom = 2.064
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.12549)
+theme_override_constants/shadow_offset_y = 2
+theme_override_fonts/font = ExtResource("9_bdlwn")
+theme_override_font_sizes/font_size = 35
+text = "5"
+horizontal_alignment = 1
+vertical_alignment = 1
+clip_text = true
+
+[node name="HealthNumber" type="Label" parent="."]
+anchors_preset = -1
+anchor_left = 0.121
+anchor_top = 0.258
+anchor_right = 0.141
+anchor_bottom = 0.307
+offset_left = -0.392014
+offset_top = 1.81599
+offset_right = -0.432007
+offset_bottom = 2.064
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.12549)
+theme_override_constants/shadow_offset_y = 2
+theme_override_fonts/font = ExtResource("9_bdlwn")
+theme_override_font_sizes/font_size = 35
+text = "5"
+horizontal_alignment = 1
+vertical_alignment = 1
+clip_text = true
+
+[node name="Name" type="Label" parent="."]
+anchors_preset = -1
+anchor_left = 0.00939583
+anchor_top = 0.015
+anchor_right = 0.125
+anchor_bottom = 0.056
+offset_left = 0.176
+offset_top = 0.28
+offset_bottom = -0.288002
+theme = SubResource("Theme_b0xbc")
+theme_override_colors/font_color = Color(0.235294, 0.2, 0.160784, 1)
+theme_override_fonts/font = ExtResource("9_bdlwn")
+text = "kinggg lolooooooooooooooooooooo"
+horizontal_alignment = 1
+vertical_alignment = 1
+clip_text = true
+text_overrun_behavior = 3
+text_direction = 1
+metadata/_edit_use_anchors_ = true
+
+[node name="Description" type="Label" parent="."]
+anchors_preset = -1
+anchor_left = 0.019
+anchor_top = 0.326
+anchor_right = 0.145
+anchor_bottom = 0.429
+offset_left = 0.112
+offset_top = -0.248001
+offset_right = -0.0400085
+offset_bottom = 0.00799561
+theme_override_fonts/font = SubResource("SystemFont_nu3yc")
+text = "aaaaaaaaaaaaaaaa
+"
+
+[node name="CardImage" type="TextureRect" parent="."]
+anchors_preset = -1
+anchor_left = 0.02
+anchor_top = 0.063
+anchor_right = 0.142
+anchor_bottom = 0.281
+offset_left = -0.0400009
+offset_top = 0.175999
+offset_right = 0.416
+offset_bottom = -0.0880127
+texture = SubResource("ImageTexture_mbfcw")
 
 [node name="Bars" type="VBoxContainer" parent="."]
 visible = false
 custom_minimum_size = Vector2(175, 25)
-layout_mode = 2
+offset_right = 190.0
+offset_bottom = 306.0
 
 [node name="TopGap" type="MarginContainer" parent="Bars"]
 custom_minimum_size = Vector2(175, 25)
