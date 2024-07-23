@@ -1,9 +1,28 @@
 using Godot;
 using System;
 
-public abstract class CardFactory
+public static class CardFactory
 {
-    protected abstract ICard MakeCard();
-    protected abstract ICard MakeCard(Card card);
+    public static void CreateCard(Card card, Node instance)
+    {
+        Card cardInstance = instance.GetChild(0) as Card;
+        cardInstance.Name = card.Name;
+        cardInstance.Description = card.Description;
+        cardInstance.Type = card.Type;
+        cardInstance.ManaCost = card.ManaCost;
+        cardInstance.CardImage = card.CardImage;
+    }
+
+    public static void CreateUnitCard(UnitCard card, Node instance)
+    {
+        UnitCard cardInstance = instance.GetChild(0) as UnitCard;
+        cardInstance.Name = card.Name;
+        cardInstance.Description = card.Description;
+        cardInstance.Type = card.Type;
+        cardInstance.ManaCost = card.ManaCost;
+        cardInstance.CardImage = card.CardImage;
+        cardInstance.Damage = card.Damage;
+        cardInstance.HP = card.HP;
+    }
 
 }

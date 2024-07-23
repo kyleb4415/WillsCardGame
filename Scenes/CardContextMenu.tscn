@@ -1,0 +1,17 @@
+[gd_scene load_steps=3 format=3 uid="uid://deymk24b1vnl8"]
+
+[sub_resource type="ImageTexture" id="ImageTexture_hx2fa"]
+
+[sub_resource type="ImageTexture" id="ImageTexture_fy55h"]
+
+[node name="CardContextMenu" type="Node2D"]
+
+[node name="PopupMenu" type="PopupMenu" parent="."]
+visible = true
+item_count = 2
+item_0/text = "Attack"
+item_0/icon = SubResource("ImageTexture_hx2fa")
+item_0/id = 0
+item_1/text = "Ability"
+item_1/icon = SubResource("ImageTexture_fy55h")
+item_1/id = 1

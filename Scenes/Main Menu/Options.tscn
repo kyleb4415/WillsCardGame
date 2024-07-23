@@ -72,4 +72,5 @@ scale = Vector2(0.1445, 0.150726)
 texture = ExtResource("4_qc8jd")
 
 [connection signal="pressed" from="Control/MarginContainer/VBoxContainer/Display" to="Control/MarginContainer/VBoxContainer/Display" method="display_on_pressed"]
+[connection signal="pressed" from="Control/MarginContainer/VBoxContainer/Audio" to="Control/MarginContainer/VBoxContainer/Audio" method="audio_on_pressed"]
 [connection signal="pressed" from="Control/MarginContainer/VBoxContainer/Back" to="Control/MarginContainer/VBoxContainer/Back" method="back_on_pressed"]

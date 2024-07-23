@@ -1,25 +1,27 @@
 using Godot;
 using System;
 using System.Data.SQLite;
+using System.Linq;
 using System.Reflection.Metadata;
 
 public partial class UnitCard : Card, ICard
 {
-	public int ID { get; set; }	
-	public int HP { get; set; }
-    public int Damage { get; set; }
+	public int ID { get; set; }
+	public int HP { get; set; } = 0;
+	public int Damage { get; set; } = 0;
+
+    [Signal]
+    public delegate void CardHitEventHandler(UnitCard c);
 
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()
     {
-		Image img = new Image();
-		byte[] bytes = new byte[CardImage.GetCount()];
-		CardImage.Read(bytes, CardImage.GetCount(), 0);
-        img.LoadPngFromBuffer(bytes);
-		StandardMaterial3D material3D = new StandardMaterial3D();
-        GetNode("Damage").Set("text", Damage);
-        GetNode("HP").Set("text", HP);
-		GetNode("CardMesh").Set("material", material3D);
+		if (Damage != 0 && HP != 0)
+		{
+            GetNode("Damage").Set("text", Damage);
+            GetNode("HP").Set("text", HP);
+        }
+
         base._Ready();
     }
 
@@ -57,5 +59,16 @@ public partial class UnitCard : Card, ICard
     // Called every frame. 'delta' is the elapsed time since the previous frame.
     public override void _Process(double delta)
 	{
+
+	}
+
+	//TODO: Death animation
+	public void TakeDamage(UnitCard c)
+	{
+		if(c.HP <= 0)
+		{
+			this.Visible = false;
+			this.Position = new Vector3(100, 100, 100);
+		}
 	}
 }

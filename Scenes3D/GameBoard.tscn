@@ -1,7 +1,8 @@
-[gd_scene load_steps=12 format=3 uid="uid://c37ukuwq6so48"]
+[gd_scene load_steps=15 format=3 uid="uid://c37ukuwq6so48"]
 
 [ext_resource type="Script" path="res://Scripts/MoveCard3D.cs" id="1_7mhem"]
-[ext_resource type="Script" path="res://Scripts/Card.cs" id="2_fpd0q"]
+[ext_resource type="Script" path="res://Scripts/BoardController.cs" id="1_y1f3f"]
+[ext_resource type="Script" path="res://Scripts/UnitCard.cs" id="2_2m2vc"]
 [ext_resource type="Texture2D" uid="uid://ciqwbi1c5c5cf" path="res://Assets/GUI/Images/boardprototype.png" id="2_pcu2q"]
 [ext_resource type="Texture2D" uid="uid://u2w5tqesdpjg" path="res://Assets/Cards/Images/greedygrinner.png" id="3_dqwsv"]
 
@@ -33,17 +34,26 @@ lightmap_size_hint = Vector2i(64, 56)
 material = SubResource("StandardMaterial3D_0mmj6")
 size = Vector3(8, 1, 4)
 
+[sub_resource type="Gradient" id="Gradient_3ka8j"]
+interpolation_color_space = 2
+colors = PackedColorArray(0, 0, 0.686275, 1, 0.433571, 0.631927, 0.705991, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_6rbho"]
+gradient = SubResource("Gradient_3ka8j")
+
 [node name="GameBoard" type="Node3D"]
+script = ExtResource("1_y1f3f")
 
 [node name="Camera3D" type="Camera3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 0.0208377, 0.999783, 0, -0.999783, 0.0208377, 0, 1.17635, 0)
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 1.17267, 0)
 script = ExtResource("1_7mhem")
 
 [node name="CardBody" type="RigidBody3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.1443, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.08472, 0.1443, 0)
+rotation_edit_mode = 1
 collision_layer = 3
 collision_mask = 3
-script = ExtResource("2_fpd0q")
+script = ExtResource("2_2m2vc")
 
 [node name="CardCollider" type="CollisionShape3D" parent="CardBody"]
 shape = SubResource("BoxShape3D_wligv")
@@ -52,6 +62,10 @@ shape = SubResource("BoxShape3D_wligv")
 transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 0, 0)
 layers = 3
 mesh = SubResource("BoxMesh_ev2sm")
+
+[node name="SelectedLight" type="OmniLight3D" parent="CardBody"]
+layers = 0
+omni_range = 0.778
 
 [node name="Board" type="StaticBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
@@ -96,3 +110,47 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.344, -1, 1.607)
 
 [node name="Space8" type="Node3D" parent="BoardPositions"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.615, -1, 1.607)
+
+[node name="TurnButton" type="Button" parent="."]
+offset_left = 1017.0
+offset_top = 29.0
+offset_right = 1095.0
+offset_bottom = 60.0
+text = "End Turn"
+
+[node name="ManaBar" type="TextureProgressBar" parent="."]
+offset_right = 610.0
+offset_bottom = 30.0
+scale = Vector2(1.37, 1.37)
+max_value = 10000.0
+nine_patch_stretch = true
+texture_progress = SubResource("GradientTexture2D_6rbho")
+
+[node name="Label" type="Label" parent="ManaBar"]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 23.0
+text = "Mana"
+
+[node name="TurnLabel" type="Label" parent="."]
+offset_left = 1027.0
+offset_top = 1.0
+offset_right = 1067.0
+offset_bottom = 24.0
+text = "Turn"
+
+[node name="TurnNumber" type="Label" parent="TurnLabel"]
+layout_mode = 0
+offset_left = 45.0
+offset_top = -1.0
+offset_right = 85.0
+offset_bottom = 22.0
+text = "0"
+
+[node name="TimerDisplay" type="Label" parent="."]
+offset_left = 646.0
+offset_top = 4.0
+offset_right = 686.0
+offset_bottom = 27.0
+
+[node name="Timer" type="Timer" parent="TimerDisplay"]

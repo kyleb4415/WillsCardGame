@@ -16,7 +16,7 @@ offset_bottom = 40.0
 [node name="ColorRect" type="ColorRect" parent="Control"]
 layout_mode = 0
 offset_left = -117.0
-offset_top = -239.0
+offset_top = -240.0
 offset_right = 1163.0
 offset_bottom = 480.0
 color = Color(1, 0.858824, 0.67451, 1)

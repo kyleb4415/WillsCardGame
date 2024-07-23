@@ -16,7 +16,7 @@ offset_bottom = 30.0
 
 [node name="ColorRect" type="ColorRect" parent="Control"]
 layout_mode = 0
-offset_left = -116.0
+offset_left = -118.0
 offset_top = -239.0
 offset_right = 1162.0
 offset_bottom = 480.0
@@ -24,9 +24,9 @@ color = Color(1, 0.858824, 0.67451, 1)
 
 [node name="ColorRect2" type="ColorRect" parent="Control"]
 layout_mode = 0
-offset_left = 479.0
+offset_left = -74.0
 offset_top = -18.0
-offset_right = 602.0
+offset_right = 1117.0
 offset_bottom = 214.0
 color = Color(1, 0.81252, 0.561791, 1)
 
@@ -36,10 +36,10 @@ anchors_preset = -1
 anchor_top = 0.5
 anchor_right = 1.0
 anchor_bottom = 0.5
-offset_left = 510.0
-offset_top = 38.0
-offset_right = 533.0
-offset_bottom = 118.0
+offset_left = 151.0
+offset_top = -30.0
+offset_right = 984.0
+offset_bottom = 187.0
 grow_horizontal = 2
 grow_vertical = 2
 pivot_offset = Vector2(32, 10)
@@ -50,10 +50,52 @@ layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
-[node name="Back" type="Button" parent="Control/MarginContainer/VBoxContainer"]
+[node name="GridContainer" type="GridContainer" parent="Control/MarginContainer/VBoxContainer"]
 layout_mode = 2
+size_flags_vertical = 4
+theme_override_constants/h_separation = 5
+columns = 2
+
+[node name="MusicLabel" type="Label" parent="Control/MarginContainer/VBoxContainer/GridContainer"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("1_n5byp")
+text = "Music"
+
+[node name="MusicSlider" type="HSlider" parent="Control/MarginContainer/VBoxContainer/GridContainer"]
+custom_minimum_size = Vector2(200, 0)
+layout_direction = 2
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+max_value = 1.0
+step = 0.05
+value = 1.0
+script = ExtResource("2_o0ssr")
+
+[node name="SFXLabel" type="Label" parent="Control/MarginContainer/VBoxContainer/GridContainer"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("1_n5byp")
+text = "Sound Effects"
+
+[node name="SFXSlider" type="HSlider" parent="Control/MarginContainer/VBoxContainer/GridContainer"]
+custom_minimum_size = Vector2(200, 0)
+layout_direction = 2
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+max_value = 1.0
+step = 0.05
+value = 1.0
+script = ExtResource("2_o0ssr")
+
+[node name="Back" type="Button" parent="Control/MarginContainer/VBoxContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
 theme_override_fonts/font = ExtResource("1_n5byp")
 text = "Back"
 script = ExtResource("2_o0ssr")
 
-[connection signal="pressed" from="Control/MarginContainer/VBoxContainer/Back" to="Control/MarginContainer/VBoxContainer/Back" method="audioback_on_pressed"]
+[connection signal="value_changed" from="Control/MarginContainer/VBoxContainer/GridContainer/MusicSlider" to="Control/MarginContainer/VBoxContainer/GridContainer/MusicSlider" method="_on_value_changed"]
+[connection signal="value_changed" from="Control/MarginContainer/VBoxContainer/GridContainer/SFXSlider" to="Control/MarginContainer/VBoxContainer/GridContainer/SFXSlider" method="sfx_on_value_changed"]
+[connection signal="pressed" from="Control/MarginContainer/VBoxContainer/GridContainer/Back" to="Control/MarginContainer/VBoxContainer/GridContainer/Back" method="audioback_on_pressed"]
