@@ -20,16 +20,25 @@ public partial class BoardController : Node3D
     private Timer _timer = new Timer();
     public bool PlayerTurn;
     private Button _endTurnButton;
+    public GameState gameState;
+
 
     //finish setting this up
     [Signal]
-    public delegate void TurnEndedEventHandler();
+    public delegate void PlayerTurnEndedEventHandler();
+    [Signal]
+    public delegate void EnemyTurnEndedEventHandler();
+    [Signal]
+    public delegate void PlayerTurnStartedEventHandler();
+    [Signal]
+    public delegate void EnemyTurnStartedEventHandler();
     public override void _Ready()
 	{
 		PrepareBoard();
     }
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
+    // possibly add card attack thingy in here
 	public override void _Process(double delta)
 	{
         _timerLabel.Set("text", Math.Round(_timer.TimeLeft).ToString());
@@ -41,6 +50,8 @@ public partial class BoardController : Node3D
         AddCardSpaces();
         AddCards();
         CardManager.InitialDealCards(this, this.GetTree());
+        gameState = GameState.PlacingCard;
+        //adding signals
     }
 
 	private void PrepareUI()
@@ -69,7 +80,7 @@ public partial class BoardController : Node3D
         if (TurnNum % 2 != 0)
         {
             PlayerTurn = true;
-            EmitSignal(SignalName.TurnEnded);
+            EmitSignal(SignalName.PlayerTurnEnded);
         }
         else
         {
@@ -137,16 +148,12 @@ public partial class BoardController : Node3D
             //unitCard.MouseEntered += ((MoveCard3D)GetNode("Camera3D")).Card_MouseEntered;
             unitCard.CardReleased += unitCard.Release;
             unitCard.CardSelected += unitCard.Select;
-            unitCard.CardHit += unitCard.TakeDamage;
             unitCard.Position += new Vector3(1, 1, 1);
             this.GetParent().CallDeferred("add_child", cardBaseInstance);
             Hand.Add(unitCard);
         }
         //-------------------------------------------------------------------------------
     }
-
-    //TODO: Create method to instance cards to a certain location (fan? laid out in front?)
-    //-------------------------------------------------------------------------------
 
     public override void _ExitTree()
     {
@@ -162,4 +169,13 @@ public partial class BoardController : Node3D
         }
         base._ExitTree();
     }
+
+    /*
+    public void CardRegularAttackHandler(Card c, Card c2)
+    {
+        //signalawaiter for aggregate function that fires after two cards are selected (emulate enemycardselected?)
+        SignalAwaiter signalAwaiter = new SignalAwaiter(this, BoardController.SignalName.VisibilityChanged, c);
+        signalAwaiter.OnCompleted(new Action(() => GD.Print("Health going down by 1")));
+    }
+    */
 }

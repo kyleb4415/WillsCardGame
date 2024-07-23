@@ -1,4 +1,6 @@
-[gd_scene load_steps=3 format=3 uid="uid://deymk24b1vnl8"]
+[gd_scene load_steps=4 format=3 uid="uid://deymk24b1vnl8"]
+
+[ext_resource type="Script" path="res://Scenes/CardPopupMenu.cs" id="1_cutqk"]
 
 [sub_resource type="ImageTexture" id="ImageTexture_hx2fa"]
 
@@ -15,3 +17,4 @@ item_0/id = 0
 item_1/text = "Ability"
 item_1/icon = SubResource("ImageTexture_fy55h")
 item_1/id = 1
+script = ExtResource("1_cutqk")

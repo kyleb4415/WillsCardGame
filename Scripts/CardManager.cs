@@ -45,7 +45,7 @@ public static class CardManager
 			Tween t2 = s.CreateTween();
             t.TweenProperty(c, "position", fanPositionLeft.Lerp(fanPositionRight, alignmentWeight), timeCalculation).SetTrans(Tween.TransitionType.Quad);
 			t2.TweenProperty(c, "rotation", fanRotationLeft.Lerp(fanRotationRight, alignmentWeight), 0.25f).SetTrans(Tween.TransitionType.Quad);
-			c.PlacedPos = c.Position;
+			c.PlacedPos = fanPositionLeft.Lerp(fanPositionRight, alignmentWeight);
 			idx += 1;
         }
 	}
@@ -124,7 +124,18 @@ public static class CardManager
 			return CardList;
 		}
 	}
-
+	
+	/*
+	 * The following sections represent the solution for dynamically instancing cards with unique abilities
+	 * A card ability dictionary has been created that has the CardName as well as the ability as a delegate
+	 * This delegate is returned from the GetCardMethod() method that takes in a card and uses the card name to search the dictionary for the method
+	 * This GetCardMethod method is employed in the UnitCard class, where (curently) there is a StatusEffect method
+	 * This StatusMethod effect will trigger every round (every two turns, this system can be changed)
+	 * 
+	 * The solution for now is to fire a signal off one of the first card of the hand [in the BoardController] for triggering the status effect
+	 * The first card in the hand has no bearing on the function of the signal, but to achieve better coupling/cohesion it may be necessary to move it since
+	 * the ability that happens depends on the card that strikes the other card (this may be easier to do once the context menu is finished)
+	 */
 	public static Delegate GetCardMethod(Card c)
 	{
 		return cardAttackMethodDict[c.Name];
@@ -133,15 +144,25 @@ public static class CardManager
 	private static Dictionary<string, Delegate> cardAttackMethodDict = new Dictionary<string, Delegate>
 	{
 		{ "Burner", BurnAttack},
-		{ "Boiler", BoilAttack}
+		{ "Boiler", BoilAttack},
+		{ "Baker", BakeAttack }
 	};
 
-	public static void BurnAttack(Card c)
+	//idk if this will work but we shall see
+	public static void BurnAttack(BoardController b, UnitCard c)
 	{
+		int counter = 0;
 		
+		GD.Print("Health reduced");
+		GD.Print($"Health is now {c.HP}");
 	}
 
-	public static void BoilAttack(Card c)
+	public static void BoilAttack(BoardController b, UnitCard c)
+	{
+
+	}
+
+	public static void BakeAttack(UnitCard c)
 	{
 
 	}

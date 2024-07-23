@@ -1,22 +1,8 @@
-[gd_scene load_steps=15 format=3 uid="uid://c37ukuwq6so48"]
+[gd_scene load_steps=10 format=3 uid="uid://c37ukuwq6so48"]
 
 [ext_resource type="Script" path="res://Scripts/MoveCard3D.cs" id="1_7mhem"]
 [ext_resource type="Script" path="res://Scripts/BoardController.cs" id="1_y1f3f"]
-[ext_resource type="Script" path="res://Scripts/UnitCard.cs" id="2_2m2vc"]
 [ext_resource type="Texture2D" uid="uid://ciqwbi1c5c5cf" path="res://Assets/GUI/Images/boardprototype.png" id="2_pcu2q"]
-[ext_resource type="Texture2D" uid="uid://u2w5tqesdpjg" path="res://Assets/Cards/Images/greedygrinner.png" id="3_dqwsv"]
-
-[sub_resource type="BoxShape3D" id="BoxShape3D_wligv"]
-size = Vector3(0.275, 0.035, 0.41)
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ubx32"]
-albedo_texture = ExtResource("3_dqwsv")
-uv1_scale = Vector3(1.9, 1.53, 1)
-uv1_offset = Vector3(-0.545, -0.6, 0)
-
-[sub_resource type="BoxMesh" id="BoxMesh_ev2sm"]
-material = SubResource("StandardMaterial3D_ubx32")
-size = Vector3(0.64, 0.035, 1.02)
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_jbem2"]
 
@@ -47,25 +33,6 @@ script = ExtResource("1_y1f3f")
 [node name="Camera3D" type="Camera3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 1.17267, 0)
 script = ExtResource("1_7mhem")
-
-[node name="CardBody" type="RigidBody3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.08472, 0.1443, 0)
-rotation_edit_mode = 1
-collision_layer = 3
-collision_mask = 3
-script = ExtResource("2_2m2vc")
-
-[node name="CardCollider" type="CollisionShape3D" parent="CardBody"]
-shape = SubResource("BoxShape3D_wligv")
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="CardBody"]
-transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 0, 0)
-layers = 3
-mesh = SubResource("BoxMesh_ev2sm")
-
-[node name="SelectedLight" type="OmniLight3D" parent="CardBody"]
-layers = 0
-omni_range = 0.778
 
 [node name="Board" type="StaticBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
