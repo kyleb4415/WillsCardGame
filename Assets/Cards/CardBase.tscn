@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=3 uid="uid://mo4ouhmg6syk"]
+[gd_scene load_steps=14 format=3 uid="uid://mo4ouhmg6syk"]
 
 [ext_resource type="Script" path="res://Assets/Cards/CardData.gd" id="1_0eeqi"]
 [ext_resource type="Texture2D" uid="uid://bdmrr4wouev0e" path="res://Assets/Cards/CardBackgrounds/goblin-border.png" id="2_7wxdq"]
@@ -9,6 +9,7 @@
 [ext_resource type="Texture2D" uid="uid://c3rlipdc0n8mh" path="res://Assets/Cards/CardAssets/mana.png" id="7_hjqwq"]
 [ext_resource type="Texture2D" uid="uid://b8kj44wmmyd56" path="res://Assets/Cards/CardAssets/atkbook.png" id="8_whux6"]
 [ext_resource type="FontFile" uid="uid://ca34cim5cdy0m" path="res://Assets/Cards/CardAssets/windows_command_prompt.ttf" id="9_bdlwn"]
+[ext_resource type="Script" path="res://Assets/Cards/TextSize.gd" id="10_tr3jx"]
 
 [sub_resource type="Theme" id="Theme_b0xbc"]
 
@@ -62,14 +63,14 @@ texture = ExtResource("7_hjqwq")
 
 [node name="ManaNumber" type="Label" parent="."]
 anchors_preset = -1
-anchor_left = 0.13
+anchor_left = 0.129
 anchor_top = 0.012
 anchor_right = 0.154
-anchor_bottom = 0.066
-offset_left = -0.76001
+anchor_bottom = 0.068
+offset_left = 0.391983
 offset_top = 0.223999
 offset_right = -0.40802
-offset_bottom = 1.232
+offset_bottom = -0.064003
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.12549)
 theme_override_constants/shadow_offset_y = 2
 theme_override_fonts/font = ExtResource("9_bdlwn")
@@ -119,22 +120,24 @@ clip_text = true
 
 [node name="Name" type="Label" parent="."]
 anchors_preset = -1
-anchor_left = 0.00939583
+anchor_left = 0.009
 anchor_top = 0.015
 anchor_right = 0.125
 anchor_bottom = 0.056
-offset_left = 0.176
+offset_left = 0.631995
 offset_top = 0.28
 offset_bottom = -0.288002
 theme = SubResource("Theme_b0xbc")
 theme_override_colors/font_color = Color(0.235294, 0.2, 0.160784, 1)
 theme_override_fonts/font = ExtResource("9_bdlwn")
-text = "kinggg lolooooooooooooooooooooo"
+theme_override_font_sizes/font_size = 27
+text = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
 horizontal_alignment = 1
 vertical_alignment = 1
+autowrap_mode = 3
 clip_text = true
-text_overrun_behavior = 3
 text_direction = 1
+script = ExtResource("10_tr3jx")
 metadata/_edit_use_anchors_ = true
 
 [node name="Description" type="Label" parent="."]
