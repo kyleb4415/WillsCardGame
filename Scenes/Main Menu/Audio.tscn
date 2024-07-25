@@ -1,6 +1,7 @@
-[gd_scene load_steps=3 format=3 uid="uid://cygl4dcvmgftx"]
+[gd_scene load_steps=4 format=3 uid="uid://cygl4dcvmgftx"]
 
 [ext_resource type="FontFile" uid="uid://cew6diln7mk5e" path="res://Assets/Fonts/BirchLeaf.ttf" id="1_n5byp"]
+[ext_resource type="Script" path="res://Scenes/Main Menu/VolumeSlider.gd" id="2_djktm"]
 [ext_resource type="Script" path="res://Scenes/Main Menu/Menu.gd" id="2_o0ssr"]
 
 [node name="Audio" type="Node2D"]
@@ -70,7 +71,8 @@ size_flags_vertical = 4
 max_value = 1.0
 step = 0.05
 value = 1.0
-script = ExtResource("2_o0ssr")
+script = ExtResource("2_djktm")
+bus_name = "Music"
 
 [node name="SFXLabel" type="Label" parent="Control/MarginContainer/VBoxContainer/GridContainer"]
 layout_mode = 2
@@ -86,7 +88,8 @@ size_flags_vertical = 4
 max_value = 1.0
 step = 0.05
 value = 1.0
-script = ExtResource("2_o0ssr")
+script = ExtResource("2_djktm")
+bus_name = "SFX"
 
 [node name="Back" type="Button" parent="Control/MarginContainer/VBoxContainer/GridContainer"]
 layout_mode = 2

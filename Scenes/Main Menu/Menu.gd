@@ -1,8 +1,5 @@
 extends Control
 
-@onready var SFX_BUS_ID = AudioServer.get_bus_index("SFX")
-@onready var MUSIC_BUS_ID = AudioServer.get_bus_index("Music")
-
 func _on_pressed():
 	SelectSFX.play()
 	get_tree().change_scene_to_file("res://Scenes3D/GameBoard.tscn") # Replace with function body.
@@ -56,16 +53,6 @@ func dmode_on_item_selected(index):
 			DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_FULLSCREEN)
 		1: 
 			DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_WINDOWED)
-
-
-func _on_value_changed(value):
-	AudioServer.set_bus_volume_db(MUSIC_BUS_ID, linear_to_db(value))
-	AudioServer.set_bus_mute(MUSIC_BUS_ID, value < .05)
-
-func sfx_on_value_changed(value):
-	AudioServer.set_bus_volume_db(SFX_BUS_ID, linear_to_db(value))
-	AudioServer.set_bus_mute(SFX_BUS_ID, value < .05)
-
 
 func audio_on_pressed():
 	SelectSFX.play()
