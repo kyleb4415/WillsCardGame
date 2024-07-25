@@ -18,8 +18,10 @@ public partial class Card : RigidBody3D, ICard
     public string Type { get; set; }
     public int ManaCost { get; set; }
     public int UnlockedFlag { get; set; }
-
     public Vector2 MousePos { get; set; }
+    public Panel ContextMenu { get; set; }
+    public Timer ContextMenuTimer { get; set; }
+    public CardState State { get; set; }
 
     [Signal]
     public delegate void PlaceCardEventHandler(Card c, TextureProgressBar t);
@@ -42,6 +44,14 @@ public partial class Card : RigidBody3D, ICard
         this.MouseEntered += Card_MouseEntered;
         this.InputRayPickable = true;
         this.CanPickUp = true;
+        this.ContextMenu = this.GetNode("ContextMenuControl/ContextMenu") as Panel;
+
+        var contextMenuText = ContextMenu.GetChild(0) as RichTextLabel;
+        contextMenuText.Text = Description;
+        //change to ability desc later
+        ContextMenu.Visible = false;
+        this.ContextMenuTimer = this.GetNode("ContextMenuControl/Timer") as Timer;
+        ContextMenuTimer.Timeout += ContextMenuTimer_Timeout;
         if (Name is not null && Description is not null)
         {
             GetNode("Name").Set("text", Name);
@@ -56,6 +66,11 @@ public partial class Card : RigidBody3D, ICard
         (GetNode("SelectedLight") as OmniLight3D).SetLayerMaskValue(1, true);
     }
 
+    private void ContextMenuTimer_Timeout()
+    {
+        ContextMenu.Visible = true;
+    }
+
 
     //implement method for dragging here (can change isRayPickable and such)
     public void PickUp(Card card)
@@ -66,15 +81,23 @@ public partial class Card : RigidBody3D, ICard
     //implement method for dropped card here
     public void Place(Card c, TextureProgressBar t)
     {
-        if(t.Value >= c.ManaCost * 100)
+        if(this.CanPickUp == true)
         {
-            this.CanPickUp = false;
-            t.Value -= c.ManaCost * 100;
+            if (t.Value >= c.ManaCost * 100)
+            {
+                this.CanPickUp = false;
+                t.Value -= c.ManaCost * 100;
+            }
+            else
+            {
+                //print something or give some notification that they don't have enough mana
+            }
         }
-        else
-        {
-            //print something or give some notification that they don't have enough mana
-        }
+    }
+
+    public override void _Process(double delta)
+    {
+        base._Process(delta);
     }
 
     public void Release(Card c)
@@ -129,7 +152,14 @@ public partial class Card : RigidBody3D, ICard
     public void Card_MouseEntered()
     {
         this.MouseOver = true;
+        this.GravityScale = 0;
+        if (!this.CanPickUp)
+        {
+            ContextMenuTimer.OneShot = true;
+            ContextMenuTimer.Start(1);
+        }
     }
+    
 
     //handles logic for card animation on hover before & after selection
     public void Card_MouseExited()
@@ -145,6 +175,13 @@ public partial class Card : RigidBody3D, ICard
             tween.TweenProperty(this, "position", this.PlacedPos, 0.2f).SetTrans(Tween.TransitionType.Quad);
         }
         this.MouseOver = false;
+        ContextMenuTimer.Stop();
+        if(ContextMenu is not null)
+        {
+            ContextMenu.Hide();
+        }
+
+        
     }
 
 }
