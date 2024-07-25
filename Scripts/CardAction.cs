@@ -43,13 +43,13 @@ public partial class CardAction : Node
 
 	public void DealDamage()
 	{
-		card1.EmitSignal(UnitCard.SignalName.CardHit, card2);
+		card2.EmitSignal(UnitCard.SignalName.CardHit, card1.Damage);
 		if(card2.HP <= 0)
 		{
 			card2.Visible = false;
 		}
-		card1.Selected = false;
-		card2.Selected = false;
+		card1.EmitSignal(Card.SignalName.CardSelected);
+		card2.EmitSignal(Card.SignalName.CardSelected);
         RotationHelper.ResetRotation(card1, card1.GetTree());
 		RotationHelper.ResetRotation(card2, card2.GetTree());
         GD.Print($"{card1.Name} did {card1.Damage} damage to {card2.Name}.");
@@ -66,6 +66,5 @@ public partial class CardAction : Node
 		card1.State = CardState.Idle;
 		card1.EmitSignal(UnitCard.SignalName.CardSelected, card1);
 		card2.EmitSignal(UnitCard.SignalName.CardSelected, card2);
-		GD.Print("ability used!");
 	}
 }

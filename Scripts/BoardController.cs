@@ -32,6 +32,8 @@ public partial class BoardController : Node3D
     public delegate void PlayerTurnStartedEventHandler();
     [Signal]
     public delegate void EnemyTurnStartedEventHandler();
+    [Signal]
+    public delegate void AbilityPhaseFinishedEventHandler();
     public override void _Ready()
 	{
 		PrepareBoard();

@@ -14,7 +14,7 @@ public partial class UnitCard : Card, ICard
 	public Dictionary<string, int[]> StatusEffects { get; set; } = new Dictionary<string, int[]>();
 
     [Signal]
-    public delegate void CardHitEventHandler(UnitCard c);
+    public delegate void CardHitEventHandler(int dmg);
 
     [Signal]
     public delegate void AbilityEventHandler(UnitCard c);
@@ -77,14 +77,14 @@ public partial class UnitCard : Card, ICard
 	}
 
 	//TODO: Death animation
-	public void UnitCard_CardHit(UnitCard c)
+	public void UnitCard_CardHit(int damage)
 	{
-		c.HP -= this.Damage;
-		if(c.HP <= 0)
+		this.HP -= damage;
+		if(this.HP <= 0)
 		{
-			c.Visible = false;
+			this.Visible = false;
 			//set this to play a death animation and then shuffle it back in the deck or something
-			c.Position = new Vector3(100, 100, 100);
+			this.Position = new Vector3(100, 100, 100);
 		}
 
 	}
@@ -92,6 +92,11 @@ public partial class UnitCard : Card, ICard
 	public void UpdateHP()
 	{
 		this.GetNode("HP").Set("text", this.HP.ToString());
+	}
+
+	public void UpdateDamage()
+	{
+		this.GetNode("Damage").Set("text", this.Damage.ToString());
 	}
 
     public void InvokeAbility(UnitCard c)
@@ -122,6 +127,6 @@ public partial class UnitCard : Card, ICard
 				}
 			}
 		}
-		GD.Print("Processing status effects");
+		//maybe print status effects here for testing later
     }
 }

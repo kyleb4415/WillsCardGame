@@ -3,60 +3,52 @@
   "WorkspaceRootPath": "C:\\Users\\KBZ\\WillsCardGame\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{5001203C-00C6-49B7-8632-3D562EB89714}|Project W.csproj|c:\\users\\kbz\\willscardgame\\scripts\\skillcard.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{5001203C-00C6-49B7-8632-3D562EB89714}|Project W.csproj|solutionrelative:scripts\\skillcard.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{5001203C-00C6-49B7-8632-3D562EB89714}|Project W.csproj|c:\\users\\kbz\\willscardgame\\scripts\\cardaction.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{5001203C-00C6-49B7-8632-3D562EB89714}|Project W.csproj|solutionrelative:scripts\\cardaction.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{5001203C-00C6-49B7-8632-3D562EB89714}|Project W.csproj|c:\\users\\kbz\\willscardgame\\scripts\\cardmanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{5001203C-00C6-49B7-8632-3D562EB89714}|Project W.csproj|solutionrelative:scripts\\cardmanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{5001203C-00C6-49B7-8632-3D562EB89714}|Project W.csproj|c:\\users\\kbz\\willscardgame\\scripts\\unitcard.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{5001203C-00C6-49B7-8632-3D562EB89714}|Project W.csproj|solutionrelative:scripts\\unitcard.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{5001203C-00C6-49B7-8632-3D562EB89714}|Project W.csproj|c:\\users\\kbz\\willscardgame\\scripts\\boardcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{5001203C-00C6-49B7-8632-3D562EB89714}|Project W.csproj|solutionrelative:scripts\\boardcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{5001203C-00C6-49B7-8632-3D562EB89714}|Project W.csproj|c:\\users\\kbz\\willscardgame\\scripts\\cardmanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{5001203C-00C6-49B7-8632-3D562EB89714}|Project W.csproj|solutionrelative:scripts\\cardmanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{5001203C-00C6-49B7-8632-3D562EB89714}|Project W.csproj|c:\\users\\kbz\\willscardgame\\scenes\\cardpopupmenu.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{5001203C-00C6-49B7-8632-3D562EB89714}|Project W.csproj|solutionrelative:scenes\\cardpopupmenu.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{5001203C-00C6-49B7-8632-3D562EB89714}|Project W.csproj|c:\\users\\kbz\\willscardgame\\scripts\\card.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{5001203C-00C6-49B7-8632-3D562EB89714}|Project W.csproj|solutionrelative:scripts\\card.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{5001203C-00C6-49B7-8632-3D562EB89714}|Project W.csproj|c:\\users\\kbz\\willscardgame\\scripts\\gamestate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{5001203C-00C6-49B7-8632-3D562EB89714}|Project W.csproj|solutionrelative:scripts\\gamestate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{5001203C-00C6-49B7-8632-3D562EB89714}|Project W.csproj|c:\\users\\kbz\\willscardgame\\scripts\\pngimageloader.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{5001203C-00C6-49B7-8632-3D562EB89714}|Project W.csproj|solutionrelative:scripts\\pngimageloader.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{5001203C-00C6-49B7-8632-3D562EB89714}|Project W.csproj|c:\\users\\kbz\\willscardgame\\scripts\\movecard3d.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{5001203C-00C6-49B7-8632-3D562EB89714}|Project W.csproj|solutionrelative:scripts\\movecard3d.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{5001203C-00C6-49B7-8632-3D562EB89714}|Project W.csproj|c:\\users\\kbz\\willscardgame\\scripts\\rotationhelper.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{5001203C-00C6-49B7-8632-3D562EB89714}|Project W.csproj|solutionrelative:scripts\\rotationhelper.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{5001203C-00C6-49B7-8632-3D562EB89714}|Project W.csproj|c:\\users\\kbz\\willscardgame\\scripts\\boardcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{5001203C-00C6-49B7-8632-3D562EB89714}|Project W.csproj|solutionrelative:scripts\\boardcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{5001203C-00C6-49B7-8632-3D562EB89714}|Project W.csproj|c:\\users\\kbz\\willscardgame\\scripts\\cardfactory.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{5001203C-00C6-49B7-8632-3D562EB89714}|Project W.csproj|solutionrelative:scripts\\cardfactory.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
+      "AbsoluteMoniker": "D:0:0:{5001203C-00C6-49B7-8632-3D562EB89714}|Project W.csproj|c:\\users\\kbz\\willscardgame\\scripts\\card.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{5001203C-00C6-49B7-8632-3D562EB89714}|Project W.csproj|solutionrelative:scripts\\card.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{5001203C-00C6-49B7-8632-3D562EB89714}|Project W.csproj|c:\\users\\kbz\\willscardgame\\scripts\\rotationhelper.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{5001203C-00C6-49B7-8632-3D562EB89714}|Project W.csproj|solutionrelative:scripts\\rotationhelper.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{5001203C-00C6-49B7-8632-3D562EB89714}|Project W.csproj|c:\\users\\kbz\\willscardgame\\scripts\\skillcard.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{5001203C-00C6-49B7-8632-3D562EB89714}|Project W.csproj|solutionrelative:scripts\\skillcard.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{5001203C-00C6-49B7-8632-3D562EB89714}|Project W.csproj|c:\\users\\kbz\\willscardgame\\scripts\\raycasthelper.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{5001203C-00C6-49B7-8632-3D562EB89714}|Project W.csproj|solutionrelative:scripts\\raycasthelper.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{5001203C-00C6-49B7-8632-3D562EB89714}|Project W.csproj|c:\\users\\kbz\\willscardgame\\scripts\\positioncontrol3d.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{5001203C-00C6-49B7-8632-3D562EB89714}|Project W.csproj|solutionrelative:scripts\\positioncontrol3d.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{5001203C-00C6-49B7-8632-3D562EB89714}|Project W.csproj|c:\\users\\kbz\\willscardgame\\scripts\\pngimageloader.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{5001203C-00C6-49B7-8632-3D562EB89714}|Project W.csproj|solutionrelative:scripts\\pngimageloader.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{5001203C-00C6-49B7-8632-3D562EB89714}|Project W.csproj|c:\\users\\kbz\\willscardgame\\scripts\\cardaction.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{5001203C-00C6-49B7-8632-3D562EB89714}|Project W.csproj|solutionrelative:scripts\\cardaction.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -66,32 +58,32 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 13,
+          "SelectedChildIndex": 7,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 1,
               "Title": "UnitCard.cs",
               "DocumentMoniker": "C:\\Users\\KBZ\\WillsCardGame\\Scripts\\UnitCard.cs",
               "RelativeDocumentMoniker": "Scripts\\UnitCard.cs",
               "ToolTip": "C:\\Users\\KBZ\\WillsCardGame\\Scripts\\UnitCard.cs",
               "RelativeToolTip": "Scripts\\UnitCard.cs",
-              "ViewState": "AQIAAGAAAAAAAAAAAAAcwBwAAAAPAAAA",
+              "ViewState": "AQIAAAsAAAAAAAAAAAA+wBYAAAAuAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-05-06T15:09:34.414Z",
               "IsPinned": true
             },
             {
               "$type": "Document",
-              "DocumentIndex": 13,
-              "Title": "PositionControl3D.cs",
-              "DocumentMoniker": "C:\\Users\\KBZ\\WillsCardGame\\Scripts\\PositionControl3D.cs",
-              "RelativeDocumentMoniker": "Scripts\\PositionControl3D.cs",
-              "ToolTip": "C:\\Users\\KBZ\\WillsCardGame\\Scripts\\PositionControl3D.cs",
-              "RelativeToolTip": "Scripts\\PositionControl3D.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAA0AAAAsAAAA",
+              "DocumentIndex": 2,
+              "Title": "GameState.cs",
+              "DocumentMoniker": "C:\\Users\\KBZ\\WillsCardGame\\Scripts\\GameState.cs",
+              "RelativeDocumentMoniker": "Scripts\\GameState.cs",
+              "ToolTip": "C:\\Users\\KBZ\\WillsCardGame\\Scripts\\GameState.cs",
+              "RelativeToolTip": "Scripts\\GameState.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAkAAAALAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-07-19T14:07:19.238Z"
+              "WhenOpened": "2024-07-23T19:33:29.978Z"
             },
             {
               "$type": "Document",
@@ -101,62 +93,37 @@
               "RelativeDocumentMoniker": "Scripts\\Card.cs",
               "ToolTip": "C:\\Users\\KBZ\\WillsCardGame\\Scripts\\Card.cs",
               "RelativeToolTip": "Scripts\\Card.cs",
-              "ViewState": "AQIAAE0AAAAAAAAAAAAwwJoAAAAcAAAA",
+              "ViewState": "AQIAAJ0AAAAAAAAAAAAcwBcAAAAoAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-05-31T15:44:37.341Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
-              "Title": "GameState.cs",
-              "DocumentMoniker": "C:\\Users\\KBZ\\WillsCardGame\\Scripts\\GameState.cs",
-              "RelativeDocumentMoniker": "Scripts\\GameState.cs",
-              "ToolTip": "C:\\Users\\KBZ\\WillsCardGame\\Scripts\\GameState.cs",
-              "RelativeToolTip": "Scripts\\GameState.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAkAAAAZAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-07-17T23:51:10.698Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 5,
-              "Title": "CardPopupMenu.cs",
-              "DocumentMoniker": "C:\\Users\\KBZ\\WillsCardGame\\Scenes\\CardPopupMenu.cs",
-              "RelativeDocumentMoniker": "Scenes\\CardPopupMenu.cs",
-              "ToolTip": "C:\\Users\\KBZ\\WillsCardGame\\Scenes\\CardPopupMenu.cs",
-              "RelativeToolTip": "Scenes\\CardPopupMenu.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAoAAAAAAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-07-16T19:07:52.17Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 11,
               "Title": "CardAction.cs",
               "DocumentMoniker": "C:\\Users\\KBZ\\WillsCardGame\\Scripts\\CardAction.cs",
               "RelativeDocumentMoniker": "Scripts\\CardAction.cs",
               "ToolTip": "C:\\Users\\KBZ\\WillsCardGame\\Scripts\\CardAction.cs",
               "RelativeToolTip": "Scripts\\CardAction.cs",
-              "ViewState": "AQIAABoAAAAAAAAAAAAswC4AAAAmAAAA",
+              "ViewState": "AQIAADwAAAAAAAAAAAAIwEAAAAA9AAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-07-16T12:37:18.255Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-07-16T12:37:18.255Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 9,
+              "DocumentIndex": 3,
               "Title": "MoveCard3D.cs",
               "DocumentMoniker": "C:\\Users\\KBZ\\WillsCardGame\\Scripts\\MoveCard3D.cs",
               "RelativeDocumentMoniker": "Scripts\\MoveCard3D.cs",
               "ToolTip": "C:\\Users\\KBZ\\WillsCardGame\\Scripts\\MoveCard3D.cs",
               "RelativeToolTip": "Scripts\\MoveCard3D.cs",
-              "ViewState": "AQIAAH8AAAAAAAAAAAAwwIkAAAAAAAAA",
+              "ViewState": "AQIAAIoAAAAAAAAAAAAQwK8AAABHAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-04-24T13:57:44.754Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 12,
+              "DocumentIndex": 9,
               "Title": "RaycastHelper.cs",
               "DocumentMoniker": "C:\\Users\\KBZ\\WillsCardGame\\Scripts\\RaycastHelper.cs",
               "RelativeDocumentMoniker": "Scripts\\RaycastHelper.cs",
@@ -168,31 +135,31 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 4,
               "Title": "BoardController.cs",
               "DocumentMoniker": "C:\\Users\\KBZ\\WillsCardGame\\Scripts\\BoardController.cs",
               "RelativeDocumentMoniker": "Scripts\\BoardController.cs",
               "ToolTip": "C:\\Users\\KBZ\\WillsCardGame\\Scripts\\BoardController.cs",
               "RelativeToolTip": "Scripts\\BoardController.cs",
-              "ViewState": "AQIAAD8AAAAAAAAAAAAowFEAAAAeAAAA",
+              "ViewState": "AQIAAD0AAAAAAAAAAAAiwFsAAAAFAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-06-26T13:34:35.91Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 0,
               "Title": "CardManager.cs",
               "DocumentMoniker": "C:\\Users\\KBZ\\WillsCardGame\\Scripts\\CardManager.cs",
               "RelativeDocumentMoniker": "Scripts\\CardManager.cs",
               "ToolTip": "C:\\Users\\KBZ\\WillsCardGame\\Scripts\\CardManager.cs",
               "RelativeToolTip": "Scripts\\CardManager.cs",
-              "ViewState": "AQIAAIIAAAAAAAAAAAAcwDAAAAAMAAAA",
+              "ViewState": "AQIAAOUAAAAAAAAAAAAkwOsAAAClAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-05-01T00:50:04.076Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 11,
+              "DocumentIndex": 5,
               "Title": "CardFactory.cs",
               "DocumentMoniker": "C:\\Users\\KBZ\\WillsCardGame\\Scripts\\CardFactory.cs",
               "RelativeDocumentMoniker": "Scripts\\CardFactory.cs",
@@ -204,40 +171,39 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 10,
+              "DocumentIndex": 7,
               "Title": "RotationHelper.cs",
               "DocumentMoniker": "C:\\Users\\KBZ\\WillsCardGame\\Scripts\\RotationHelper.cs",
               "RelativeDocumentMoniker": "Scripts\\RotationHelper.cs",
               "ToolTip": "C:\\Users\\KBZ\\WillsCardGame\\Scripts\\RotationHelper.cs",
               "RelativeToolTip": "Scripts\\RotationHelper.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAwAAACWAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-07-11T13:37:32.09Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 8,
+              "DocumentIndex": 10,
               "Title": "PngImageLoader.cs",
               "DocumentMoniker": "C:\\Users\\KBZ\\WillsCardGame\\Scripts\\PngImageLoader.cs",
               "RelativeDocumentMoniker": "Scripts\\PngImageLoader.cs",
               "ToolTip": "C:\\Users\\KBZ\\WillsCardGame\\Scripts\\PngImageLoader.cs",
               "RelativeToolTip": "Scripts\\PngImageLoader.cs",
-              "ViewState": "AQIAAAUAAAAAAAAAAAAxwAAAAAAAAAAA",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-07-11T13:37:07.188Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 8,
               "Title": "SkillCard.cs",
               "DocumentMoniker": "C:\\Users\\KBZ\\WillsCardGame\\Scripts\\SkillCard.cs",
               "RelativeDocumentMoniker": "Scripts\\SkillCard.cs",
               "ToolTip": "C:\\Users\\KBZ\\WillsCardGame\\Scripts\\SkillCard.cs",
               "RelativeToolTip": "Scripts\\SkillCard.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAYAAABCAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-05-06T15:07:23.184Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-05-06T15:07:23.184Z"
             }
           ]
         },

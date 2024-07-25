@@ -7,5 +7,5 @@ public enum GameState
     SelectingCard,
     AwaitingTarget,
     ExecutingAction,
-    AbilitySelectionPhase
+    AbilityPhase
 }

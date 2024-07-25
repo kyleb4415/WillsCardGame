@@ -7,6 +7,8 @@ public partial class CardPopupMenu : PopupMenu
 	public override void _Ready()
 	{
         this.IdPressed += CardPopupMenu_IdPressed;
+        UnitCard u = GetParent().GetParent<UnitCard>();
+        u.EmitSignal(Card.SignalName.CardSelected);
 	}
 
     private void CardPopupMenu_IdPressed(long id)
@@ -17,13 +19,14 @@ public partial class CardPopupMenu : PopupMenu
                 UnitCard u = GetParent().GetParent() as UnitCard;
                 u.Selected = true;
                 u.State = CardState.Attacking;
-                GD.Print("Attack selected");
+                u.EmitSignal(Card.SignalName.CardSelected, u);
+                GD.Print($"{u.Name} Attack selected");
                 break;
             case 1:
                 UnitCard u2 = GetParent().GetParent() as UnitCard;
-                u2.Selected = true;
+                u2.EmitSignal(Card.SignalName.CardSelected, u2);
                 u2.State = CardState.UsingAbility;
-                GD.Print("Ability selected");
+                GD.Print($"{u2.Name} ability selected");
                 break;
             default:
                 break;

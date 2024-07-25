@@ -23,7 +23,7 @@ public partial class MoveCard3D : Camera3D
     public Vector2 screenSize;
     public bool queueFree = false;
     public GameState currentGameState;
-    //public bool MouseOverCard { get; set; }
+    public BoardController boardController;
 
     [Signal]
     public delegate void HoverCardEventHandler(Card c);
@@ -60,19 +60,18 @@ public partial class MoveCard3D : Camera3D
         switch (currentGameState)
         {
             case (GameState.PlacingCard):
-                //since movecolliders handles moving logic then the only thing here will be progressing game state
-                //some weird logic is necessary since multiple cards can be placed within a turn
-
                 if (@event is InputEventMouseButton && @event.IsActionPressed("leftclick"))
                 {
                     colliders = RaycastHelper.GetCollisionPoint(this, mouse, 3.0f);
                 }
                 else if (@event is InputEventMouseButton && @event.IsActionReleased("leftclick"))
                 {
+                    GD.Print("placing card");
                     PlaceCard(@event);
                 }
                 if (@event is InputEventMouseButton && @event.IsActionPressed("rightclick"))
                 {
+                    GD.Print("picking card");
                     CardInteractContextMenu(@event);
                 }
                 break;
@@ -107,14 +106,25 @@ public partial class MoveCard3D : Camera3D
             Card card = (Card)colliders["collider"];
             if (card.CanPickUp)
             {
-                card.EmitSignal(Card.SignalName.PlaceCard, card);
-
-                Tween tween = CreateTween();
-                tween.TweenProperty(card, "position", card.PlacedPos, 0.5f).SetTrans(Tween.TransitionType.Quad);
-                tween.Finished += () =>
+                //card.EmitSignal(Card.SignalName.PlaceCard, card);
+                if(card.PlacedPos != default)
                 {
-                    card.EmitSignal(Card.SignalName.PlaceCard, card, this.GetParent().GetNode("ManaBar"));
-                };
+                    Tween tween = CreateTween();
+                    tween.TweenProperty(card, "position", card.PlacedPos, 0.5f).SetTrans(Tween.TransitionType.Quad);
+                    tween.Finished += () =>
+                    {
+                        card.EmitSignal(Card.SignalName.PlaceCard, card, this.GetParent().GetNode("ManaBar"));
+                    };
+                }
+                else
+                {
+                    Tween tween = CreateTween();
+                    Tween tween2 = CreateTween();
+                    tween.TweenProperty(card, "position", card.OriginPos, 0.5f).SetTrans(Tween.TransitionType.Quad);
+                    tween2.TweenProperty(card, "rotation", card.OriginRot, 0.5f).SetTrans(Tween.TransitionType.Quad);
+                    card.GravityScale = 0;
+                    colliders = null;
+                }
             }
             else
             {
@@ -134,7 +144,6 @@ public partial class MoveCard3D : Camera3D
             {
                 if (!selectedCard.CanPickUp && !selectedCard.Selected)
                 {
-                    selectedCard.EmitSignal(Card.SignalName.CardSelected, selectedCard);
                     Node2D contextMenu = ResourceLoader.Load<PackedScene>("res://Scenes/CardContextMenu.tscn").Instantiate<Node2D>();
                     contextMenu.GetChild(0).Set("position", mouse);
                     selectedCard.AddChild(contextMenu);
@@ -142,7 +151,7 @@ public partial class MoveCard3D : Camera3D
                 }
                 else
                 {
-                    selectedCard.EmitSignal(Card.SignalName.CardSelected, selectedCard);
+                    selectedCard.State = CardState.Idle;
                 }
             }
         }
@@ -156,14 +165,13 @@ public partial class MoveCard3D : Camera3D
             selectedCard = (UnitCard)colliders["collider"];
             if (!selectedCard.CanPickUp && !selectedCard.Selected)
             {
-                GD.Print("selected");
                 selectedCard.EmitSignal(Card.SignalName.CardSelected, selectedCard);
-                GD.Print(selectedCard.Selected);
                 currentGameState = GameState.AwaitingTarget;
+                selectedCard.State = CardState.Attacking;
             }
             else
             {
-                selectedCard.EmitSignal(Card.SignalName.CardSelected, selectedCard);
+
             }
         }
     }
@@ -199,12 +207,16 @@ public partial class MoveCard3D : Camera3D
         //this if statement will be unnecessary once enemy is implemented
         if (!targetCard.CanPickUp)
         {
-            selectedCard.EmitSignal(UnitCard.SignalName.CardHit, targetCard);
             CardAction action = new CardAction(selectedCard, targetCard);
             action.ExecuteAction();
             currentGameState = GameState.PlacingCard;
         }
 
+    }
+
+    private void ContinueGameAfterAbility()
+    {
+        currentGameState = GameState.PlacingCard;
     }
 
     private void MoveColliders(Dictionary colliders, double delta)
@@ -272,8 +284,7 @@ public partial class MoveCard3D : Camera3D
     public void Area_OnBodyExited(Node3D body)
     {
         Card cardBody = (Card)body;
-        //fix this
-        //cardBody.PlacedPos = CardManager.ReturnCardToHand();
+        cardBody.PlacedPos = default;
         cardBody.CanPickUp = true;
     }
 
