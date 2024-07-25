@@ -1,9 +1,10 @@
 extends Control
 
+# anything with _on_pressed is related to button functionality
 func _on_pressed():
-	SelectSFX.play()
-	get_tree().change_scene_to_file("res://Scenes3D/GameBoard.tscn") # Replace with function body.
-	MenuMusic.stop()
+	SelectSFX.play() #plays the global sound effect for button pressing
+	get_tree().change_scene_to_file("res://Scenes3D/GameBoard.tscn") # chanhges scene
+	MenuMusic.stop() #when Play is hit - this will stop main menu music
 
 func _on_options_pressed():
 	SelectSFX.play()
@@ -11,10 +12,10 @@ func _on_options_pressed():
 
 func _on_quit_pressed():
 	SelectSFX.play()
-	get_tree().quit()
+	get_tree().quit() # quits game
 
 func _on_item_selected(index):
-	match index: 
+	match index: # drop-down selection for resolution modes
 		0: 
 			DisplayServer.window_set_size(Vector2i(1920,1080))
 		1: 
@@ -47,7 +48,7 @@ func display_on_pressed():
 	
 
 
-func dmode_on_item_selected(index):
+func dmode_on_item_selected(index): #dropdown for display mode
 	match index: 
 		0: 
 			DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_FULLSCREEN)

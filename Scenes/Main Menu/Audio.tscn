@@ -59,6 +59,7 @@ columns = 2
 
 [node name="MusicLabel" type="Label" parent="Control/MarginContainer/VBoxContainer/GridContainer"]
 layout_mode = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_fonts/font = ExtResource("1_n5byp")
 text = "Music"
 
@@ -76,6 +77,7 @@ bus_name = "Music"
 
 [node name="SFXLabel" type="Label" parent="Control/MarginContainer/VBoxContainer/GridContainer"]
 layout_mode = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_fonts/font = ExtResource("1_n5byp")
 text = "Sound Effects"
 
