@@ -49,7 +49,6 @@ public partial class CardAction : Node
 			card2.Visible = false;
 		}
 		card1.EmitSignal(Card.SignalName.CardSelected, card1);
-		card2.EmitSignal(Card.SignalName.CardSelected, card2);
         RotationHelper.ResetRotation(card1, card1.GetTree());
 		RotationHelper.ResetRotation(card2, card2.GetTree());
         GD.Print($"{card1.Name} did {card1.Damage} damage to {card2.Name}.");
@@ -65,6 +64,5 @@ public partial class CardAction : Node
         card1.EmitSignal(UnitCard.SignalName.Ability, card2);
 		card1.State = CardState.Idle;
 		card1.EmitSignal(UnitCard.SignalName.CardSelected, card1);
-		card2.EmitSignal(UnitCard.SignalName.CardSelected, card2);
 	}
 }

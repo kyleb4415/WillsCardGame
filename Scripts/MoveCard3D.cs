@@ -24,6 +24,8 @@ public partial class MoveCard3D : Camera3D
     public bool queueFree = false;
     public GameState currentGameState;
     public BoardController boardController;
+    public float MouseCastLength = 9.0f;
+    public float CardFollowDistance = 3.5f;
 
     [Signal]
     public delegate void HoverCardEventHandler(Card c);
@@ -65,7 +67,7 @@ public partial class MoveCard3D : Camera3D
             case (GameState.PlacingCard):
                 if (@event is InputEventMouseButton && @event.IsActionPressed("leftclick"))
                 {
-                    colliders = RaycastHelper.GetCollisionPoint(this, mouse, 3.0f);
+                    InitialAction(@event);
                 }
                 else if (@event is InputEventMouseButton && @event.IsActionReleased("leftclick"))
                 {
@@ -101,6 +103,24 @@ public partial class MoveCard3D : Camera3D
         base._Input(@event);
     }
 
+
+    private void InitialAction(InputEvent @event)
+    {
+        if(colliders is null)
+        {
+            colliders = RaycastHelper.GetCollisionPoint(this, mouse, MouseCastLength);
+        }
+        else
+        {
+            Card card = (Card)colliders["collider"];
+            if(card != null && !card.CanPickUp && !boardController.Hand.Contains(card))
+            {
+                currentGameState = GameState.SelectingCard;
+                CardInteractNoContextMenu(@event);
+            }
+        }
+    }
+
     /// <summary>
     /// Handles card placement on first placing onto the board
     /// Path 1 - Card is the first to be placed onto the board and there is no selectedCard
@@ -110,7 +130,7 @@ public partial class MoveCard3D : Camera3D
 
     private void PlaceCard(InputEvent @event)
     {
-        colliders = RaycastHelper.GetCollisionPoint(this, mouse, 3.0f);
+        colliders = RaycastHelper.GetCollisionPoint(this, mouse, MouseCastLength);
         if (colliders["collider"].AsGodotObject().GetType() != typeof(StaticBody3D))
         {
             Card card = (Card)colliders["collider"];
@@ -125,6 +145,8 @@ public partial class MoveCard3D : Camera3D
                     {
                         card.EmitSignal(Card.SignalName.PlaceCard, card, this.GetParent().GetNode("ManaBar"));
                     };
+                    boardController.Hand.Remove(card);
+                    currentGameState = GameState.SelectingCard;
                 }
                 else
                 {
@@ -132,17 +154,10 @@ public partial class MoveCard3D : Camera3D
                     Tween tween2 = CreateTween();
                     tween.TweenProperty(card, "position", card.OriginPos, 0.5f).SetTrans(Tween.TransitionType.Quad);
                     tween2.TweenProperty(card, "rotation", card.OriginRot, 0.5f).SetTrans(Tween.TransitionType.Quad);
-                    boardController.Hand.Add(card);
                     card.GravityScale = 0;
                     colliders = null;
                 }
             }
-            else if(!card.CanPickUp && selectedCard == null)
-            {
-                currentGameState = GameState.SelectingCard;
-                CardInteractNoContextMenu(@event);
-            }
-
             if(selectedCard != null)
             {
                 GD.Print("awaitingtarget");
@@ -158,7 +173,7 @@ public partial class MoveCard3D : Camera3D
     /// </summary>
     private void CardInteractContextMenu(InputEvent @event)
     {
-        colliders = RaycastHelper.GetCollisionPoint(this, mouse, 3.0f);
+        colliders = RaycastHelper.GetCollisionPoint(this, mouse, MouseCastLength);
         if (colliders["collider"].AsGodotObject().GetType() == typeof(UnitCard))
         {
             UnitCard cardToBeSelected = (UnitCard)colliders["collider"];
@@ -198,11 +213,15 @@ public partial class MoveCard3D : Camera3D
     /// </summary>
     private void CardInteractNoContextMenu(InputEvent @event)
     {
-        colliders = RaycastHelper.GetCollisionPoint(this, mouse, 3.0f);
+        colliders = RaycastHelper.GetCollisionPoint(this, mouse, MouseCastLength);
         if (colliders["collider"].AsGodotObject().GetType() == typeof(UnitCard))
         {
             UnitCard cardToBeSelected = (UnitCard)colliders["collider"];
-            if(selectedCard != cardToBeSelected)
+            if(boardController.Hand.Contains(cardToBeSelected))
+            {
+                currentGameState = GameState.PlacingCard;
+            }
+            else if(selectedCard != cardToBeSelected)
             {
                 selectedCard = (UnitCard)colliders["collider"];
                 if (!selectedCard.CanPickUp && !selectedCard.Selected)
@@ -216,6 +235,7 @@ public partial class MoveCard3D : Camera3D
             {
                 selectedCard.EmitSignal(Card.SignalName.CardSelected, selectedCard);
                 selectedCard = null;
+                currentGameState = GameState.PlacingCard;
             }
         }
     }
@@ -228,7 +248,7 @@ public partial class MoveCard3D : Camera3D
     
     private void SelectTarget(InputEvent @event)
     {
-        colliders = RaycastHelper.GetCollisionPoint(this, mouse, 3.0f);
+        colliders = RaycastHelper.GetCollisionPoint(this, mouse, MouseCastLength);
         if (colliders["collider"].AsGodotObject().GetType() == typeof(UnitCard))
         {
             targetCard = (UnitCard)colliders["collider"];
@@ -252,7 +272,7 @@ public partial class MoveCard3D : Camera3D
             else
             {
                 currentGameState = GameState.PlacingCard;
-                colliders = RaycastHelper.GetCollisionPoint(this, mouse, 3.0f);
+                colliders = RaycastHelper.GetCollisionPoint(this, mouse, MouseCastLength);
             }
 
         }
@@ -321,7 +341,7 @@ public partial class MoveCard3D : Camera3D
                         RotationHelper.ResetRotation(colliderToMove, this.GetTree());
                         colliderToMove.Set("gravity_scale", 0);
                         colliderToMove.IsPickedUp = true;
-                        colliderToMove.Position = colliderToMove.Position.Lerp(ProjectPosition(mouse, 2.5f), (float)delta * 10);
+                        colliderToMove.Position = colliderToMove.Position.Lerp(ProjectPosition(mouse, CardFollowDistance), (float)delta * 10);
                         boardController.Hand.Remove(colliderToMove);
                     }
                 }

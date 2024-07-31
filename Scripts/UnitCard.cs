@@ -35,8 +35,9 @@ public partial class UnitCard : Card, ICard
         }
 		b.PlayerTurnEnded += ProcessStatusEffects;
 		this.CardHit += UnitCard_CardHit;
+        this.CardReleased += Release;
+        this.CardSelected += Select;
         base._Ready();
-        StatusEffects.Add("Poison", new int[] { 1, 2 });
     }
 
 	public UnitCard()
@@ -47,7 +48,7 @@ public partial class UnitCard : Card, ICard
 	public UnitCard(int id, string name, SQLiteBlob? cardImage, string desc, string type, SQLiteBlob? typeImage, int damage, int hp, int unlockedFlag, int manaCost)
 	{
 		this.ID = id;
-		this.Name = name;
+		this.CardName = name;
 		this.CardImage = cardImage;
 		this.Description = desc;
 		this.Type = type;
@@ -62,7 +63,7 @@ public partial class UnitCard : Card, ICard
     public UnitCard(int id, string name, string desc, string type, int damage, int hp, int unlockedFlag, int manaCost)
 	{
 		this.ID = id;
-		this.Name = name;
+		this.CardName = name;
 		this.Description = desc;
 		this.Type = type;
 		this.Damage = damage;

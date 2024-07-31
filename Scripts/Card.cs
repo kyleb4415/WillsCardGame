@@ -16,7 +16,7 @@ public partial class Card : RigidBody3D, ICard
     public Vector3 OriginRot { get; set; } = new Vector3();
     public SQLiteBlob CardImage { get; set; } = null;
     public SQLiteBlob TypeImage { get; set; }
-    public string Name { get; set; }
+    public string CardName { get; set; }
     public string Description { get; set; }
     public string Type { get; set; }
     public int ManaCost { get; set; }
@@ -25,6 +25,7 @@ public partial class Card : RigidBody3D, ICard
     public Panel ContextMenu { get; set; }
     public Timer ContextMenuTimer { get; set; }
     public CardState State { get; set; }
+    public CardAlignment CardAlignmentType { get; set; }
 
     [Signal]
     public delegate void PlaceCardEventHandler(Card c, TextureProgressBar t);
@@ -48,6 +49,7 @@ public partial class Card : RigidBody3D, ICard
         this.InputRayPickable = true;
         this.CanPickUp = true;
         this.ContextMenu = this.GetNode("ContextMenuControl/ContextMenu") as Panel;
+        this.Name = CardName;
 
         var contextMenuText = ContextMenu.GetChild(0) as RichTextLabel;
         contextMenuText.Text = Description;
@@ -57,7 +59,7 @@ public partial class Card : RigidBody3D, ICard
         ContextMenuTimer.Timeout += ContextMenuTimer_Timeout;
         if (Name is not null && Description is not null)
         {
-            GetNode("Name").Set("text", Name);
+            GetNode("Name").Set("text", CardName);
             GetNode("Description").Set("text", Description);
             GetNode("ManaCost").Set("text", ManaCost.ToString());
         }
@@ -132,7 +134,7 @@ public partial class Card : RigidBody3D, ICard
             try
             {
                 MoveCard3D instance = GetNode("/root/GameBoard/Camera3D") as MoveCard3D;
-                Vector3 collisionPoint = (Vector3)RaycastHelper.GetCollisionPoint((Camera3D)instance, instance.mouse, 3.0f)["position"];
+                Vector3 collisionPoint = (Vector3)RaycastHelper.GetCollisionPoint((Camera3D)instance, instance.mouse, 9.0f)["position"];
                 RotationHelper.RotateCard(this, collisionPoint, this.GetTree());
             }
             catch (Exception e)
@@ -188,6 +190,13 @@ public partial class Card : RigidBody3D, ICard
         }
 
         
+    }
+
+    public enum CardAlignment
+    {
+        Player,
+        Neutral,
+        Enemy
     }
 
 }

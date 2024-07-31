@@ -50,8 +50,39 @@ public static class CardManager
         }
 	}
 
-	//gets weight by setting index over count
-	private static float CalculateCardAlignment(List<Card> cardList, float idx)
+    public static void InitialDealEnemyCardsAnimation(BoardController b, Vector3 dealPosition, SceneTree s)
+    {
+        Vector3 fanPositionLeft = new Vector3(-0.1f, -1f, 1f);
+        Vector3 fanPositionRight = new Vector3(0.1f, -1f, 1f);
+
+        //maybe change positions to accommodate more cards if necessary?
+        if (b.Enemy.EnemyHand.Count > 4)
+        {
+
+        }
+
+        Vector3 fanRotationLeft = new Vector3(0, 0.25f, 0);
+        Vector3 fanRotationRight = new Vector3(0, -0.25f, 0);
+
+        float idx = 0;
+
+        foreach (Card c in b.Enemy.EnemyHand)
+        {
+            float alignmentWeight = CalculateCardAlignment(b.Hand, idx);
+            float timeCalculation = 2f * (c.Position.X - fanPositionLeft.X);
+            c.GravityScale = 0;
+            Tween t = s.CreateTween();
+            Tween t2 = s.CreateTween();
+            t.TweenProperty(c, "position", fanPositionLeft.Lerp(fanPositionRight, alignmentWeight), timeCalculation).SetTrans(Tween.TransitionType.Quad);
+            t2.TweenProperty(c, "rotation", fanRotationLeft.Lerp(fanRotationRight, alignmentWeight), 0.25f).SetTrans(Tween.TransitionType.Quad);
+            c.OriginPos = fanPositionLeft.Lerp(fanPositionRight, alignmentWeight);
+            c.OriginRot = fanRotationLeft.Lerp(fanRotationRight, alignmentWeight);
+            idx += 1;
+        }
+    }
+
+    //gets weight by setting index over count
+    private static float CalculateCardAlignment(List<Card> cardList, float idx)
 	{
 		if(cardList.Count != 0)
 		{
@@ -72,9 +103,9 @@ public static class CardManager
 		}
 	}
 
-	public static List<UnitCard> LoadCardsFromDB()
+	public static List<ICard> LoadCardsFromDB()
 	{
-		List<UnitCard> CardList = new();
+		List<ICard> CardList = new();
 		using (SQLiteConnection conn = new SQLiteConnection($"Data Source=DataStore/CardData.db"))
 		{
 			conn.Open();
@@ -93,7 +124,7 @@ public static class CardManager
 							{
 								//For UnitCard Constructor
 								//1 - ID
-								//2 - Name
+								//2 - CardName
 								//3 - Image
 								//4 - Description
 								//5 - Type
@@ -164,7 +195,7 @@ public static class CardManager
 	};
 	public static Delegate GetCardMethod(Card c)
 	{
-		return cardAttackMethodDict[c.Name];
+		return cardAttackMethodDict[c.CardName];
 	}
 
 	private static Dictionary<string, Delegate> cardAttackMethodDict = new Dictionary<string, Delegate>

@@ -12,8 +12,11 @@ public partial class BoardController : Node3D
     public Script cardScript = ResourceLoader.Load<Script>("res://Scripts/UnitCard.cs");
     public readonly PackedScene cardSpace = ResourceLoader.Load<PackedScene>("res://Scenes3D/CardSpaceBase.tscn");
     public readonly PackedScene cardBase = ResourceLoader.Load<PackedScene>("res://Scenes3D/CardBase3D.tscn");
+    //Player card lists
     public List<Node> cardGameObjects = new List<Node>();
     public List<Card> Hand { get; set; } = new List<Card>();
+
+    //UI/Turns
     public int TurnNum;
     private Label _turnNumberLabel;
     private Label _timerLabel;
@@ -22,6 +25,8 @@ public partial class BoardController : Node3D
     private Button _endTurnButton;
     public GameState gameState;
 
+    //EnemyAI attribute
+    public EnemyAI Enemy;
 
     //finish setting this up
     [Signal]
@@ -139,19 +144,26 @@ public partial class BoardController : Node3D
 
         //instancing cards from db 
         //-------------------------------------------------------------------------------
-        List<UnitCard> cards = CardManager.LoadCardsFromDB();
+        List<ICard> cards = CardManager.LoadCardsFromDB();
         foreach (var c in cards)
         {
             //modify before instantiation
             var cardBaseInstance = cardBase.Instantiate();
             cardGameObjects.Add(cardBaseInstance);
-            CardFactory.CreateUnitCard(c, cardBaseInstance);
+            if(c.GetType() == typeof(Card))
+            {
+                CardFactory.CreateCard((Card)c, cardBaseInstance);
+            }
+            else if(c.GetType() == typeof(UnitCard))
+            {
+                CardFactory.CreateUnitCard((UnitCard)c, cardBaseInstance);
+            }
+
             UnitCard unitCard = cardBaseInstance.GetChild(0) as UnitCard;
             //unitCard.MouseEntered += ((MoveCard3D)GetNode("Camera3D")).Card_MouseEntered;
-            unitCard.CardReleased += unitCard.Release;
-            unitCard.CardSelected += unitCard.Select;
+
             unitCard.Position += new Vector3(1, 1, 1);
-            this.GetParent().CallDeferred("add_child", cardBaseInstance);
+            this.GetNode("PlayerDeck").CallDeferred("add_child", cardBaseInstance);
             Hand.Add(unitCard);
         }
         //-------------------------------------------------------------------------------
