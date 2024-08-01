@@ -1,24 +1,193 @@
-[gd_scene load_steps=3 format=3 uid="uid://mo4ouhmg6syk"]
+[gd_scene load_steps=15 format=3 uid="uid://mo4ouhmg6syk"]
 
 [ext_resource type="Script" path="res://Assets/Cards/CardData.gd" id="1_0eeqi"]
-[ext_resource type="Texture2D" uid="uid://bm7ps6vqkeiyy" path="res://Assets/Cards/border-transparent.png" id="2_rd12c"]
+[ext_resource type="Texture2D" uid="uid://bdmrr4wouev0e" path="res://Assets/Cards/CardBackgrounds/goblin-border.png" id="2_7wxdq"]
+[ext_resource type="Texture2D" uid="uid://bxd60a16ufmnp" path="res://Assets/Cards/CardAssets/layer behind items test.png" id="3_ajtbf"]
+[ext_resource type="Texture2D" uid="uid://bcswqpdp7bn2y" path="res://Assets/Cards/CardAssets/name-text-box.png" id="4_0nlo5"]
+[ext_resource type="Texture2D" uid="uid://pvrqd744o6o2" path="res://Assets/Cards/CardAssets/heart.png" id="5_qb5st"]
+[ext_resource type="Texture2D" uid="uid://dfpive2yl5415" path="res://Assets/Cards/CardAssets/ability-txt-box.png" id="6_4xqgb"]
+[ext_resource type="Texture2D" uid="uid://c3rlipdc0n8mh" path="res://Assets/Cards/CardAssets/mana.png" id="7_hjqwq"]
+[ext_resource type="Texture2D" uid="uid://b8kj44wmmyd56" path="res://Assets/Cards/CardAssets/atkbook.png" id="8_whux6"]
+[ext_resource type="FontFile" uid="uid://ca34cim5cdy0m" path="res://Assets/Cards/CardAssets/windows_command_prompt.ttf" id="9_bdlwn"]
+[ext_resource type="Script" path="res://Assets/Cards/TextSize.gd" id="10_tr3jx"]
 
-[node name="CardBase" type="MarginContainer"]
-custom_minimum_size = Vector2(175, 250)
-offset_right = 175.0
-offset_bottom = 250.0
+[sub_resource type="Theme" id="Theme_b0xbc"]
+
+[sub_resource type="SystemFont" id="SystemFont_nu3yc"]
+font_names = PackedStringArray("Windows")
+
+[sub_resource type="ImageTexture" id="ImageTexture_4aimb"]
+
+[sub_resource type="ImageTexture" id="ImageTexture_mbfcw"]
+
+[node name="CardBase" type="Node"]
 script = ExtResource("1_0eeqi")
 
 [node name="Card" type="Sprite2D" parent="."]
+visible = false
 centered = false
 
-[node name="Border" type="Sprite2D" parent="."]
-texture = ExtResource("2_rd12c")
+[node name="Card Images" type="Node2D" parent="."]
+
+[node name="Border" type="Sprite2D" parent="Card Images"]
+visible = false
+texture = ExtResource("2_7wxdq")
 centered = false
+
+[node name="LayerBehind" type="Sprite2D" parent="Card Images"]
+position = Vector2(94.5, 154.518)
+scale = Vector2(1.01786, 1.01786)
+texture = ExtResource("3_ajtbf")
+
+[node name="NameBox" type="Sprite2D" parent="Card Images"]
+position = Vector2(94, 24)
+scale = Vector2(1.07857, 1.07857)
+texture = ExtResource("4_0nlo5")
+
+[node name="Heart" type="Sprite2D" parent="Card Images"]
+position = Vector2(149.931, 184.465)
+scale = Vector2(0.193318, 0.189977)
+texture = ExtResource("5_qb5st")
+
+[node name="AtkBook" type="Sprite2D" parent="Card Images"]
+position = Vector2(35.4375, 187.438)
+scale = Vector2(0.0496826, 0.0496826)
+texture = ExtResource("8_whux6")
+
+[node name="AbilityTextBox" type="Sprite2D" parent="Card Images"]
+position = Vector2(95, 245)
+scale = Vector2(1.01807, 1.01807)
+texture = ExtResource("6_4xqgb")
+
+[node name="ManaCrystal" type="Sprite2D" parent="Card Images"]
+position = Vector2(162, 24)
+scale = Vector2(0.0584717, 0.0584717)
+texture = ExtResource("7_hjqwq")
+
+[node name="ManaNumber" type="Label" parent="."]
+visible = false
+anchors_preset = -1
+anchor_left = 0.129
+anchor_top = 0.012
+anchor_right = 0.154
+anchor_bottom = 0.068
+offset_left = 0.391983
+offset_top = 0.223999
+offset_right = -0.40802
+offset_bottom = -0.064003
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.12549)
+theme_override_constants/shadow_offset_y = 2
+theme_override_fonts/font = ExtResource("9_bdlwn")
+theme_override_font_sizes/font_size = 40
+text = "5"
+horizontal_alignment = 1
+vertical_alignment = 1
+clip_text = true
+metadata/_edit_use_anchors_ = true
+
+[node name="AttackNumber" type="Label" parent="."]
+visible = false
+anchors_preset = -1
+anchor_left = 0.021
+anchor_top = 0.256
+anchor_right = 0.043
+anchor_bottom = 0.307
+offset_left = 1.808
+offset_top = 3.112
+offset_right = -0.536003
+offset_bottom = 2.064
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.12549)
+theme_override_constants/shadow_offset_y = 2
+theme_override_fonts/font = ExtResource("9_bdlwn")
+theme_override_font_sizes/font_size = 35
+text = "5"
+horizontal_alignment = 1
+vertical_alignment = 1
+clip_text = true
+metadata/_edit_use_anchors_ = true
+
+[node name="HealthNumber" type="Label" parent="."]
+visible = false
+anchors_preset = -1
+anchor_left = 0.121
+anchor_top = 0.258
+anchor_right = 0.141
+anchor_bottom = 0.307
+offset_left = -0.392014
+offset_top = 1.81599
+offset_right = -0.432007
+offset_bottom = 2.064
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.12549)
+theme_override_constants/shadow_offset_y = 2
+theme_override_fonts/font = ExtResource("9_bdlwn")
+theme_override_font_sizes/font_size = 35
+text = "5"
+horizontal_alignment = 1
+vertical_alignment = 1
+clip_text = true
+metadata/_edit_use_anchors_ = true
+
+[node name="Name" type="Label" parent="."]
+visible = false
+anchors_preset = -1
+anchor_left = 0.009
+anchor_top = 0.015
+anchor_right = 0.125
+anchor_bottom = 0.056
+offset_left = 0.631995
+offset_top = 0.28
+offset_bottom = -0.288002
+theme = SubResource("Theme_b0xbc")
+theme_override_colors/font_color = Color(0.235294, 0.2, 0.160784, 1)
+theme_override_fonts/font = ExtResource("9_bdlwn")
+theme_override_font_sizes/font_size = 27
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
+clip_text = true
+text_direction = 1
+script = ExtResource("10_tr3jx")
+metadata/_edit_use_anchors_ = true
+
+[node name="Description" type="Label" parent="."]
+visible = false
+anchors_preset = -1
+anchor_left = 0.019
+anchor_top = 0.326
+anchor_right = 0.145
+anchor_bottom = 0.429
+offset_left = 0.112
+offset_top = -0.248001
+offset_right = -0.0400085
+offset_bottom = 0.00799561
+theme_override_fonts/font = SubResource("SystemFont_nu3yc")
+text = "aaaaaaaaaaaaaaaa
+"
+metadata/_edit_use_anchors_ = true
+
+[node name="CardBorder" type="TextureRect" parent="."]
+offset_right = 188.0
+offset_bottom = 305.0
+texture = SubResource("ImageTexture_4aimb")
+
+[node name="CardImage" type="TextureRect" parent="."]
+anchors_preset = -1
+anchor_left = 0.02
+anchor_top = 0.063
+anchor_right = 0.142
+anchor_bottom = 0.281
+offset_left = -0.0400009
+offset_top = 0.175999
+offset_right = 0.416
+offset_bottom = -0.0880127
+texture = SubResource("ImageTexture_mbfcw")
+metadata/_edit_use_anchors_ = true
 
 [node name="Bars" type="VBoxContainer" parent="."]
+visible = false
 custom_minimum_size = Vector2(175, 25)
-layout_mode = 2
+offset_right = 190.0
+offset_bottom = 306.0
 
 [node name="TopGap" type="MarginContainer" parent="Bars"]
 custom_minimum_size = Vector2(175, 25)
@@ -36,9 +205,8 @@ size_flags_horizontal = 3
 [node name="CenterContainer" type="CenterContainer" parent="Bars/TopBar/Name"]
 layout_mode = 2
 
-[node name="Name" type="Label" parent="Bars/TopBar/Name/CenterContainer"]
+[node name="Name" type="RichTextLabel" parent="Bars/TopBar/Name/CenterContainer"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 15
 
 [node name="MidGap" type="MarginContainer" parent="Bars/TopBar"]
 layout_mode = 2
@@ -52,9 +220,8 @@ size_flags_horizontal = 3
 [node name="CenterContainer" type="CenterContainer" parent="Bars/TopBar/Cost"]
 layout_mode = 2
 
-[node name="Cost" type="Label" parent="Bars/TopBar/Cost/CenterContainer"]
+[node name="Cost" type="RichTextLabel" parent="Bars/TopBar/Cost/CenterContainer"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 15
 text = "1"
 
 [node name="MidGap" type="MarginContainer" parent="Bars"]
@@ -74,9 +241,8 @@ size_flags_horizontal = 3
 [node name="CenterContainer" type="CenterContainer" parent="Bars/CardDesc/DescContainer"]
 layout_mode = 2
 
-[node name="Desc" type="Label" parent="Bars/CardDesc/DescContainer/CenterContainer"]
+[node name="Desc" type="RichTextLabel" parent="Bars/CardDesc/DescContainer/CenterContainer"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 15
 text = "Burn stuff"
 
 [node name="LowerGap" type="MarginContainer" parent="Bars"]
@@ -95,9 +261,8 @@ size_flags_horizontal = 3
 [node name="CenterContainer" type="CenterContainer" parent="Bars/BottomBar/HealthContainer"]
 layout_mode = 2
 
-[node name="Health" type="Label" parent="Bars/BottomBar/HealthContainer/CenterContainer"]
+[node name="Health" type="RichTextLabel" parent="Bars/BottomBar/HealthContainer/CenterContainer"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 15
 text = "2"
 
 [node name="MidGap" type="MarginContainer" parent="Bars/BottomBar"]
@@ -112,11 +277,35 @@ size_flags_horizontal = 3
 [node name="CenterContainer" type="CenterContainer" parent="Bars/BottomBar/AttackContainer"]
 layout_mode = 2
 
-[node name="Attack" type="Label" parent="Bars/BottomBar/AttackContainer/CenterContainer"]
+[node name="Attack" type="RichTextLabel" parent="Bars/BottomBar/AttackContainer/CenterContainer"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 15
 text = "1"
 
 [node name="BottomGap" type="MarginContainer" parent="Bars"]
 custom_minimum_size = Vector2(30, 20)
 layout_mode = 2
+
+[node name="Container" type="Control" parent="."]
+layout_mode = 3
+anchor_left = 0.051
+anchor_top = 0.269
+anchor_right = 0.111
+anchor_bottom = 0.306
+offset_left = 0.247997
+offset_top = -0.312012
+offset_right = 0.127991
+offset_bottom = -0.28801
+
+[node name="Type" type="TextureRect" parent="Container"]
+layout_mode = 2
+anchor_left = 0.275246
+anchor_top = 0.124667
+anchor_right = 0.579783
+anchor_bottom = 1.04133
+offset_left = 0.00800133
+offset_top = 0.0079999
+offset_right = 0.994999
+offset_bottom = 0.00799942
+texture = SubResource("ImageTexture_mbfcw")
+stretch_mode = 2
+metadata/_edit_use_anchors_ = true
