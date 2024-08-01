@@ -41,7 +41,8 @@ public partial class BoardController : Node3D
     public delegate void AbilityPhaseFinishedEventHandler();
     public override void _Ready()
 	{
-		PrepareBoard();
+        Enemy = GetNode("Enemy") as EnemyAI;
+        PrepareBoard();
     }
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -91,6 +92,8 @@ public partial class BoardController : Node3D
         }
         else
         {
+            GD.Print("enemy turn");
+            EmitSignal(SignalName.EnemyTurnStarted);
             PlayerTurn = false;
         }
         _timer.Start(12);
@@ -150,6 +153,7 @@ public partial class BoardController : Node3D
             //modify before instantiation
             var cardBaseInstance = cardBase.Instantiate();
             cardGameObjects.Add(cardBaseInstance);
+            
             if(c.GetType() == typeof(Card))
             {
                 CardFactory.CreateCard((Card)c, cardBaseInstance);
@@ -159,12 +163,39 @@ public partial class BoardController : Node3D
                 CardFactory.CreateUnitCard((UnitCard)c, cardBaseInstance);
             }
 
-            UnitCard unitCard = cardBaseInstance.GetChild(0) as UnitCard;
+            Card card = cardBaseInstance.GetChild(0) as Card;
             //unitCard.MouseEntered += ((MoveCard3D)GetNode("Camera3D")).Card_MouseEntered;
+            card.CardAlignmentType = Card.CardAlignment.Player;
 
-            unitCard.Position += new Vector3(1, 1, 1);
+            card.Position += new Vector3(1, 1, 1);
             this.GetNode("PlayerDeck").CallDeferred("add_child", cardBaseInstance);
-            Hand.Add(unitCard);
+            Hand.Add(card);
+        }
+
+        foreach (var c in Enemy.EnemyDeck)
+        {
+            //modify before instantiation
+            var cardBaseInstance = cardBase.Instantiate();
+            cardGameObjects.Add(cardBaseInstance);
+
+            if (c.GetType() == typeof(Card))
+            {
+                CardFactory.CreateCard((Card)c, cardBaseInstance);
+            }
+            else if (c.GetType() == typeof(UnitCard))
+            {
+                CardFactory.CreateUnitCard((UnitCard)c, cardBaseInstance);
+            }
+
+
+            Card card = cardBaseInstance.GetChild(0) as Card;
+            card.CardAlignmentType = Card.CardAlignment.Enemy;
+            card.Position += new Vector3(1, 1, 1);
+            this.GetNode("PlayerDeck").CallDeferred("add_child", cardBaseInstance);
+            if(Enemy.EnemyHand.Count < 7)
+            {
+                Enemy.EnemyHand.Add(card);
+            }
         }
         //-------------------------------------------------------------------------------
     }

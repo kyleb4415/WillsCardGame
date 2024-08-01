@@ -108,15 +108,34 @@ public partial class MoveCard3D : Camera3D
     {
         if(colliders is null)
         {
-            colliders = RaycastHelper.GetCollisionPoint(this, mouse, MouseCastLength);
+            if (RaycastHelper.GetCollisionPoint(this, mouse, MouseCastLength)["collider"].AsGodotObject().GetType() != typeof(StaticBody3D))
+            {
+                colliders = RaycastHelper.GetCollisionPoint(this, mouse, MouseCastLength);
+            }
+            else
+            {
+                GD.Print("clicking on a staticbody...");
+            }
+
         }
         else
         {
-            Card card = (Card)colliders["collider"];
-            if(card != null && !card.CanPickUp && !boardController.Hand.Contains(card))
+            if (colliders["collider"].AsGodotObject().GetType() != typeof(StaticBody3D))
             {
-                currentGameState = GameState.SelectingCard;
-                CardInteractNoContextMenu(@event);
+                Card card = (Card)colliders["collider"];
+                if (card != null && !card.CanPickUp && !boardController.Hand.Contains(card) && card.CardAlignmentType != Card.CardAlignment.Enemy)
+                {
+                    currentGameState = GameState.SelectingCard;
+                    CardInteractNoContextMenu(@event);
+                }
+                else if(selectedCard != null && !boardController.Enemy.EnemyHand.Contains(card))
+                {
+                    currentGameState = GameState.ExecutingAction;
+                }
+                else
+                {
+                    colliders = null;
+                }
             }
         }
     }
@@ -130,11 +149,10 @@ public partial class MoveCard3D : Camera3D
 
     private void PlaceCard(InputEvent @event)
     {
-        colliders = RaycastHelper.GetCollisionPoint(this, mouse, MouseCastLength);
-        if (colliders["collider"].AsGodotObject().GetType() != typeof(StaticBody3D))
+        if (colliders != null)
         {
             Card card = (Card)colliders["collider"];
-            if (card.CanPickUp)
+            if (card.CanPickUp && card.CardAlignmentType != Card.CardAlignment.Enemy)
             {
                 //card.EmitSignal(Card.SignalName.PlaceCard, card);
                 if(card.PlacedPos != default)
@@ -255,7 +273,7 @@ public partial class MoveCard3D : Camera3D
             UnitCard c = (UnitCard)targetCard; 
             if(!boardController.Hand.Contains(c))
             {
-                if(targetCard != selectedCard)
+                if (targetCard != selectedCard && targetCard.CardAlignmentType == Card.CardAlignment.Enemy && targetCard.CanPickUp == false && !boardController.Enemy.EnemyHand.Contains(targetCard))
                 {
                     currentGameState = GameState.ExecutingAction;
                 }
@@ -264,9 +282,16 @@ public partial class MoveCard3D : Camera3D
                     CardInteractNoContextMenu(@event);
                     currentGameState = GameState.SelectingCard;
                 }
-                else if (targetCard.CanPickUp == true)
+                else if (targetCard.CardAlignmentType == Card.CardAlignment.Player)
                 {
-                    //do something here, need to decide
+                    //deselect previous selected card
+                    selectedCard.EmitSignal(Card.SignalName.CardSelected, selectedCard);
+                    selectedCard = targetCard;
+
+                    //select new selectedcard
+                    selectedCard.EmitSignal(Card.SignalName.CardSelected, selectedCard);
+                    targetCard = null;
+                    currentGameState = GameState.PlacingCard;
                 }
             }
             else
@@ -336,7 +361,7 @@ public partial class MoveCard3D : Camera3D
                         return;
                     }
 
-                    if (colliderToMove.CanPickUp == true)
+                    if (colliderToMove.CanPickUp == true && colliderToMove.CardAlignmentType != Card.CardAlignment.Enemy)  
                     {
                         RotationHelper.ResetRotation(colliderToMove, this.GetTree());
                         colliderToMove.Set("gravity_scale", 0);
