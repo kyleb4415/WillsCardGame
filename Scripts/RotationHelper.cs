@@ -30,7 +30,6 @@ public static class RotationHelper
             //tween.TweenProperty(c, "position", new Vector3(c.PlacedPos.X, c.PlacedPos.Y, c.PlacedPos.Z), 0.1f);
             tween2.TweenProperty(c, "rotation", new Vector3(0f, 0f, 0f), 0.25f).SetTrans(Tween.TransitionType.Quad);
             tween2.Finished += () => {
-                c.GravityScale = 1f;
                 c.Set("rotation", new Vector3(0f, 0f, 0f));
                 (c.GetNode("SelectedLight") as OmniLight3D).SetLayerMaskValue(1, false);
                 c.InputRayPickable = true;

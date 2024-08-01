@@ -23,7 +23,9 @@ public partial class MoveCard3D : Camera3D
     public Vector2 screenSize;
     public bool queueFree = false;
     public GameState currentGameState;
-    //public bool MouseOverCard { get; set; }
+    public BoardController boardController;
+    public float MouseCastLength = 9.0f;
+    public float CardFollowDistance = 3.5f;
 
     [Signal]
     public delegate void HoverCardEventHandler(Card c);
@@ -31,6 +33,9 @@ public partial class MoveCard3D : Camera3D
     public override void _Ready()
     {
         mouse = new Vector2();
+        //fix this - board controller needs to get initialized
+
+        boardController = this.GetParent<BoardController>();
     }
 
     // Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -60,19 +65,18 @@ public partial class MoveCard3D : Camera3D
         switch (currentGameState)
         {
             case (GameState.PlacingCard):
-                //since movecolliders handles moving logic then the only thing here will be progressing game state
-                //some weird logic is necessary since multiple cards can be placed within a turn
-
                 if (@event is InputEventMouseButton && @event.IsActionPressed("leftclick"))
                 {
-                    colliders = RaycastHelper.GetCollisionPoint(this, mouse, 3.0f);
+                    InitialAction(@event);
                 }
                 else if (@event is InputEventMouseButton && @event.IsActionReleased("leftclick"))
                 {
+                    GD.Print("placing card");
                     PlaceCard(@event);
                 }
                 if (@event is InputEventMouseButton && @event.IsActionPressed("rightclick"))
                 {
+                    GD.Print("picking card");
                     CardInteractContextMenu(@event);
                 }
                 break;
@@ -99,107 +103,190 @@ public partial class MoveCard3D : Camera3D
         base._Input(@event);
     }
 
+
+    private void InitialAction(InputEvent @event)
+    {
+        if(colliders is null)
+        {
+            colliders = RaycastHelper.GetCollisionPoint(this, mouse, MouseCastLength);
+        }
+        else
+        {
+            Card card = (Card)colliders["collider"];
+            if(card != null && !card.CanPickUp && !boardController.Hand.Contains(card))
+            {
+                currentGameState = GameState.SelectingCard;
+                CardInteractNoContextMenu(@event);
+            }
+        }
+    }
+
+    /// <summary>
+    /// Handles card placement on first placing onto the board
+    /// Path 1 - Card is the first to be placed onto the board and there is no selectedCard
+    /// Path 2 - Card has been placed and is now being clicked again, leading the event to be relayed to the selectcard stage
+    /// Path 3 - Card has been selected so gameState has to jump back to the AwaitingTarget phase
+    /// </summary>
+
     private void PlaceCard(InputEvent @event)
     {
-        colliders = RaycastHelper.GetCollisionPoint(this, mouse, 3.0f);
+        colliders = RaycastHelper.GetCollisionPoint(this, mouse, MouseCastLength);
         if (colliders["collider"].AsGodotObject().GetType() != typeof(StaticBody3D))
         {
             Card card = (Card)colliders["collider"];
             if (card.CanPickUp)
             {
-                card.EmitSignal(Card.SignalName.PlaceCard, card);
-
-                Tween tween = CreateTween();
-                tween.TweenProperty(card, "position", card.PlacedPos, 0.5f).SetTrans(Tween.TransitionType.Quad);
-                tween.Finished += () =>
+                //card.EmitSignal(Card.SignalName.PlaceCard, card);
+                if(card.PlacedPos != default)
                 {
-                    card.EmitSignal(Card.SignalName.PlaceCard, card, this.GetParent().GetNode("ManaBar"));
-                };
-            }
-            else
-            {
-                currentGameState = GameState.SelectingCard;
-                CardInteractNoContextMenu(@event);
-            }
-        }
-    }
-
-    private void CardInteractContextMenu(InputEvent @event)
-    {
-        colliders = RaycastHelper.GetCollisionPoint(this, mouse, 3.0f);
-        if (colliders["collider"].AsGodotObject().GetType() == typeof(UnitCard))
-        {
-            selectedCard = (UnitCard)colliders["collider"];
-            if (CardManager.GetCardMethod(selectedCard) != null)
-            {
-                if (!selectedCard.CanPickUp && !selectedCard.Selected)
-                {
-                    selectedCard.EmitSignal(Card.SignalName.CardSelected, selectedCard);
-                    Node2D contextMenu = ResourceLoader.Load<PackedScene>("res://Scenes/CardContextMenu.tscn").Instantiate<Node2D>();
-                    contextMenu.GetChild(0).Set("position", mouse);
-                    selectedCard.AddChild(contextMenu);
-                    currentGameState = GameState.AwaitingTarget;
+                    Tween tween = CreateTween();
+                    tween.TweenProperty(card, "position", card.PlacedPos, 0.5f).SetTrans(Tween.TransitionType.Quad);
+                    tween.Finished += () =>
+                    {
+                        card.EmitSignal(Card.SignalName.PlaceCard, card, this.GetParent().GetNode("ManaBar"));
+                    };
+                    boardController.Hand.Remove(card);
+                    currentGameState = GameState.SelectingCard;
                 }
                 else
                 {
-                    selectedCard.EmitSignal(Card.SignalName.CardSelected, selectedCard);
+                    Tween tween = CreateTween();
+                    Tween tween2 = CreateTween();
+                    tween.TweenProperty(card, "position", card.OriginPos, 0.5f).SetTrans(Tween.TransitionType.Quad);
+                    tween2.TweenProperty(card, "rotation", card.OriginRot, 0.5f).SetTrans(Tween.TransitionType.Quad);
+                    card.GravityScale = 0;
+                    colliders = null;
                 }
+            }
+            if(selectedCard != null)
+            {
+                GD.Print("awaitingtarget");
+                currentGameState = GameState.AwaitingTarget;
             }
         }
     }
 
-    private void CardInteractNoContextMenu(InputEvent @event)
+    /// <summary>
+    /// Handles card interaction WITH context menu, allowing a regular attack or use of an ability.
+    /// Path 1 - Card is not already selected in the selectedCard variable, thus adding it to the selectedCard variable and progressing the state machine.
+    /// Path 2 - Card is already the selectedCard, thus selecting it again will deselect it and will cause the state machine to stay in the same state.
+    /// </summary>
+    private void CardInteractContextMenu(InputEvent @event)
     {
-        colliders = RaycastHelper.GetCollisionPoint(this, mouse, 3.0f);
+        colliders = RaycastHelper.GetCollisionPoint(this, mouse, MouseCastLength);
         if (colliders["collider"].AsGodotObject().GetType() == typeof(UnitCard))
         {
-            selectedCard = (UnitCard)colliders["collider"];
-            if (!selectedCard.CanPickUp && !selectedCard.Selected)
+            UnitCard cardToBeSelected = (UnitCard)colliders["collider"];
+            if (selectedCard != cardToBeSelected)
             {
-                GD.Print("selected");
-                selectedCard.EmitSignal(Card.SignalName.CardSelected, selectedCard);
-                GD.Print(selectedCard.Selected);
-                currentGameState = GameState.AwaitingTarget;
+                selectedCard = (UnitCard)colliders["collider"];
+                if (CardManager.GetCardMethod(selectedCard) != null)
+                {
+                    if (!selectedCard.CanPickUp && !selectedCard.Selected)
+                    {
+                        selectedCard.Selected = true;
+                        GD.Print("card selected context menu " + selectedCard.Selected);
+                        Node2D contextMenu = ResourceLoader.Load<PackedScene>("res://Scenes/CardContextMenu.tscn").Instantiate<Node2D>();
+                        contextMenu.GetChild(0).Set("position", mouse);
+                        selectedCard.AddChild(contextMenu);
+                        currentGameState = GameState.AwaitingTarget;
+                    }
+                    else
+                    {
+                        selectedCard.State = CardState.Idle;
+                    }
+                }
             }
             else
             {
                 selectedCard.EmitSignal(Card.SignalName.CardSelected, selectedCard);
+                selectedCard = null;
+            }
+
+        }
+    }
+
+    /// <summary>
+    /// Handles card interaction without context menu, just clicking on the cards makes them attack and not use special ability (unless passive)
+    /// Path 1 - Card is not already selected in the selectedCard variable, thus adding it to the selectedCard variable and progressing the state machine.
+    /// Path 2 - Card is already the selectedCard, thus selecting it again will deselect it and will cause the state machine to stay in the same state.
+    /// </summary>
+    private void CardInteractNoContextMenu(InputEvent @event)
+    {
+        colliders = RaycastHelper.GetCollisionPoint(this, mouse, MouseCastLength);
+        if (colliders["collider"].AsGodotObject().GetType() == typeof(UnitCard))
+        {
+            UnitCard cardToBeSelected = (UnitCard)colliders["collider"];
+            if(boardController.Hand.Contains(cardToBeSelected))
+            {
+                currentGameState = GameState.PlacingCard;
+            }
+            else if(selectedCard != cardToBeSelected)
+            {
+                selectedCard = (UnitCard)colliders["collider"];
+                if (!selectedCard.CanPickUp && !selectedCard.Selected)
+                {
+                    selectedCard.EmitSignal(Card.SignalName.CardSelected, selectedCard);
+                    currentGameState = GameState.AwaitingTarget;
+                    selectedCard.State = CardState.Attacking;
+                }
+            }
+            else
+            {
+                selectedCard.EmitSignal(Card.SignalName.CardSelected, selectedCard);
+                selectedCard = null;
+                currentGameState = GameState.PlacingCard;
             }
         }
     }
 
+    /// <summary>
+    /// Selects target card that selectedCard will attack
+    /// Path 1 - Selected card is NOT in the hand and it will be selected as the target card for the action to be performed against.
+    /// Path 2 - Selected target card IS in the hand it will NOT be selected as the target, but will instead undergo placement.
+    /// </summary>
+    
     private void SelectTarget(InputEvent @event)
     {
-        colliders = RaycastHelper.GetCollisionPoint(this, mouse, 3.0f);
+        colliders = RaycastHelper.GetCollisionPoint(this, mouse, MouseCastLength);
         if (colliders["collider"].AsGodotObject().GetType() == typeof(UnitCard))
         {
             targetCard = (UnitCard)colliders["collider"];
-            if (targetCard != selectedCard)
+            UnitCard c = (UnitCard)targetCard; 
+            if(!boardController.Hand.Contains(c))
             {
-                currentGameState = GameState.ExecutingAction;
+                if(targetCard != selectedCard)
+                {
+                    currentGameState = GameState.ExecutingAction;
+                }
+                else if (targetCard == selectedCard)
+                {
+                    CardInteractNoContextMenu(@event);
+                    currentGameState = GameState.SelectingCard;
+                }
+                else if (targetCard.CanPickUp == true)
+                {
+                    //do something here, need to decide
+                }
             }
-            else if(targetCard == selectedCard)
+            else
             {
-                CardInteractNoContextMenu(@event);
-                currentGameState = GameState.SelectingCard;
+                currentGameState = GameState.PlacingCard;
+                colliders = RaycastHelper.GetCollisionPoint(this, mouse, MouseCastLength);
             }
-            else if(targetCard.CanPickUp == true)
-            {
-                //do something here, need to decide
-            }
+
         }
-        else
-        {
-            currentGameState = GameState.SelectingCard;
-        }
+
     }
 
+    /// <summary>
+    /// Executes action, whether it be attacking or using an ability
+    /// </summary>
     private void ExecuteAction()
     {
         //this if statement will be unnecessary once enemy is implemented
         if (!targetCard.CanPickUp)
         {
-            selectedCard.EmitSignal(UnitCard.SignalName.CardHit, targetCard);
             CardAction action = new CardAction(selectedCard, targetCard);
             action.ExecuteAction();
             currentGameState = GameState.PlacingCard;
@@ -207,6 +294,19 @@ public partial class MoveCard3D : Camera3D
 
     }
 
+    /// <summary>
+    /// Continues game after ability phase if needed
+    /// </summary>
+    private void ContinueGameAfterAbility()
+    {
+        currentGameState = GameState.PlacingCard;
+    }
+
+    /// <summary>
+    /// Moves card 
+    /// </summary>
+    /// <param name="colliders">Represents the card object that's being moved</param>
+    /// <param name="delta">Represents the physicsprocess time</param>
     private void MoveColliders(Dictionary colliders, double delta)
     {
         try
@@ -219,6 +319,9 @@ public partial class MoveCard3D : Camera3D
                     if (colliders["collider"].AsGodotObject().GetType() == typeof(UnitCard))
                     {
                         colliderToMove = (UnitCard)colliders["collider"];
+                        //TODO: 
+                        //emit remove from hand signal so awaitingtarget logic will work
+                        //will be replaced into hand if it's not put in a spot
                     }
                     else if (colliders["collider"].AsGodotObject().GetType() == typeof(SkillCard))
                     {
@@ -238,7 +341,8 @@ public partial class MoveCard3D : Camera3D
                         RotationHelper.ResetRotation(colliderToMove, this.GetTree());
                         colliderToMove.Set("gravity_scale", 0);
                         colliderToMove.IsPickedUp = true;
-                        colliderToMove.Position = colliderToMove.Position.Lerp(ProjectPosition(mouse, 2.5f), (float)delta * 10);
+                        colliderToMove.Position = colliderToMove.Position.Lerp(ProjectPosition(mouse, CardFollowDistance), (float)delta * 10);
+                        boardController.Hand.Remove(colliderToMove);
                     }
                 }
             }
@@ -250,7 +354,10 @@ public partial class MoveCard3D : Camera3D
         }
     }
 
-    //this is the event for the area3d colliders, should lerp card to space
+    /// <summary>
+    /// Lerps card into the area if it's released while into the area
+    /// </summary>
+    /// <param name="body">Body entering the area</param>
     public void Area_OnBodyEntered(Node3D body)
     {
         //reconfigure to use signals so it can fix card automatically going to space
@@ -269,11 +376,14 @@ public partial class MoveCard3D : Camera3D
         }
     }
 
+    /// <summary>
+    /// Removes card lerping if it exits the area
+    /// </summary>
+    /// <param name="body">Represents card body exiting area</param>
     public void Area_OnBodyExited(Node3D body)
     {
         Card cardBody = (Card)body;
-        //fix this
-        //cardBody.PlacedPos = CardManager.ReturnCardToHand();
+        cardBody.PlacedPos = default;
         cardBody.CanPickUp = true;
     }
 

@@ -1,24 +1,14 @@
-[gd_scene load_steps=10 format=3 uid="uid://c37ukuwq6so48"]
+[gd_scene load_steps=9 format=3 uid="uid://c37ukuwq6so48"]
 
 [ext_resource type="Script" path="res://Scripts/MoveCard3D.cs" id="1_7mhem"]
 [ext_resource type="Script" path="res://Scripts/BoardController.cs" id="1_y1f3f"]
-[ext_resource type="Texture2D" uid="uid://ciqwbi1c5c5cf" path="res://Assets/GUI/Images/boardprototype.png" id="2_pcu2q"]
+[ext_resource type="Script" path="res://Scripts/EnemyAI.cs" id="4_3y4ib"]
+[ext_resource type="PackedScene" uid="uid://c7ls33jcksslf" path="res://Scenes3D/board.glb" id="4_d1dy4"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_jbem2"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_od776"]
 size = Vector3(60, 1, 60)
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_0mmj6"]
-albedo_texture = ExtResource("2_pcu2q")
-uv1_scale = Vector3(0.125, 0.125, 0.2)
-uv1_offset = Vector3(0.505, 0.035, -0.485)
-uv1_triplanar = true
-
-[sub_resource type="BoxMesh" id="BoxMesh_obpbq"]
-lightmap_size_hint = Vector2i(64, 56)
-material = SubResource("StandardMaterial3D_0mmj6")
-size = Vector3(8, 1, 4)
 
 [sub_resource type="Gradient" id="Gradient_3ka8j"]
 interpolation_color_space = 2
@@ -31,26 +21,26 @@ gradient = SubResource("Gradient_3ka8j")
 script = ExtResource("1_y1f3f")
 
 [node name="Camera3D" type="Camera3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 1.17267, 0)
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 2.24975, 0)
 script = ExtResource("1_7mhem")
 
-[node name="Board" type="StaticBody3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
+[node name="board" parent="." instance=ExtResource("4_d1dy4")]
+transform = Transform3D(0.28, 0, 0, 0, 0.28, 0, 0, 0, 0.28, 0.636022, -1.8911, -0.433337)
+
+[node name="Board2" type="StaticBody3D" parent="board"]
+transform = Transform3D(2.85714, 0, 0, 0, 2.85714, 0, 0, 0, 2.85714, -2.39509, 2.54599, 1.23811)
 physics_material_override = SubResource("PhysicsMaterial_jbem2")
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Board"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="board/Board2"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
 shape = SubResource("BoxShape3D_od776")
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Board"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0.0385028)
-layers = 2
-mesh = SubResource("BoxMesh_obpbq")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, -0.00918031, 0.999958, 0, -0.999958, -0.00918031, 0, 5.21265, 0)
 light_energy = 0.244
 shadow_enabled = true
+
+[node name="EnemyBoardPositions" type="Node" parent="."]
 
 [node name="BoardPositions" type="Node" parent="."]
 
@@ -121,3 +111,11 @@ offset_right = 686.0
 offset_bottom = 27.0
 
 [node name="Timer" type="Timer" parent="TimerDisplay"]
+
+[node name="EnemyDeck" type="Node3D" parent="."]
+
+[node name="PlayerDeck" type="Node3D" parent="."]
+
+[node name="Enemy" type="Node3D" parent="."]
+transform = Transform3D(0.999945, 0, 0.0104718, 0, 1, 0, -0.0104718, 0, 0.999945, 0, 0, 0)
+script = ExtResource("4_3y4ib")
