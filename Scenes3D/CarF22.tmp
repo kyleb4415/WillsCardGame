@@ -23,7 +23,6 @@ size = Vector3(0.275, 0.002, 0.41)
 font_names = PackedStringArray("Windows")
 
 [node name="CardBase3d" type="Node3D"]
-transform = Transform3D(1.5, 0, 0, 0, 1.5, 0, 0, 0, 1.5, 0, 0, 0)
 
 [node name="CardBody" type="RigidBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.1443, 0)
@@ -45,7 +44,7 @@ material_override = SubResource("StandardMaterial3D_ad6b7")
 mesh = SubResource("BoxMesh_gic02")
 
 [node name="Name" type="Label3D" parent="CardBody"]
-transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, -0.0728298, 0.0897118, -0.228278)
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0.00282058, 0.0897118, -0.179199)
 text = "a"
 font = ExtResource("7_uff6s")
 font_size = 12
@@ -53,43 +52,41 @@ outline_size = 0
 uppercase = true
 
 [node name="Description" type="Label3D" parent="CardBody"]
-transform = Transform3D(0.585, 0, 0, 0, -2.55712e-08, 0.585, 0, -0.585, -2.55712e-08, 0, 0.00351089, 0.18277)
+transform = Transform3D(0.585, 0, 0, 0, -2.55712e-08, 0.585, 0, -0.585, -2.55712e-08, 0, 0.00351089, 0.141394)
 text = "a"
 font = SubResource("SystemFont_plqby")
 font_size = 12
 
 [node name="Type" type="Label3D" parent="CardBody"]
-transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0.00351089, 0.0604362)
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0.00351089, 0.0530774)
 text = "a"
 font = ExtResource("7_uff6s")
 font_size = 12
 
 [node name="ManaCost" type="Label3D" parent="CardBody"]
-transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0.139958, 0.062667, -0.230331)
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0.109323, 0.062667, -0.178964)
 text = "5"
 font = ExtResource("7_uff6s")
 font_size = 12
 outline_size = 0
 
 [node name="Damage" type="Label3D" parent="CardBody"]
-transform = Transform3D(0.585, 0, 0, 0, -2.55712e-08, 0.585, 0, -0.585, -2.55712e-08, -0.0786626, 0.00351089, 0.0539177)
+transform = Transform3D(0.585, 0, 0, 0, -2.55712e-08, 0.585, 0, -0.585, -2.55712e-08, -0.0786626, 0.00351089, 0.0583459)
 text = "a"
 font = ExtResource("7_uff6s")
-font_size = 20
+font_size = 12
 outline_size = 0
 
 [node name="HP" type="Label3D" parent="CardBody"]
-transform = Transform3D(0.585, 0, 0, 0, -2.55712e-08, 0.585, 0, -0.585, -2.55712e-08, 0.114231, 0.00273722, 0.0627552)
+transform = Transform3D(0.585, 0, 0, 0, -2.55712e-08, 0.585, 0, -0.585, -2.55712e-08, 0.0899721, 0.00351089, 0.0551789)
 text = "a"
 font = ExtResource("7_uff6s")
-font_size = 20
+font_size = 12
 outline_size = 0
 
 [node name="SelectedLight" type="OmniLight3D" parent="CardBody"]
 layers = 0
 omni_range = 0.21309
-
-[node name="CardBase" parent="CardBody" instance=ExtResource("2_nqvf2")]
 
 [node name="ContextMenuControl" type="Control" parent="CardBody"]
 layout_mode = 3
@@ -129,5 +126,9 @@ fit_content = true
 
 [node name="Timer" type="Timer" parent="CardBody/ContextMenuControl"]
 one_shot = true
+
+[node name="CardBase" parent="CardBody" instance=ExtResource("2_nqvf2")]
+visible = false
+script = null
 
 [editable path="CardBody/CardBase"]

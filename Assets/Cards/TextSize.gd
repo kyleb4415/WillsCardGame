@@ -4,7 +4,8 @@ var min_font_size = 10
 var max_font_size = 27
 
 func _ready():
-	self.connect("text_changed", self, "_adjust_font_size")
+	#self.connect("text_changed", self, "_adjust_font_size")
+	pass
 
 
 func _adjust_font_size():

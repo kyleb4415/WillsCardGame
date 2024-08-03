@@ -13,32 +13,32 @@ public partial class UnitCard : Card, ICard
 	public int Damage { get; set; } = 0;
 	public Dictionary<string, int[]> StatusEffects { get; set; } = new Dictionary<string, int[]>();
 
-    [Signal]
-    public delegate void CardHitEventHandler(int dmg);
+	[Signal]
+	public delegate void CardHitEventHandler(int dmg);
 
-    [Signal]
-    public delegate void AbilityEventHandler(UnitCard c);
+	[Signal]
+	public delegate void AbilityEventHandler(UnitCard c);
 
 	[Signal]
 	public delegate void OnDamagedEventHandler();
 
-    // Called when the node enters the scene tree for the first time.
-    public override void _Ready()
-    {
+	// Called when the node enters the scene tree for the first time.
+	public override void _Ready()
+	{
 		BoardController b = GetNode("/root/GameBoard") as BoardController;
 		if (Damage != 0 && HP != 0)
 		{
-            GetNode("Damage").Set("text", Damage);
-            GetNode("HP").Set("text", HP);
+			GetNode("Damage").Set("text", Damage);
+			GetNode("HP").Set("text", HP);
 			this.Ability += InvokeAbility;
 			this.OnDamaged += UpdateHP;
-        }
+		}
 		b.PlayerTurnEnded += ProcessStatusEffects;
 		this.CardHit += UnitCard_CardHit;
-        this.CardReleased += Release;
-        this.CardSelected += Select;
-        base._Ready();
-    }
+		this.CardReleased += Release;
+		this.CardSelected += Select;
+		base._Ready();
+	}
 
 	public UnitCard()
 	{
@@ -60,7 +60,7 @@ public partial class UnitCard : Card, ICard
 
 	}
 
-    public UnitCard(int id, string name, string desc, string type, int damage, int hp, int unlockedFlag, int manaCost)
+	public UnitCard(int id, string name, string desc, string type, int damage, int hp, int unlockedFlag, int manaCost)
 	{
 		this.ID = id;
 		this.CardName = name;
@@ -71,8 +71,8 @@ public partial class UnitCard : Card, ICard
 		this.UnlockedFlag = UnlockedFlag;
 		this.ManaCost = manaCost;
 	}
-    // Called every frame. 'delta' is the elapsed time since the previous frame.
-    public override void _Process(double delta)
+	// Called every frame. 'delta' is the elapsed time since the previous frame.
+	public override void _Process(double delta)
 	{
 
 	}
@@ -100,13 +100,13 @@ public partial class UnitCard : Card, ICard
 		this.GetNode("Damage").Set("text", this.Damage.ToString());
 	}
 
-    public void InvokeAbility(UnitCard c)
-    {
-        var method = CardManager.GetCardMethod(c);
-        method.DynamicInvoke( new object[] { GetNode("/root/GameBoard"), c });
+	public void InvokeAbility(UnitCard c)
+	{
+		var method = CardManager.GetCardMethod(c);
+		method.DynamicInvoke( new object[] { GetNode("/root/GameBoard"), c });
 		BoardController b = GetNode("/root/GameBoard") as BoardController;
 		c.UpdateHP();
-    }
+	}
 
 	//Harmful status effects are represented by a StatusEffect name key and a int[] consisting of two integers - the first being the 
 	//damage from the status effect and the second being the amount of turns it is applied for.
@@ -129,5 +129,5 @@ public partial class UnitCard : Card, ICard
 			}
 		}
 		//maybe print status effects here for testing later
-    }
+	}
 }
