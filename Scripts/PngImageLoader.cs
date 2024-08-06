@@ -19,6 +19,7 @@ public static class PngImageLoader
             imgTexture = ImageTexture.CreateFromImage(img);
             imgTexture.SetSizeOverride(new Vector2I(width, height));
             material3D.Set("albedo_texture", ImageTexture.CreateFromImage(img));
+            GD.Print("creating image texture");
         }
         catch (Exception ex)
         {

@@ -1,0 +1,15 @@
+[gd_scene format=3 uid="uid://buwiwts28kf35"]
+
+[node name="CardDescriptionPopup" type="Node2D"]
+
+[node name="PopupPanel" type="PopupPanel" parent="."]
+transparent_bg = true
+gui_disable_input = true
+visible = true
+
+[node name="RichTextLabel" type="RichTextLabel" parent="PopupPanel"]
+offset_left = 4.0
+offset_top = 4.0
+offset_right = 96.0
+offset_bottom = 96.0
+text = "jkasljdfasdfasdf"

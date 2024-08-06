@@ -1,5 +1,6 @@
 using Godot;
 using System;
+using System.Collections.Generic;
 using System.Data.SQLite;
 
 
@@ -11,15 +12,22 @@ public partial class Card : RigidBody3D, ICard
     public bool Selected { get; set; } = false;
     public bool MouseOver { get; set; } = false;
     public Vector3 PlacedPos { get; set; } = new Vector3();
+    //storing rotation and position information for card in fan so it can go back if released outside of a space
+    public Vector3 OriginPos { get; set; } = new Vector3();
+    public Vector3 OriginRot { get; set; } = new Vector3();
     public SQLiteBlob CardImage { get; set; } = null;
     public SQLiteBlob TypeImage { get; set; }
-    public string Name { get; set; }
+    public string CardName { get; set; }
     public string Description { get; set; }
     public string Type { get; set; }
     public int ManaCost { get; set; }
     public int UnlockedFlag { get; set; }
-
     public Vector2 MousePos { get; set; }
+    public Panel ContextMenu { get; set; }
+    public Timer ContextMenuTimer { get; set; }
+    public CardState State { get; set; }
+    public CardAlignment CardAlignmentType { get; set; }
+    public List<StatusEffect> Effects { get; set; } = new List<StatusEffect>();
 
     [Signal]
     public delegate void PlaceCardEventHandler(Card c, TextureProgressBar t);
@@ -42,9 +50,21 @@ public partial class Card : RigidBody3D, ICard
         this.MouseEntered += Card_MouseEntered;
         this.InputRayPickable = true;
         this.CanPickUp = true;
+        this.ContextMenu = this.GetNode("ContextMenuControl/ContextMenu") as Panel;
+        if(CardName != null)
+        {
+            this.Name = CardName;
+        }
+
+        var contextMenuText = ContextMenu.GetChild(0) as RichTextLabel;
+        contextMenuText.Text = Description;
+        //change to ability desc later
+        ContextMenu.Visible = false;
+        this.ContextMenuTimer = this.GetNode("ContextMenuControl/Timer") as Timer;
+        ContextMenuTimer.Timeout += ContextMenuTimer_Timeout;
         if (Name is not null && Description is not null)
         {
-            GetNode("Name").Set("text", Name);
+            GetNode("Name").Set("text", CardName);
             GetNode("Description").Set("text", Description);
             GetNode("ManaCost").Set("text", ManaCost.ToString());
         }
@@ -54,6 +74,11 @@ public partial class Card : RigidBody3D, ICard
         }
 
         (GetNode("SelectedLight") as OmniLight3D).SetLayerMaskValue(1, true);
+    }
+
+    private void ContextMenuTimer_Timeout()
+    {
+        ContextMenu.Visible = true;
     }
 
 
@@ -66,15 +91,24 @@ public partial class Card : RigidBody3D, ICard
     //implement method for dropped card here
     public void Place(Card c, TextureProgressBar t)
     {
-        if(t.Value >= c.ManaCost * 100)
+        if(this.CanPickUp == true)
         {
-            this.CanPickUp = false;
-            t.Value -= c.ManaCost * 100;
+            if (t.Value >= c.ManaCost * 100)
+            {
+                this.CanPickUp = false;
+                t.Value -= c.ManaCost * 100;
+                GetNode<BoardController>("/root/GameBoard").PlayerCardsOnBoard.Add(c);
+            }
+            else
+            {
+                //print something or give some notification that they don't have enough mana
+            }
         }
-        else
-        {
-            //print something or give some notification that they don't have enough mana
-        }
+    }
+
+    public override void _Process(double delta)
+    {
+        base._Process(delta);
     }
 
     public void Release(Card c)
@@ -84,14 +118,17 @@ public partial class Card : RigidBody3D, ICard
 
     public void Select(Card c)
     {
-        this.Selected = !Selected;
+        c.Selected = !Selected;
+        GD.Print($"{c.Name} is now selected: {c.Selected}");
         if(Selected == true)
         {
-            this.GravityScale = 0;
+            c.GravityScale = 0;
         }
-        else
+        else if(c.Selected == false && !c.CanPickUp && MouseOver == false)
         {
-            this.GravityScale = 1;
+            Tween t = GetTree().CreateTween();
+            t.TweenProperty(c, "position", this.PlacedPos, 0.25f).SetTrans(Tween.TransitionType.Quad);
+
         }
         //OpenContextMenu(c);
     }
@@ -103,7 +140,7 @@ public partial class Card : RigidBody3D, ICard
             try
             {
                 MoveCard3D instance = GetNode("/root/GameBoard/Camera3D") as MoveCard3D;
-                Vector3 collisionPoint = (Vector3)RaycastHelper.GetCollisionPoint((Camera3D)instance, instance.mouse, 3.0f)["position"];
+                Vector3 collisionPoint = (Vector3)RaycastHelper.GetCollisionPoint((Camera3D)instance, instance.mouse, 9.0f)["position"];
                 RotationHelper.RotateCard(this, collisionPoint, this.GetTree());
             }
             catch (Exception e)
@@ -129,7 +166,14 @@ public partial class Card : RigidBody3D, ICard
     public void Card_MouseEntered()
     {
         this.MouseOver = true;
+        this.GravityScale = 0;
+        if (!this.CanPickUp)
+        {
+            ContextMenuTimer.OneShot = true;
+            ContextMenuTimer.Start(1);
+        }
     }
+    
 
     //handles logic for card animation on hover before & after selection
     public void Card_MouseExited()
@@ -141,10 +185,29 @@ public partial class Card : RigidBody3D, ICard
         else if(this.Selected == false && this.CanPickUp == false)
         {
             RotationHelper.ResetRotation(this, this.GetTree());
-            Tween tween = CreateTween();
+            Tween tween = this.GetTree().CreateTween();
             tween.TweenProperty(this, "position", this.PlacedPos, 0.2f).SetTrans(Tween.TransitionType.Quad);
         }
         this.MouseOver = false;
+        ContextMenuTimer.Stop();
+        if(ContextMenu is not null)
+        {
+            ContextMenu.Hide();
+        }
+
+        
+    }
+    
+    public void ApplyStatusEffect(StatusEffect effect, Card c)
+    {
+        c.Effects.Add(effect);
+    }
+
+    public enum CardAlignment
+    {
+        Player,
+        Neutral,
+        Enemy
     }
 
 }

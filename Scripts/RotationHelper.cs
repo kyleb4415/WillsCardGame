@@ -12,11 +12,24 @@ public static class RotationHelper
         c.GravityScale = 0;
         tween.TweenProperty(c, "position", new Vector3(c.PlacedPos.X, c.PlacedPos.Y + 0.1f, c.PlacedPos.Z), 0.1f).SetTrans(Tween.TransitionType.Quad);
 
-        float z = (1.5f * c.Position.Z - collisionPoint.Z * 1.5f);
-        float x = (1.5f * c.Position.X - collisionPoint.X * 1.5f);
-        //leave y the same
-        tween2.TweenProperty(c, "rotation", new Vector3(x, (c.Rotation.Y), z), 0.25f).SetTrans(Tween.TransitionType.Quad);
-        (c.GetNode("SelectedLight") as OmniLight3D).SetLayerMaskValue(1, true);
+        if(c.CardAlignmentType == Card.CardAlignment.Player)
+        {
+            float z = (1.5f * c.Position.Z - collisionPoint.Z * 1.5f);
+            float x = (1.5f * c.Position.X - collisionPoint.X * 1.5f);
+            //leave y the same
+            tween2.TweenProperty(c, "rotation", new Vector3(x, (c.Rotation.Y), z), 0.25f).SetTrans(Tween.TransitionType.Quad);
+            (c.GetNode("SelectedLight") as OmniLight3D).SetLayerMaskValue(1, true);
+        }
+        else
+        {
+            var localCollision = c.ToLocal(collisionPoint);
+            float z = (0.5f - Math.Abs(localCollision.Z * 3.0f));
+            float x = (0.5f - Math.Abs(localCollision.X * 3.0f));
+            //leave y the same
+            tween2.TweenProperty(c, "rotation", new Vector3(x, (c.Rotation.Y), z), 0.25f).SetTrans(Tween.TransitionType.Quad);
+            (c.GetNode("SelectedLight") as OmniLight3D).SetLayerMaskValue(1, true);
+        }
+
     }
 
     //NOTE: 7/8/2024 - removed position changes under ResetRotation
@@ -30,7 +43,6 @@ public static class RotationHelper
             //tween.TweenProperty(c, "position", new Vector3(c.PlacedPos.X, c.PlacedPos.Y, c.PlacedPos.Z), 0.1f);
             tween2.TweenProperty(c, "rotation", new Vector3(0f, 0f, 0f), 0.25f).SetTrans(Tween.TransitionType.Quad);
             tween2.Finished += () => {
-                c.GravityScale = 1f;
                 c.Set("rotation", new Vector3(0f, 0f, 0f));
                 (c.GetNode("SelectedLight") as OmniLight3D).SetLayerMaskValue(1, false);
                 c.InputRayPickable = true;
