@@ -6,15 +6,18 @@ public partial class EnemyAI : Node
 {
 	public List<ICard> EnemyDeck = new List<ICard>();
 	public List<Card> EnemyHand = new List<Card>();
+	public List<Node3D> EnemySpaces = new List<Node3D>();
 	private bool _firstTurn = true;
+	private BoardController _boardController;
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
 		EnemyDeck = CardManager.LoadCardsFromDB();
-		foreach(var c in EnemyDeck)
+		_boardController = this.GetParent<BoardController>();
+		_boardController.EnemyTurnStarted += PlayTurn;
+		foreach(var space in GetNode("EnemyBoardPositions").GetChildren())
 		{
-			Card card = (Card)c;
-			card.CardAlignmentType = Card.CardAlignment.Enemy;
+			EnemySpaces.Add((Node3D)space);
 		}
 	}
 
@@ -29,7 +32,8 @@ public partial class EnemyAI : Node
 		int selection = rnd.Next(0, 101);
 		if(_firstTurn == true)
 		{
-            PlayFirstTurn();
+            PlayFirstTurn(rnd);
+			_firstTurn = false;
         }
 		else
 		{
@@ -41,10 +45,23 @@ public partial class EnemyAI : Node
         }
 	}
 
-	public void PlayFirstTurn()
+	//reparent card to other node
+	public void PlayFirstTurn(Random rnd)
 	{
+		GD.Print("playfristrun method");
+		int cardSelection = rnd.Next(0, EnemyHand.Count);
+		int spaceSelection = rnd.Next(0, EnemySpaces.Count);
 
-	}
+		Card card = EnemyHand[cardSelection];
+		card.PlacedPos = EnemySpaces[spaceSelection].Position;
+
+		EnemyHand.Remove(card);
+		card.CanPickUp = false;
+
+        Tween tween = GetTree().CreateTween();
+        tween.TweenProperty(card, "position", card.PlacedPos, 2f).SetTrans(Tween.TransitionType.Quad);
+		RotationHelper.ResetRotation(card, this.GetTree());
+    }
 
 	public void PlaceCard()
 	{

@@ -16,6 +16,7 @@ public static class CardManager
     public static void InitialDealCards(BoardController b, SceneTree s)
     {
 		InitialDealCardsAnimation(b, new Vector3(0,0,0), s);
+		InitialDealEnemyCardsAnimation(b, new Vector3(0, 0, 1), s);
     }
 
 	//dealing cards from hand
@@ -52,8 +53,8 @@ public static class CardManager
 
     public static void InitialDealEnemyCardsAnimation(BoardController b, Vector3 dealPosition, SceneTree s)
     {
-        Vector3 fanPositionLeft = new Vector3(-0.1f, -1f, 1f);
-        Vector3 fanPositionRight = new Vector3(0.1f, -1f, 1f);
+        Vector3 fanPositionLeft = new Vector3(-0.1f, -1f, -1f);
+        Vector3 fanPositionRight = new Vector3(0.1f, -1f, -1f);
 
         //maybe change positions to accommodate more cards if necessary?
         if (b.Enemy.EnemyHand.Count > 4)

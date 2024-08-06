@@ -118,10 +118,10 @@ public partial class Card : RigidBody3D, ICard
         {
             c.GravityScale = 0;
         }
-        else if(c.Selected == false && !c.CanPickUp)
+        else if(c.Selected == false && !c.CanPickUp && MouseOver == false)
         {
-            Tween t = c.GetTree().CreateTween();
-            t.TweenProperty(c, "position", new Vector3(this.PlacedPos.X, this.PlacedPos.Y + 0.1f, this.PlacedPos.Z), 0.1f).SetTrans(Tween.TransitionType.Quad);
+            Tween t = GetTree().CreateTween();
+            t.TweenProperty(c, "position", this.PlacedPos, 0.25f).SetTrans(Tween.TransitionType.Quad);
 
         }
         //OpenContextMenu(c);
