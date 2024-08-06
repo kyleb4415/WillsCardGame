@@ -12,9 +12,14 @@ public partial class BoardController : Node3D
     public Script cardScript = ResourceLoader.Load<Script>("res://Scripts/UnitCard.cs");
     public readonly PackedScene cardSpace = ResourceLoader.Load<PackedScene>("res://Scenes3D/CardSpaceBase.tscn");
     public readonly PackedScene cardBase = ResourceLoader.Load<PackedScene>("res://Scenes3D/CardBase3D.tscn");
-    //Player card lists
+
+    //Player attributes/properties
     public List<Node> cardGameObjects = new List<Node>();
     public List<Card> Hand { get; set; } = new List<Card>();
+    public List<Card> PlayerCardsOnBoard { get; set; } = new List<Card>();
+    public List<Card> PlayerDeck { get; set; } = new List<Card>();
+    public int PlayerHealth = 10;
+    
 
     //UI/Turns
     public int TurnNum;
@@ -26,7 +31,7 @@ public partial class BoardController : Node3D
     public GameState gameState;
 
     //EnemyAI attribute
-    public EnemyAI Enemy;
+    public EnemyAI Enemy { get; set; }
 
     //finish setting this up
     [Signal]
@@ -136,16 +141,7 @@ public partial class BoardController : Node3D
 
     private void AddCards()
     {
-        //attaching events for card TODO: DELETE LATER
-        //-------------------------------------------------------------------------------
-        //Card card = (Card)GetNode("/root/GameBoard/CardBody");
-
-        //card.MouseEntered += ((MoveCard3D)GetNode("Camera3D")).Card_MouseEntered;
-        //card.CardReleased += card.Release;
-        //card.CardSelected += card.Select;
-        //-------------------------------------------------------------------------------
-
-        //instancing cards from db 
+        //instancing player cards from db 
         //-------------------------------------------------------------------------------
         List<ICard> cards = CardManager.LoadCardsFromDB();
         foreach (var c in cards)
@@ -164,14 +160,22 @@ public partial class BoardController : Node3D
             }
 
             Card card = cardBaseInstance.GetChild(0) as Card;
-            //unitCard.MouseEntered += ((MoveCard3D)GetNode("Camera3D")).Card_MouseEntered;
             card.CardAlignmentType = Card.CardAlignment.Player;
 
-            card.Position += new Vector3(1, 1, 1);
-            this.GetNode("PlayerDeck").CallDeferred("add_child", cardBaseInstance);
-            Hand.Add(card);
+            card.Position = GetNode<Node3D>("PlayerDeck").GetChild<MeshInstance3D>(0).Position;
+            this.GetNode("PlayerDeck").AddChild(cardBaseInstance);
+            if(Hand.Count < 7)
+            {
+                Hand.Add(card);
+            }
+            else
+            {
+                PlayerDeck.Add(card);
+            }
         }
 
+        //instancing enemy cards from db 
+        //-------------------------------------------------------------------------------
         foreach (var c in Enemy.EnemyDeck)
         {
             //modify before instantiation
@@ -187,11 +191,12 @@ public partial class BoardController : Node3D
                 CardFactory.CreateUnitCard((UnitCard)c, cardBaseInstance);
             }
 
-
             Card card = cardBaseInstance.GetChild(0) as Card;
             card.CardAlignmentType = Card.CardAlignment.Enemy;
-            card.Position += new Vector3(1, 1, 1);
-            this.GetNode("PlayerDeck").CallDeferred("add_child", cardBaseInstance);
+
+            card.Position = GetNode<Node3D>("EnemyDeck").GetChild<MeshInstance3D>(0).Position;
+            //this.GetNode("EnemyDeck").CallDeferred("add_child", cardBaseInstance);
+            this.GetNode("EnemyDeck").AddChild(cardBaseInstance);
             if(Enemy.EnemyHand.Count < 7)
             {
                 Enemy.EnemyHand.Add(card);
@@ -214,13 +219,4 @@ public partial class BoardController : Node3D
         }
         base._ExitTree();
     }
-
-    /*
-    public void CardRegularAttackHandler(Card c, Card c2)
-    {
-        //signalawaiter for aggregate function that fires after two cards are selected (emulate enemycardselected?)
-        SignalAwaiter signalAwaiter = new SignalAwaiter(this, BoardController.SignalName.VisibilityChanged, c);
-        signalAwaiter.OnCompleted(new Action(() => GD.Print("Health going down by 1")));
-    }
-    */
 }

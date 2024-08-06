@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://c37ukuwq6so48"]
+[gd_scene load_steps=15 format=3 uid="uid://c37ukuwq6so48"]
 
 [ext_resource type="Script" path="res://Scripts/MoveCard3D.cs" id="1_7mhem"]
 [ext_resource type="Script" path="res://Scripts/BoardController.cs" id="1_y1f3f"]
@@ -16,6 +16,25 @@ colors = PackedColorArray(0, 0, 0.686275, 1, 0.433571, 0.631927, 0.705991, 1)
 
 [sub_resource type="GradientTexture2D" id="GradientTexture2D_6rbho"]
 gradient = SubResource("Gradient_3ka8j")
+
+[sub_resource type="BoxMesh" id="BoxMesh_yoio3"]
+size = Vector3(0.59, 0.205, 0.755)
+
+[sub_resource type="BoxMesh" id="BoxMesh_jcvsn"]
+size = Vector3(0.59, 0.205, 0.755)
+
+[sub_resource type="BoxMesh" id="BoxMesh_ar7h0"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_77a2g"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_hgecj"]
+
+[sub_resource type="Curve3D" id="Curve3D_eyf4i"]
+_data = {
+"points": PackedVector3Array(2.70605e-05, 5.40018e-05, 0.00809705, 0, 0, 0, -1.12067, -0.142452, 1.07635, -0.907863, 0.00615585, 0.00212324, 0.907863, -0.00615585, -0.00212324, 0.0249707, -0.0373911, 1.3183, 0, 0, 0, 0.444418, 0.00832045, -0.0896896, 1.09171, -0.0573674, 1.08205),
+"tilts": PackedFloat32Array(0, 0, 0)
+}
+point_count = 3
 
 [node name="GameBoard" type="Node3D"]
 script = ExtResource("1_y1f3f")
@@ -66,11 +85,35 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00469831, -1.006, 1.635)
 [node name="Space8" type="Node3D" parent="BoardPositions"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.11676, -1.006, 1.635)
 
+[node name="EnemyHPLabel" type="Label" parent="."]
+offset_left = 6.0
+offset_top = 38.0
+offset_right = 115.0
+offset_bottom = 61.0
+text = "asdhfasdfasdf"
+
+[node name="EnemyHP" type="Label" parent="EnemyHPLabel"]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 23.0
+
+[node name="PlayerHPLabel" type="Label" parent="."]
+offset_left = 12.0
+offset_top = 617.0
+offset_right = 91.0
+offset_bottom = 640.0
+text = "Player HP:"
+
+[node name="PlayerHP" type="Label" parent="PlayerHPLabel"]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 23.0
+
 [node name="TurnButton" type="Button" parent="."]
-offset_left = 1017.0
-offset_top = 29.0
-offset_right = 1095.0
-offset_bottom = 60.0
+offset_left = 961.0
+offset_top = 32.0
+offset_right = 1039.0
+offset_bottom = 63.0
 text = "End Turn"
 
 [node name="ManaBar" type="TextureProgressBar" parent="."]
@@ -112,7 +155,15 @@ offset_bottom = 27.0
 
 [node name="EnemyDeck" type="Node3D" parent="."]
 
+[node name="MeshInstance3D" type="MeshInstance3D" parent="EnemyDeck"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.355, -1.514, -1.311)
+mesh = SubResource("BoxMesh_yoio3")
+
 [node name="PlayerDeck" type="Node3D" parent="."]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="PlayerDeck"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.258, -1.448, 1.536)
+mesh = SubResource("BoxMesh_jcvsn")
 
 [node name="Enemy" type="Node3D" parent="."]
 transform = Transform3D(0.999945, 0, 0.0104718, 0, 1, 0, -0.0104718, 0, 0.999945, 0, 0, 0)
@@ -121,25 +172,55 @@ script = ExtResource("4_3y4ib")
 [node name="EnemyBoardPositions" type="Node" parent="Enemy"]
 
 [node name="Space" type="Node3D" parent="Enemy/EnemyBoardPositions"]
-transform = Transform3D(1, 0, 0, 0, -0.999999, -0.00155345, 0, 0.00155345, -0.999999, -2.25164, -1.58445, -0.690724)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.25164, -1.58445, -0.690724)
 
 [node name="Space2" type="Node3D" parent="Enemy/EnemyBoardPositions"]
-transform = Transform3D(1, 0, 0, 0, -0.999999, -0.00155345, 0, 0.00155345, -0.999999, -1.073, -1.584, -0.644)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.073, -1.584, -0.644)
 
 [node name="Space3" type="Node3D" parent="Enemy/EnemyBoardPositions"]
-transform = Transform3D(1, 0, 0, 0, -0.999999, -0.00155345, 0, 0.00155345, -0.999999, 0.0106465, -1.584, -0.691)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0106465, -1.584, -0.691)
 
 [node name="Space4" type="Node3D" parent="Enemy/EnemyBoardPositions"]
-transform = Transform3D(1, 0, 0, 0, -0.999999, -0.00155345, 0, 0.00155345, -0.999999, 1.09438, -1.584, -0.691)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.09438, -1.584, -0.691)
 
 [node name="Space5" type="Node3D" parent="Enemy/EnemyBoardPositions"]
-transform = Transform3D(1, 0, 0, 0, -0.999999, -0.00155345, 0, 0.00155345, -0.999999, 2.17466, -1.584, -0.691)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.17466, -1.584, -0.691)
 
 [node name="Space6" type="Node3D" parent="Enemy/EnemyBoardPositions"]
-transform = Transform3D(1, 0, 0, 0, -0.999999, -0.00155345, 0, 0.00155345, -0.999999, 0.990521, -1.584, -1.68431)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.990521, -1.584, -1.68431)
 
 [node name="Space7" type="Node3D" parent="Enemy/EnemyBoardPositions"]
-transform = Transform3D(1, 0, 0, 0, -0.999999, -0.00155345, 0, 0.00155345, -0.999999, -0.0580718, -1.584, -1.684)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0580718, -1.584, -1.684)
 
 [node name="Space8" type="Node3D" parent="Enemy/EnemyBoardPositions"]
-transform = Transform3D(1, 0, 0, 0, -0.999999, -0.00155345, 0, 0.00155345, -0.999999, -1.18031, -1.584, -1.684)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.18031, -1.584, -1.684)
+
+[node name="PlayerBody" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 3.38546)
+
+[node name="PlayerMesh" type="MeshInstance3D" parent="PlayerBody"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.3343, 0.131189)
+mesh = SubResource("BoxMesh_ar7h0")
+
+[node name="PlayerBodyObject" type="StaticBody3D" parent="PlayerBody"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="PlayerBody/PlayerBodyObject"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.38266, 0.137494)
+shape = SubResource("BoxShape3D_77a2g")
+
+[node name="EnemyBody" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -4.40979)
+
+[node name="EnemyBodyMesh" type="MeshInstance3D" parent="EnemyBody"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.3343, 1.07322)
+mesh = SubResource("BoxMesh_ar7h0")
+
+[node name="EnemyBodyObject" type="StaticBody3D" parent="EnemyBody"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.23175, 1.07844)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="EnemyBody/EnemyBodyObject"]
+shape = SubResource("BoxShape3D_hgecj")
+
+[node name="Path3D" type="Path3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.274273, 0.0291913, -0.377312)
+curve = SubResource("Curve3D_eyf4i")

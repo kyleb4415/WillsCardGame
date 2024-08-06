@@ -1,19 +1,20 @@
-[gd_scene load_steps=8 format=3 uid="uid://bqe4y0kfsdcsm"]
+[gd_scene load_steps=7 format=3 uid="uid://bqe4y0kfsdcsm"]
 
 [ext_resource type="Script" path="res://Scripts/UnitCard.cs" id="1_f3fyc"]
 [ext_resource type="Script" path="res://Scripts/PositionControl3D.cs" id="2_1qbv1"]
-[ext_resource type="Script" path="res://Scenes3D/CardMesh.gd" id="2_rudrb"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_62a8p"]
 size = Vector3(0.275, 0.035, 0.41)
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ad6b7"]
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_21we6"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_4p7fh"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_gic02"]
-material = SubResource("StandardMaterial3D_21we6")
+resource_local_to_scene = true
+material = SubResource("StandardMaterial3D_4p7fh")
 size = Vector3(0.275, 0.002, 0.41)
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_2u3xh"]
+size = Vector2(0.155, 0.045)
 
 [node name="CardBase3d" type="Node3D"]
 
@@ -27,43 +28,35 @@ shape = SubResource("BoxShape3D_62a8p")
 [node name="CardMesh" type="MeshInstance3D" parent="CardBody"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.000343561, 0)
 layers = 3
-material_override = SubResource("StandardMaterial3D_ad6b7")
 mesh = SubResource("BoxMesh_gic02")
-script = ExtResource("2_rudrb")
 
 [node name="Name" type="Label3D" parent="CardBody"]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0.00351089, -0.132415)
-visible = false
 text = "a"
 font_size = 12
 
 [node name="Description" type="Label3D" parent="CardBody"]
 transform = Transform3D(0.585, 0, 0, 0, -2.55712e-08, 0.585, 0, -0.585, -2.55712e-08, 0, 0.00351089, 0.0738633)
-visible = false
 text = "a"
 font_size = 12
 
 [node name="Type" type="Label3D" parent="CardBody"]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0.00351089, -0.0247653)
-visible = false
 text = "a"
 font_size = 12
 
 [node name="ManaCost" type="Label3D" parent="CardBody"]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0.136746, 0.00351089, -0.132415)
-visible = false
 text = "a"
 font_size = 12
 
 [node name="Damage" type="Label3D" parent="CardBody"]
 transform = Transform3D(0.585, 0, 0, 0, -2.55712e-08, 0.585, 0, -0.585, -2.55712e-08, -0.0859057, 0.00351089, 0.178114)
-visible = false
 text = "a"
 font_size = 12
 
 [node name="HP" type="Label3D" parent="CardBody"]
 transform = Transform3D(0.585, 0, 0, 0, -2.55712e-08, 0.585, 0, -0.585, -2.55712e-08, 0.0899721, 0.00351089, 0.174245)
-visible = false
 text = "a"
 font_size = 12
 
@@ -109,3 +102,7 @@ fit_content = true
 
 [node name="Timer" type="Timer" parent="CardBody/ContextMenuControl"]
 one_shot = true
+
+[node name="StatusEffectContainer" type="MeshInstance3D" parent="CardBody"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.177713)
+mesh = SubResource("PlaneMesh_2u3xh")

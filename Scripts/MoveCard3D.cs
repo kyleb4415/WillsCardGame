@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 public partial class MoveCard3D : Camera3D
 {
     public Dictionary colliders;
+    public Dictionary playerColliders;
 
     public dynamic selectedCard;
     public dynamic targetCard;
@@ -33,8 +34,6 @@ public partial class MoveCard3D : Camera3D
     public override void _Ready()
     {
         mouse = new Vector2();
-        //fix this - board controller needs to get initialized
-
         boardController = this.GetParent<BoardController>();
     }
 
@@ -106,39 +105,33 @@ public partial class MoveCard3D : Camera3D
 
     private void InitialAction(InputEvent @event)
     {
-        if(colliders is null)
+        if (RaycastHelper.GetCollisionPoint(this, mouse, MouseCastLength)["collider"].AsGodotObject().GetType() != typeof(StaticBody3D))
         {
-            if (RaycastHelper.GetCollisionPoint(this, mouse, MouseCastLength)["collider"].AsGodotObject().GetType() != typeof(StaticBody3D))
-            {
-                colliders = RaycastHelper.GetCollisionPoint(this, mouse, MouseCastLength);
-            }
-            else
-            {
-                GD.Print("clicking on a staticbody...");
-            }
+            colliders = RaycastHelper.GetCollisionPoint(this, mouse, MouseCastLength);
+            Card c = (Card)colliders["collider"];
 
+            if (c != null && !c.CanPickUp && !boardController.Hand.Contains(c) && c.CardAlignmentType != Card.CardAlignment.Enemy)
+            {
+                currentGameState = GameState.SelectingCard;
+                CardInteractNoContextMenu(@event);
+            }
+            else if (selectedCard != null && !boardController.Enemy.EnemyHand.Contains(c))
+            {
+                currentGameState = GameState.ExecutingAction;
+            }
+            else if (!c.CanPickUp)
+            {
+                currentGameState = GameState.SelectingCard;
+                CardInteractNoContextMenu(@event);
+            }
         }
         else
         {
-            if (colliders["collider"].AsGodotObject().GetType() != typeof(StaticBody3D))
-            {
-                Card card = (Card)colliders["collider"];
-                if (card != null && !card.CanPickUp && !boardController.Hand.Contains(card) && card.CardAlignmentType != Card.CardAlignment.Enemy)
-                {
-                    currentGameState = GameState.SelectingCard;
-                    CardInteractNoContextMenu(@event);
-                }
-                else if(selectedCard != null && !boardController.Enemy.EnemyHand.Contains(card))
-                {
-                    currentGameState = GameState.ExecutingAction;
-                }
-                else
-                {
-                    colliders = null;
-                }
-            }
+            playerColliders = RaycastHelper.GetCollisionPoint(this, mouse, MouseCastLength);
+            //try logic here for player collider stuff like get node name and such
         }
     }
+
 
     /// <summary>
     /// Handles card placement on first placing onto the board
@@ -155,7 +148,7 @@ public partial class MoveCard3D : Camera3D
             if (card.CanPickUp && card.CardAlignmentType != Card.CardAlignment.Enemy)
             {
                 //card.EmitSignal(Card.SignalName.PlaceCard, card);
-                if(card.PlacedPos != default)
+                if(card.PlacedPos != new Vector3(0, 0, 0) && this.GetParent().GetNode<TextureProgressBar>("ManaBar").Value >= card.ManaCost * 100)
                 {
                     Tween tween = CreateTween();
                     tween.TweenProperty(card, "position", card.PlacedPos, 0.5f).SetTrans(Tween.TransitionType.Quad);
@@ -165,6 +158,10 @@ public partial class MoveCard3D : Camera3D
                     };
                     boardController.Hand.Remove(card);
                     currentGameState = GameState.SelectingCard;
+                    GD.Print("Placing");
+
+                    CardManager.DealPlayerCardAnimation(boardController.PlayerDeck[boardController.PlayerDeck.Count - 1], boardController, new Vector3(0,0,0), this.GetTree());
+
                 }
                 else
                 {
@@ -276,6 +273,7 @@ public partial class MoveCard3D : Camera3D
                 if (targetCard != selectedCard && targetCard.CardAlignmentType == Card.CardAlignment.Enemy && targetCard.CanPickUp == false && !boardController.Enemy.EnemyHand.Contains(targetCard))
                 {
                     currentGameState = GameState.ExecutingAction;
+                    colliders = null;
                 }
                 else if (targetCard == selectedCard)
                 {
@@ -301,7 +299,23 @@ public partial class MoveCard3D : Camera3D
             }
 
         }
-
+        else if(colliders["collider"].AsGodotObject().GetType() == typeof(StaticBody3D))
+        {
+            StaticBody3D collider = (StaticBody3D)colliders["collider"];
+            if(collider == GetNode<StaticBody3D>("/root/GameBoard/EnemyBody/EnemyBodyObject"))
+            {
+                boardController.Enemy.Health -= selectedCard.Damage;
+                GD.Print(boardController.Enemy.Health);
+                selectedCard.EmitSignal(Card.SignalName.CardSelected, selectedCard);
+                currentGameState = GameState.PlacingCard;
+                selectedCard = null;
+                collider = null;
+            }
+            else
+            {
+                collider = null;
+            }
+        }
     }
 
     /// <summary>
@@ -315,8 +329,9 @@ public partial class MoveCard3D : Camera3D
             CardAction action = new CardAction(selectedCard, targetCard);
             action.ExecuteAction();
             currentGameState = GameState.PlacingCard;
+            selectedCard = null;
+            targetCard = null;
         }
-
     }
 
     /// <summary>

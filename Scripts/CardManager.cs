@@ -15,21 +15,24 @@ public static class CardManager
     public delegate void CardInteractionEventHandler(Card c, Card d);
     public static void InitialDealCards(BoardController b, SceneTree s)
     {
-		InitialDealCardsAnimation(b, new Vector3(0,0,0), s);
-		InitialDealEnemyCardsAnimation(b, new Vector3(0, 0, 1), s);
+        InitialDealEnemyCardsAnimation(b, new Vector3(0, 0, 0), s);
+        DealCardsBezierAnimation(b, new Vector3(0,0,0), s);
+
     }
 
 	//dealing cards from hand
+	/*
 	public static void InitialDealCardsAnimation(BoardController b, Vector3 dealPosition, SceneTree s)
 	{
-        Vector3 fanPositionLeft = new Vector3(-0.1f, -1f, 1f);
-        Vector3 fanPositionRight = new Vector3(0.1f, -1f, 1f);
+        Vector3 fanPositionLeft = new Vector3(-0.2f, -1f, 1f);
+        Vector3 fanPositionRight = new Vector3(0.2f, -1f, 1f);
 
 		//maybe change positions to accommodate more cards if necessary?
 		if(b.Hand.Count > 4)
 		{
-
-		}
+            fanPositionLeft = new Vector3(-0.8f, -1f, 1f);
+			fanPositionRight = new Vector3(0.8f, -1f, 1f);
+        }
 
         Vector3 fanRotationLeft = new Vector3(0, 0.25f, 0);
         Vector3 fanRotationRight = new Vector3(0, -0.25f, 0);
@@ -39,7 +42,7 @@ public static class CardManager
         foreach (Card c in b.Hand)
 		{
             float alignmentWeight = CalculateCardAlignment(b.Hand, idx);
-			float timeCalculation = 2f * (c.Position.X - fanPositionLeft.X);
+			float timeCalculation = 0.2f * (c.Position.X - fanPositionLeft.X);
             c.GravityScale = 0;
 			Tween t = s.CreateTween();
 			Tween t2 = s.CreateTween();
@@ -50,32 +53,180 @@ public static class CardManager
 			idx += 1;
         }
 	}
+	*/
+
+    public static void DealCardsBezierAnimation(BoardController b, Vector3 dealPosition, SceneTree s)
+    {
+        Vector3 p0 = new Vector3(-0.2f, -1f, 1f);
+		Vector3 p1 = new Vector3(0f, -1f, 0.8f);
+        Vector3 p2 = new Vector3(0.2f, -1f, 1f);
+
+		//maybe change positions to accommodate more cards if necessary?
+		if (b.Hand.Count > 4)
+        {
+            p0 = new Vector3(-0.8f, -1f, 1f);
+            p1 = new Vector3(0f, -1f, 0.8f);
+            p2 = new Vector3(0.8f, -1f, 1f);
+        }
+
+
+        Curve3D curve = new Curve3D();
+		curve.AddPoint(p0);
+		curve.SetPointOut(0, new Vector3(0, 0, 0));
+		curve.AddPoint(p1, new Vector3(-0.9f, 0f, 0f), new Vector3(0.9f, 0f, 0f));
+		curve.AddPoint(p2);
+		curve.SetPointIn(2, new Vector3(0, 0, 0));
+
+        Vector3 fanRotationLeft = new Vector3(0, 0.25f, 0);
+        Vector3 fanRotationRight = new Vector3(0, -0.25f, 0);
+
+		List<Vector3> pointsOnCurve = CalculatePointsOnCurve(curve, 7);
+
+        int idx = 0;
+
+        foreach (Card c in b.Hand)
+        {
+            float alignmentWeight = CalculateCardAlignment(b.Hand, idx);
+            float timeCalculation = 0.2f * (c.Position.X - p0.X);
+            c.GravityScale = 0;
+            Tween t = s.CreateTween();
+            Tween t2 = s.CreateTween();
+            t.TweenProperty(c, "position", pointsOnCurve[idx], timeCalculation).SetTrans(Tween.TransitionType.Quad);
+            t2.TweenProperty(c, "rotation", fanRotationLeft.Lerp(fanRotationRight, alignmentWeight), 0.25f).SetTrans(Tween.TransitionType.Quad);
+			c.OriginPos = pointsOnCurve[idx];
+            c.OriginRot = fanRotationLeft.Lerp(fanRotationRight, alignmentWeight);
+            idx += 1;
+        }
+    }
+
+
+    /*
+    public static void DealPlayerCardAnimation(Card card, BoardController b, Vector3 dealPosition, SceneTree s)
+    {
+        Vector3 fanPositionLeft = new Vector3(-0.4f, -1f, 1f);
+        Vector3 fanPositionRight = new Vector3(0.4f, -1f, 1f);
+
+        //maybe change positions to accommodate more cards if necessary?
+        if (b.Hand.Count > 4)
+        {
+            fanPositionLeft = new Vector3(-0.8f, -1f, 1f);
+            fanPositionRight = new Vector3(0.8f, -1f, 1f);
+        }
+
+        Vector3 fanRotationLeft = new Vector3(0, 0.25f, 0);
+        Vector3 fanRotationRight = new Vector3(0, -0.25f, 0);
+
+		float idx = 0;
+		GD.Print("Dealing card from deck");
+
+		b.Hand.Add(card);
+        b.PlayerDeck.Remove(b.PlayerDeck[b.PlayerDeck.Count - 1]);
+        foreach (Card c in b.Hand)
+        {
+            float alignmentWeight = CalculateCardAlignment(b.Hand, idx);
+            float timeCalculation = 0.2f * (c.Position.X - fanPositionLeft.X);
+            c.GravityScale = 0;
+            Tween t = s.CreateTween();
+            Tween t2 = s.CreateTween();
+            t.TweenProperty(c, "position", fanPositionLeft.Lerp(fanPositionRight, alignmentWeight), timeCalculation).SetTrans(Tween.TransitionType.Quad);
+            t2.TweenProperty(c, "rotation", fanRotationLeft.Lerp(fanRotationRight, alignmentWeight), 0.25f).SetTrans(Tween.TransitionType.Quad);
+            c.OriginPos = fanPositionLeft.Lerp(fanPositionRight, alignmentWeight);
+            c.OriginRot = fanRotationLeft.Lerp(fanRotationRight, alignmentWeight);
+            idx += 1;
+        }
+
+    }
+	*/
+
+    public static void DealPlayerCardAnimation(Card card, BoardController b, Vector3 dealPosition, SceneTree s)
+    {
+        Vector3 p0 = new Vector3(-0.2f, -1f, 1f);
+        Vector3 p1 = new Vector3(0f, -1f, 0.8f);
+        Vector3 p2 = new Vector3(0.2f, -1f, 1f);
+
+        //maybe change positions to accommodate more cards if necessary?
+        if (b.Hand.Count > 4)
+        {
+            p0 = new Vector3(-0.8f, -1f, 1f);
+            p1 = new Vector3(0f, -1f, 0.8f);
+            p2 = new Vector3(0.8f, -1f, 1f);
+        }
+
+
+        Curve3D curve = new Curve3D();
+        curve.AddPoint(p0);
+        curve.SetPointOut(0, new Vector3(0, 0, 0));
+        curve.AddPoint(p1, new Vector3(-0.9f, 0f, 0f), new Vector3(0.9f, 0f, 0f));
+        curve.AddPoint(p2);
+        curve.SetPointIn(2, new Vector3(0, 0, 0));
+
+        Vector3 fanRotationLeft = new Vector3(0, 0.25f, 0);
+        Vector3 fanRotationRight = new Vector3(0, -0.25f, 0);
+
+        List<Vector3> pointsOnCurve = CalculatePointsOnCurve(curve, 7);
+
+        int idx = 0;
+        b.PlayerDeck.Remove(b.PlayerDeck[b.PlayerDeck.Count - 1]);
+		b.Hand.Add(card);
+
+		foreach (Card c in b.Hand)
+		{
+			if(c != card)
+			{
+                float alignmentWeight = CalculateCardAlignment(b.Hand, idx);
+                float timeCalculation = 0.4f;
+                c.GravityScale = 0;
+                Tween t = s.CreateTween();
+                Tween t2 = s.CreateTween();
+                t.TweenProperty(c, "position", pointsOnCurve[idx], timeCalculation).SetTrans(Tween.TransitionType.Quad);
+                t2.TweenProperty(c, "rotation", fanRotationLeft.Lerp(fanRotationRight, alignmentWeight), 0.25f).SetTrans(Tween.TransitionType.Quad);
+                c.OriginPos = pointsOnCurve[idx];
+                c.OriginRot = fanRotationLeft.Lerp(fanRotationRight, alignmentWeight);
+                idx += 1;
+            }
+			else
+			{
+                float alignmentWeight = CalculateCardAlignment(b.Hand, idx);
+                float timeCalculation = 0.2f * (c.Position.X - p0.X);
+                c.GravityScale = 0;
+                Tween t = s.CreateTween();
+                Tween t2 = s.CreateTween();
+                t.TweenProperty(c, "position", pointsOnCurve[idx], timeCalculation).SetTrans(Tween.TransitionType.Quad);
+                t2.TweenProperty(c, "rotation", fanRotationLeft.Lerp(fanRotationRight, alignmentWeight), 0.25f).SetTrans(Tween.TransitionType.Quad);
+                c.OriginPos = pointsOnCurve[idx];
+                c.OriginRot = fanRotationLeft.Lerp(fanRotationRight, alignmentWeight);
+                idx += 1;
+            }
+
+		}
+    }
 
     public static void InitialDealEnemyCardsAnimation(BoardController b, Vector3 dealPosition, SceneTree s)
     {
-        Vector3 fanPositionLeft = new Vector3(-0.1f, -1f, -1f);
-        Vector3 fanPositionRight = new Vector3(0.1f, -1f, -1f);
+        Vector3 fanPositionLeft = new Vector3(-0.4f, -1f, -1f);
+        Vector3 fanPositionRight = new Vector3(0.4f, -1f, -1f);
 
         //maybe change positions to accommodate more cards if necessary?
         if (b.Enemy.EnemyHand.Count > 4)
         {
-
+            fanPositionLeft = new Vector3(-0.8f, -1f, -1f);
+            fanPositionRight = new Vector3(0.8f, -1f, -1f);
         }
 
         Vector3 fanRotationLeft = new Vector3(0, 0.25f, 0);
         Vector3 fanRotationRight = new Vector3(0, -0.25f, 0);
 
         float idx = 0;
-
         foreach (Card c in b.Enemy.EnemyHand)
         {
-            float alignmentWeight = CalculateCardAlignment(b.Hand, idx);
-            float timeCalculation = 2f * (c.Position.X - fanPositionLeft.X);
+            float alignmentWeight = CalculateCardAlignment(b.Enemy.EnemyHand, idx);
+            float timeCalculation = 0.2f * Math.Abs((c.Position.X - fanPositionLeft.X));
             c.GravityScale = 0;
-            Tween t = s.CreateTween();
-            Tween t2 = s.CreateTween();
-            t.TweenProperty(c, "position", fanPositionLeft.Lerp(fanPositionRight, alignmentWeight), timeCalculation).SetTrans(Tween.TransitionType.Quad);
-            t2.TweenProperty(c, "rotation", fanRotationLeft.Lerp(fanRotationRight, alignmentWeight), 0.25f).SetTrans(Tween.TransitionType.Quad);
+            Tween t3 = s.CreateTween();
+            Tween t4 = s.CreateTween();
+            t3.TweenProperty(c, "position", fanPositionLeft.Lerp(fanPositionRight, alignmentWeight), timeCalculation).SetTrans(Tween.TransitionType.Quad);
+            //t.TweenProperty(c, "position", fanPositionLeft.Lerp(fanPositionRight, alignmentWeight), timeCalculation).SetTrans(Tween.TransitionType.Quad);
+            t4.TweenProperty(c, "rotation", fanRotationLeft.Lerp(fanRotationRight, alignmentWeight), 0.25f).SetTrans(Tween.TransitionType.Quad);
             c.OriginPos = fanPositionLeft.Lerp(fanPositionRight, alignmentWeight);
             c.OriginRot = fanRotationLeft.Lerp(fanRotationRight, alignmentWeight);
             idx += 1;
@@ -104,6 +255,18 @@ public static class CardManager
 		}
 	}
 
+	private static List<Vector3> CalculatePointsOnCurve(Curve3D curve, int points)
+	{
+		List<Vector3> pointsOnCurve = new List<Vector3>();
+		for(int i = 0; i < points; i++)
+		{
+			GD.Print(curve.SampleBaked(i * 0.25f, false));
+			pointsOnCurve.Add(curve.SampleBaked(i * 0.29f, false));
+
+        }
+		return pointsOnCurve;
+	}
+
 	public static List<ICard> LoadCardsFromDB()
 	{
 		List<ICard> CardList = new();
@@ -112,39 +275,83 @@ public static class CardManager
 			conn.Open();
 			using(var command = new SQLiteCommand(conn))
 			{
-				command.CommandText = @"SELECT rowid, * FROM Card";
+				command.CommandText = @"SELECT * FROM Card";
 				using (SQLiteDataReader reader = command.ExecuteReader(CommandBehavior.KeyInfo))
 				{
                     while (reader.Read())
 					{
-						//use factory with reader values as inputs and then put into list that is returned at the end the method
-						//rewrite GetBlobs to call a separate method that creates an appropriate buffer and loads the image
-						if(reader.GetValue(3) != null)
-						{
+						/*
+						 * Debugging
+                        GD.Print(reader.GetValue(0).ToString());
+                        GD.Print(reader.GetValue(1).ToString());
+                        GD.Print(reader.GetValue(2).ToString());
+                        GD.Print(reader.GetValue(3).ToString());
+                        GD.Print(reader.GetValue(4).ToString());
+                        GD.Print(reader.GetValue(5).ToString());
+                        GD.Print(reader.GetValue(6).ToString());
+                        GD.Print(reader.GetValue(7).ToString());
+                        GD.Print(reader.GetValue(8).ToString());
+                        GD.Print(reader.GetValue(9).ToString());
+                        GD.Print(reader.GetValue(10).ToString());
+                        GD.Print(reader.GetValue(11).ToString());
+						*/
+
+                        //use factory with reader values as inputs and then put into list that is returned at the end the method
+                        //rewrite GetBlobs to call a separate method that creates an appropriate buffer and loads the image
+						if(reader.GetValue(2) != null && reader.GetValue(2).ToString() != string.Empty && reader.GetValue(6) != null && reader.GetValue(6).ToString() != string.Empty)
+						{ 
 							try
 							{
-								//For UnitCard Constructor
-								//1 - ID
-								//2 - CardName
-								//3 - Image
-								//4 - Description
+								//DB Rows
+								//0 - ID
+								//1 - CardName
+								//2 - Image
+								//3 - AbilityName
+								//4 - [ability] Description
 								//5 - Type
 								//6 - TypeImage
 								//7 - Damage
 								//8 - HP
-								//9 - UnlockedFlag
-								//10 - ManaCost
-                                CardList.Add(new UnitCard(reader.GetInt32(1), reader.GetString(2), reader.GetBlob(3, true), reader.GetString(4), reader.GetString(5), reader.GetBlob(6, true), reader.GetInt32(7), reader.GetInt32(8), reader.GetInt32(9), reader.GetInt32(10)));
+								//9 - ManaCost
+								//10 - UnlockedFlag
+								//11 - Race
+								if(reader.GetValue(7) != null && reader.GetValue(7).ToString() != string.Empty && reader.GetValue(8).ToString() != string.Empty && reader.GetValue(8) != null)
+								{
+                                    CardList.Add(new UnitCard(reader.GetInt32(0), reader.GetString(1), reader.GetBlob(2, true), reader.GetValue(3).ToString(), reader.GetValue(4).ToString(), reader.GetValue(5).ToString(), reader.GetBlob(6, true), reader.GetInt32(7), reader.GetInt32(8), reader.GetInt32(9), reader.GetInt32(10), reader.GetString(11)));
+                                }
+								else
+								{
+                                    CardList.Add(new SkillCard(reader.GetInt32(0), reader.GetString(1), reader.GetBlob(2, true), reader.GetValue(3).ToString(), reader.GetValue(4).ToString(), reader.GetValue(5).ToString(), reader.GetBlob(6, true), reader.GetInt32(9), reader.GetInt32(10), reader.GetString(11)));
+                                }
+
                             }
 							catch(Exception e)
 							{
 								GD.Print(e.Message);
 							}
                         }
+						else if(reader.GetValue(2).ToString() != string.Empty && reader.GetValue(6).ToString() == string.Empty)
+						{
+                            if (reader.GetValue(7) != null && reader.GetValue(7).ToString() != string.Empty && reader.GetValue(8).ToString() != string.Empty && reader.GetValue(8) != null)
+                            {
+                                CardList.Add(new UnitCard(reader.GetInt32(0), reader.GetString(1), reader.GetBlob(2, true), reader.GetValue(3).ToString(), reader.GetValue(4).ToString(), reader.GetValue(5).ToString(), reader.GetInt32(7), reader.GetInt32(8), reader.GetInt32(9), reader.GetInt32(10), reader.GetString(11)));
+                            }
+                            else
+                            {
+                                CardList.Add(new SkillCard(reader.GetInt32(0), reader.GetString(1), reader.GetBlob(2, true), reader.GetValue(3).ToString(), reader.GetValue(4).ToString(), reader.GetValue(5).ToString(), reader.GetInt32(9), reader.GetInt32(10), reader.GetString(11)));
+                            }
+                        }
 						else
 						{
+							if(reader.GetValue(7).ToString() == string.Empty && reader.GetValue(8).ToString() == string.Empty)
+							{
+								CardList.Add(new SkillCard(reader.GetInt32(0), reader.GetString(1), reader.GetValue(3).ToString(), reader.GetValue(4).ToString(), reader.GetValue(5).ToString(), reader.GetInt32(9), reader.GetInt32(10), reader.GetString(11)));
+							}
+							else
+							{
+                                CardList.Add(new UnitCard(reader.GetInt32(0), reader.GetString(1), reader.GetValue(3).ToString(), reader.GetValue(4).ToString(), reader.GetValue(5).ToString(), reader.GetInt32(7), reader.GetInt32(8), reader.GetInt32(9), reader.GetInt32(10), reader.GetString(11)));
+                            }
 							//UnitCard Constructor Overload w/o CardImage TypeImage
-                            CardList.Add(new UnitCard(reader.GetInt32(0), reader.GetString(2), reader.GetString(4), reader.GetString(5), reader.GetInt32(7), reader.GetInt32(8), reader.GetInt32(9), reader.GetInt32(10)));
                         }
 						if(CardList.Count > 0)
 						{
@@ -210,7 +417,7 @@ public static class CardManager
 	//Status effects reference - first index is damage and second index is turns
 	public static void BurnAttack(BoardController b, UnitCard c)
 	{
-		c.StatusEffects.Add("Burn", new int[] { 1, 1 });
+		c.Effects.Add(new StatusEffect(Effect.Fire, 1, 1, false));
 		GD.Print("Health reduced");
 		GD.Print($"Health is now {c.HP}");
 	}
@@ -234,7 +441,7 @@ public static class CardManager
     //-----------------------------------------------------------------------------------------
     public static void InfectionSpread(BoardController b, UnitCard c)
 	{
-		c.StatusEffects.Add("Infection", new int[] { 1, 9999 });
+		c.Effects.Add(new StatusEffect(Effect.Infection, 9999, 1, false));
 	}
 
 	public static void Taunt(BoardController b, UnitCard c)
