@@ -98,6 +98,8 @@ public partial class MoveCard3D : Camera3D
             case (GameState.ExecutingAction):
                 ExecuteAction();
                 break;
+            case (GameState.EnemyTurn):
+                break;
         }
         base._Input(@event);
     }
@@ -155,6 +157,7 @@ public partial class MoveCard3D : Camera3D
                     tween.Finished += () =>
                     {
                         card.EmitSignal(Card.SignalName.PlaceCard, card, this.GetParent().GetNode("ManaBar"));
+                        colliders = null;
                     };
                     boardController.Hand.Remove(card);
                     currentGameState = GameState.SelectingCard;

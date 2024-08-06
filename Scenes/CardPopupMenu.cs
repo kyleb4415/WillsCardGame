@@ -22,6 +22,16 @@ public partial class CardPopupMenu : PopupMenu
             case 1:
                 UnitCard u2 = GetParent().GetParent() as UnitCard;
                 u2.State = CardState.UsingAbility;
+
+                //for unitcard strengthen/taunt/single abilities
+                if(CardManager.GetCardMethod(u2).Method.GetParameters().Length == 1)
+                {
+                    u2.InvokeAbility(u2);
+                    u2.EmitSignal(Card.SignalName.CardSelected, u2);
+                    GetNode<MoveCard3D>("/root/GameBoard/Camera3D").currentGameState = GameState.SelectingCard;
+                    GetNode<MoveCard3D>("/root/GameBoard/Camera3D").selectedCard = null;
+                }
+
                 GD.Print($"{u2.Name} ability selected");
                 break;
             default:

@@ -35,7 +35,7 @@ public partial class UnitCard : Card, ICard
 			this.Ability += InvokeAbility;
 			this.OnDamaged += UpdateHP;
         }
-		b.PlayerTurnEnded += ProcessStatusEffects;
+		b.PlayerTurnStarted += ProcessStatusEffects;
 		this.CardHit += UnitCard_CardHit;
         this.CardReleased += Release;
         this.CardSelected += Select;
@@ -104,7 +104,7 @@ public partial class UnitCard : Card, ICard
 	public void UnitCard_CardHit(int damage)
 	{
 		this.HP -= damage;
-		UpdateHP();
+		this.UpdateHP();
 		if(this.HP <= 0)
 		{
 			this.Visible = false;
@@ -125,10 +125,12 @@ public partial class UnitCard : Card, ICard
 
     public void InvokeAbility(UnitCard c)
     {
-        var method = CardManager.GetCardMethod(c);
+        var method = CardManager.GetCardMethod(this);
         method.DynamicInvoke( new object[] { GetNode("/root/GameBoard"), c });
+		/*
 		BoardController b = GetNode("/root/GameBoard") as BoardController;
 		c.UpdateHP();
+		*/
     }
 
 	//Harmful status effects are represented by a StatusEffect name key and a int[] consisting of two integers - the first being the 
@@ -144,6 +146,7 @@ public partial class UnitCard : Card, ICard
 				{
 					if(s.Boost != true)
 					{
+						GD.Print($"{this.CardName} inflicted with {s.Effect} for {s.Damage} damage!");
                         this.EmitSignal(SignalName.CardHit, s.Damage);
                         s.Duration--;
                     }

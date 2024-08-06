@@ -427,12 +427,12 @@ public static class CardManager
 
 	public static void BoilAttack(BoardController b, UnitCard c)
 	{
-
+		c.Effects.Add(new StatusEffect(Effect.Fire, 2, 1, false));
 	}
 
 	public static void BakeAttack(BoardController b, UnitCard c)
 	{
-
+		c.Effects.Add(new StatusEffect(Effect.Fire, 1, 2, false));
 	}
     //burner abilities end
     //-----------------------------------------------------------------------------------------

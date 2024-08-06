@@ -60,9 +60,9 @@ public partial class CardAction : Node
 	public void UseAbility()
 	{
 		var method = CardManager.GetCardMethod(card1);
-        //!!TODO: change later - can do this in attack method
         card1.EmitSignal(UnitCard.SignalName.Ability, card2);
-		card1.State = CardState.Idle;
+        GD.Print($"{card1.Name} did {CardManager.GetCardMethod(card1).Method} on {card2.Name}.");
+        card1.State = CardState.Idle;
 		card1.EmitSignal(UnitCard.SignalName.CardSelected, card1);
 	}
 }

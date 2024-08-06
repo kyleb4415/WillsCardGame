@@ -18,6 +18,8 @@ public partial class BoardController : Node3D
     public List<Card> Hand { get; set; } = new List<Card>();
     public List<Card> PlayerCardsOnBoard { get; set; } = new List<Card>();
     public List<Card> PlayerDeck { get; set; } = new List<Card>();
+    public AbilityPhase CurrentPhase { get; set; }
+
     public int PlayerHealth = 10;
     
 
@@ -93,7 +95,7 @@ public partial class BoardController : Node3D
         if (TurnNum % 2 != 0)
         {
             PlayerTurn = true;
-            EmitSignal(SignalName.PlayerTurnEnded);
+            EmitSignal(SignalName.PlayerTurnStarted);
         }
         else
         {
