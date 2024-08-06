@@ -15,32 +15,32 @@ public partial class UnitCard : Card, ICard
 	public string Race { get; set; }
 	public string AbilityName { get; set; }
 
-    [Signal]
-    public delegate void CardHitEventHandler(int dmg);
+	[Signal]
+	public delegate void CardHitEventHandler(int dmg);
 
-    [Signal]
-    public delegate void AbilityEventHandler(UnitCard c);
+	[Signal]
+	public delegate void AbilityEventHandler(UnitCard c);
 
 	[Signal]
 	public delegate void OnDamagedEventHandler();
 
-    // Called when the node enters the scene tree for the first time.
-    public override void _Ready()
-    {
+	// Called when the node enters the scene tree for the first time.
+	public override void _Ready()
+	{
 		BoardController b = GetNode("/root/GameBoard") as BoardController;
 		if (Damage != 0 && HP != 0)
 		{
-            GetNode("Damage").Set("text", Damage);
-            GetNode("HP").Set("text", HP);
+			GetNode("Damage").Set("text", Damage);
+			GetNode("HP").Set("text", HP);
 			this.Ability += InvokeAbility;
 			this.OnDamaged += UpdateHP;
-        }
+		}
 		b.PlayerTurnStarted += ProcessStatusEffects;
 		this.CardHit += UnitCard_CardHit;
-        this.CardReleased += Release;
-        this.CardSelected += Select;
-        base._Ready();
-    }
+		this.CardReleased += Release;
+		this.CardSelected += Select;
+		base._Ready();
+	}
 
 	public UnitCard()
 	{
@@ -60,37 +60,37 @@ public partial class UnitCard : Card, ICard
 		this.Damage = damage;
 		this.HP = hp;
 		this.ManaCost = manaCost;
-        this.UnlockedFlag = unlockedFlag;
+		this.UnlockedFlag = unlockedFlag;
 		this.Race = race;
 
-    }
-    public UnitCard(int id, string name, SQLiteBlob? cardImage, string abilityName, string desc, string type, int damage, int hp, int manaCost, int unlockedFlag, string race)
-    {
-        this.ID = id;
-        this.CardName = name;
-        this.CardImage = cardImage;
-        this.AbilityName = abilityName;
-        this.Description = desc;
-        this.Type = type;
-        this.Damage = damage;
-        this.HP = hp;
-        this.ManaCost = manaCost;
-        this.UnlockedFlag = unlockedFlag;
-        this.Race = race;
-
-    }
-
-    public UnitCard(int id, string name, string abilityName, string desc, string type, int damage, int hp, int manaCost, int unlockedFlag, string race)
+	}
+	public UnitCard(int id, string name, SQLiteBlob? cardImage, string abilityName, string desc, string type, int damage, int hp, int manaCost, int unlockedFlag, string race)
 	{
 		this.ID = id;
 		this.CardName = name;
-        this.AbilityName = abilityName;
-        this.Description = desc;
+		this.CardImage = cardImage;
+		this.AbilityName = abilityName;
+		this.Description = desc;
 		this.Type = type;
 		this.Damage = damage;
 		this.HP = hp;
-        this.ManaCost = manaCost;
-        this.UnlockedFlag = unlockedFlag;
+		this.ManaCost = manaCost;
+		this.UnlockedFlag = unlockedFlag;
+		this.Race = race;
+
+	}
+
+	public UnitCard(int id, string name, string abilityName, string desc, string type, int damage, int hp, int manaCost, int unlockedFlag, string race)
+	{
+		this.ID = id;
+		this.CardName = name;
+		this.AbilityName = abilityName;
+		this.Description = desc;
+		this.Type = type;
+		this.Damage = damage;
+		this.HP = hp;
+		this.ManaCost = manaCost;
+		this.UnlockedFlag = unlockedFlag;
 		this.Race = race;
 	}
 #nullable disable
@@ -123,15 +123,15 @@ public partial class UnitCard : Card, ICard
 		this.GetNode("Damage").Set("text", this.Damage.ToString());
 	}
 
-    public void InvokeAbility(UnitCard c)
-    {
-        var method = CardManager.GetCardMethod(this);
-        method.DynamicInvoke( new object[] { GetNode("/root/GameBoard"), c });
+	public void InvokeAbility(UnitCard c)
+	{
+		var method = CardManager.GetCardMethod(this);
+		method.DynamicInvoke( new object[] { GetNode("/root/GameBoard"), c });
 		/*
 		BoardController b = GetNode("/root/GameBoard") as BoardController;
 		c.UpdateHP();
 		*/
-    }
+	}
 
 	//Harmful status effects are represented by a StatusEffect name key and a int[] consisting of two integers - the first being the 
 	//damage from the status effect and the second being the amount of turns it is applied for.
@@ -147,9 +147,9 @@ public partial class UnitCard : Card, ICard
 					if(s.Boost != true)
 					{
 						GD.Print($"{this.CardName} inflicted with {s.Effect} for {s.Damage} damage!");
-                        this.EmitSignal(SignalName.CardHit, s.Damage);
-                        s.Duration--;
-                    }
+						this.EmitSignal(SignalName.CardHit, s.Damage);
+						s.Duration--;
+					}
 					else
 					{
 						UpdateDamage();
@@ -164,5 +164,5 @@ public partial class UnitCard : Card, ICard
 			}
 		}
 		//maybe print status effects here for testing later
-    }
+	}
 }
