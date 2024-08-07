@@ -1,5 +1,6 @@
 [gd_scene load_steps=14 format=3 uid="uid://mo4ouhmg6syk"]
 
+[ext_resource type="Script" path="res://Assets/Cards/CardImages.gd" id="1_lofjw"]
 [ext_resource type="Texture2D" uid="uid://bdmrr4wouev0e" path="res://Assets/Cards/CardBackgrounds/goblin-border.png" id="2_7wxdq"]
 [ext_resource type="Texture2D" uid="uid://bxd60a16ufmnp" path="res://Assets/Cards/CardAssets/layer behind items test.png" id="3_ajtbf"]
 [ext_resource type="Texture2D" uid="uid://bcswqpdp7bn2y" path="res://Assets/Cards/CardAssets/name-text-box.png" id="4_0nlo5"]
@@ -8,7 +9,6 @@
 [ext_resource type="Texture2D" uid="uid://c3rlipdc0n8mh" path="res://Assets/Cards/CardAssets/mana.png" id="7_hjqwq"]
 [ext_resource type="Texture2D" uid="uid://b8kj44wmmyd56" path="res://Assets/Cards/CardAssets/atkbook.png" id="8_whux6"]
 [ext_resource type="FontFile" uid="uid://ca34cim5cdy0m" path="res://Assets/Cards/CardAssets/windows_command_prompt.ttf" id="9_bdlwn"]
-[ext_resource type="Script" path="res://Assets/Cards/TextSize.gd" id="10_tr3jx"]
 
 [sub_resource type="ImageTexture" id="ImageTexture_4aimb"]
 
@@ -22,36 +22,31 @@ subpixel_positioning = 0
 
 [node name="CardBase" type="Node2D"]
 
-[node name="CardViewport" type="SubViewport" parent="."]
-transparent_bg = true
-size = Vector2i(189, 316)
-render_target_update_mode = 4
+[node name="CardImages" type="Node2D" parent="."]
+script = ExtResource("1_lofjw")
 
-[node name="Card Images" type="Node2D" parent="CardViewport"]
-
-[node name="CardBorder" type="TextureRect" parent="CardViewport/Card Images"]
+[node name="CardBorder" type="TextureRect" parent="CardImages"]
 offset_right = 188.0
 offset_bottom = 305.0
 texture = SubResource("ImageTexture_4aimb")
 
-[node name="Border" type="Sprite2D" parent="CardViewport/Card Images"]
+[node name="Border" type="Sprite2D" parent="CardImages"]
 visible = false
 texture = ExtResource("2_7wxdq")
 centered = false
 
-[node name="LayerBehind" type="Sprite2D" parent="CardViewport/Card Images"]
+[node name="LayerBehind" type="Sprite2D" parent="CardImages"]
 position = Vector2(94.5, 154.518)
 scale = Vector2(1.01786, 1.01786)
 texture = ExtResource("3_ajtbf")
 
-[node name="NameBox" type="Sprite2D" parent="CardViewport/Card Images"]
+[node name="NameBox" type="Sprite2D" parent="CardImages"]
 position = Vector2(94, 24)
 scale = Vector2(1.07857, 1.07857)
 texture = ExtResource("4_0nlo5")
 
-[node name="CardImage" type="TextureRect" parent="CardViewport/Card Images"]
+[node name="CardImage" type="TextureRect" parent="CardImages"]
 custom_minimum_size = Vector2(122, 122)
-anchors_preset = -1
 offset_left = 32.0
 offset_top = 49.0
 offset_right = 154.0
@@ -59,25 +54,52 @@ offset_bottom = 171.0
 texture = SubResource("ImageTexture_mbfcw")
 stretch_mode = 3
 
-[node name="Heart" type="Sprite2D" parent="CardViewport/Card Images"]
+[node name="Heart" type="Sprite2D" parent="CardImages"]
 position = Vector2(149.931, 184.465)
 scale = Vector2(0.193318, 0.189977)
 texture = ExtResource("5_qb5st")
 
-[node name="AtkBook" type="Sprite2D" parent="CardViewport/Card Images"]
+[node name="AtkBook" type="Sprite2D" parent="CardImages"]
 position = Vector2(35.4375, 187.438)
 scale = Vector2(0.0496826, 0.0496826)
 texture = ExtResource("8_whux6")
 
-[node name="AbilityTextBox" type="Sprite2D" parent="CardViewport/Card Images"]
+[node name="AbilityTextBox" type="Sprite2D" parent="CardImages"]
 position = Vector2(95, 245)
 scale = Vector2(1.01807, 1.01807)
 texture = ExtResource("6_4xqgb")
 
-[node name="ManaCrystal" type="Sprite2D" parent="CardViewport/Card Images"]
+[node name="ManaCrystal" type="Sprite2D" parent="CardImages"]
 position = Vector2(162, 24)
 scale = Vector2(0.0584717, 0.0584717)
 texture = ExtResource("7_hjqwq")
+
+[node name="TypesContainer" type="Control" parent="CardImages"]
+layout_mode = 3
+anchors_preset = 0
+offset_left = 58.0
+offset_top = 168.0
+offset_right = 129.0
+offset_bottom = 202.0
+
+[node name="Type" type="TextureRect" parent="CardImages/TypesContainer"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.31
+anchor_right = 0.775
+anchor_bottom = 1.0
+offset_left = -0.0100002
+offset_right = -0.0250053
+offset_bottom = -1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = SubResource("ImageTexture_mbfcw")
+stretch_mode = 2
+
+[node name="CardViewport" type="SubViewport" parent="."]
+transparent_bg = true
+size = Vector2i(189, 316)
+render_target_update_mode = 4
 
 [node name="ManaNumber" type="Label" parent="CardViewport"]
 visible = false
@@ -162,7 +184,6 @@ vertical_alignment = 1
 autowrap_mode = 3
 clip_text = true
 text_direction = 1
-script = ExtResource("10_tr3jx")
 metadata/_edit_use_anchors_ = true
 
 [node name="Description" type="Label" parent="CardViewport"]
@@ -282,25 +303,6 @@ text = "1"
 [node name="BottomGap" type="MarginContainer" parent="CardViewport/Bars"]
 custom_minimum_size = Vector2(30, 20)
 layout_mode = 2
-
-[node name="Container" type="Control" parent="CardViewport"]
-layout_mode = 3
-offset_left = 58.0
-offset_top = 168.0
-offset_right = 129.0
-offset_bottom = 202.0
-
-[node name="Type" type="TextureRect" parent="CardViewport/Container"]
-layout_mode = 1
-anchors_preset = -1
-anchor_right = 0.465
-anchor_bottom = 1.0
-offset_right = -0.0150032
-offset_bottom = -1.0
-grow_horizontal = 2
-grow_vertical = 2
-texture = SubResource("ImageTexture_mbfcw")
-stretch_mode = 2
 
 [node name="Card" type="Sprite2D" parent="."]
 visible = false

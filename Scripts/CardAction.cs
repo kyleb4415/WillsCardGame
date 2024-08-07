@@ -49,9 +49,9 @@ public partial class CardAction : Node
 			card2.Visible = false;
 		}
 		card1.EmitSignal(Card.SignalName.CardSelected, card1);
-        RotationHelper.ResetRotation(card1, card1.GetTree());
+		RotationHelper.ResetRotation(card1, card1.GetTree());
 		RotationHelper.ResetRotation(card2, card2.GetTree());
-        GD.Print($"{card1.Name} did {card1.Damage} damage to {card2.Name}.");
+		GD.Print($"{card1.Name} did {card1.Damage} damage to {card2.Name}.");
 		card1.State = CardState.Idle;
 	}
 
@@ -60,9 +60,9 @@ public partial class CardAction : Node
 	public void UseAbility()
 	{
 		var method = CardManager.GetCardMethod(card1);
-        card1.EmitSignal(UnitCard.SignalName.Ability, card2);
-        GD.Print($"{card1.Name} did {CardManager.GetCardMethod(card1).Method} on {card2.Name}.");
-        card1.State = CardState.Idle;
+		card1.EmitSignal(UnitCard.SignalName.Ability, card2);
+		GD.Print($"{card1.Name} did {CardManager.GetCardMethod(card1).Method} on {card2.Name}.");
+		card1.State = CardState.Idle;
 		card1.EmitSignal(UnitCard.SignalName.CardSelected, card1);
 	}
 }

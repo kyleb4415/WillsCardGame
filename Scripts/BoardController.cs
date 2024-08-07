@@ -8,20 +8,20 @@ public partial class BoardController : Node3D
 	// Called when the node enters the scene tree for the first time.
 
 	private TextureProgressBar _textureProgressBar;
-    public readonly Script gameSpaceScript = ResourceLoader.Load<Script>("res://Scripts/MoveCard3D.cs");
-    public Script cardScript = ResourceLoader.Load<Script>("res://Scripts/UnitCard.cs");
-    public readonly PackedScene cardSpace = ResourceLoader.Load<PackedScene>("res://Scenes3D/CardSpaceBase.tscn");
-    public readonly PackedScene cardBase = ResourceLoader.Load<PackedScene>("res://Scenes3D/CardBase3D.tscn");
+	public readonly Script gameSpaceScript = ResourceLoader.Load<Script>("res://Scripts/MoveCard3D.cs");
+	public Script cardScript = ResourceLoader.Load<Script>("res://Scripts/UnitCard.cs");
+	public readonly PackedScene cardSpace = ResourceLoader.Load<PackedScene>("res://Scenes3D/CardSpaceBase.tscn");
+	public readonly PackedScene cardBase = ResourceLoader.Load<PackedScene>("res://Scenes3D/CardBase3D.tscn");
 
-    //Player attributes/properties
-    public List<Node> cardGameObjects = new List<Node>();
-    public List<Card> Hand { get; set; } = new List<Card>();
-    public List<Card> PlayerCardsOnBoard { get; set; } = new List<Card>();
-    public List<Card> PlayerDeck { get; set; } = new List<Card>();
-    public AbilityPhase CurrentPhase { get; set; }
+	//Player attributes/properties
+	public List<Node> cardGameObjects = new List<Node>();
+	public List<Card> Hand { get; set; } = new List<Card>();
+	public List<Card> PlayerCardsOnBoard { get; set; } = new List<Card>();
+	public List<Card> PlayerDeck { get; set; } = new List<Card>();
+	public AbilityPhase CurrentPhase { get; set; }
 
-    public int PlayerHealth = 10;
-    
+	public int PlayerHealth = 10;
+	
 
 	//UI/Turns
 	public int TurnNum;
@@ -32,8 +32,8 @@ public partial class BoardController : Node3D
 	private Button _endTurnButton;
 	public GameState gameState;
 
-    //EnemyAI attribute
-    public EnemyAI Enemy { get; set; }
+	//EnemyAI attribute
+	public EnemyAI Enemy { get; set; }
 
 	//finish setting this up
 	[Signal]
@@ -48,9 +48,9 @@ public partial class BoardController : Node3D
 	public delegate void AbilityPhaseFinishedEventHandler();
 	public override void _Ready()
 	{
-        Enemy = GetNode("Enemy") as EnemyAI;
-        PrepareBoard();
-    }
+		Enemy = GetNode("Enemy") as EnemyAI;
+		PrepareBoard();
+	}
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
 	// possibly add card attack thingy in here
@@ -86,25 +86,25 @@ public partial class BoardController : Node3D
 		_timer.Start(12);
 	}
 
-    private void _endTurnButton_Pressed()
-    {
-        _textureProgressBar.Value += 100D;
-        GD.Print("Timed out!");
-        TurnNum++;
-        _turnNumberLabel.Set("text", TurnNum.ToString());
-        if (TurnNum % 2 != 0)
-        {
-            PlayerTurn = true;
-            EmitSignal(SignalName.PlayerTurnStarted);
-        }
-        else
-        {
-            GD.Print("enemy turn");
-            EmitSignal(SignalName.EnemyTurnStarted);
-            PlayerTurn = false;
-        }
-        _timer.Start(12);
-    }
+	private void _endTurnButton_Pressed()
+	{
+		_textureProgressBar.Value += 100D;
+		GD.Print("Timed out!");
+		TurnNum++;
+		_turnNumberLabel.Set("text", TurnNum.ToString());
+		if (TurnNum % 2 != 0)
+		{
+			PlayerTurn = true;
+			EmitSignal(SignalName.PlayerTurnStarted);
+		}
+		else
+		{
+			GD.Print("enemy turn");
+			EmitSignal(SignalName.EnemyTurnStarted);
+			PlayerTurn = false;
+		}
+		_timer.Start(12);
+	}
 
 	public Node3D cardSpaceInstanceParent;
 	public Area3D cardSpaceInstanceChild;
@@ -141,84 +141,84 @@ public partial class BoardController : Node3D
 		//-------------------------------------------------------------------------------
 	}
 
-    private void AddCards()
-    {
-        //instancing player cards from db 
-        //-------------------------------------------------------------------------------
-        List<ICard> cards = CardManager.LoadCardsFromDB();
-        foreach (var c in cards)
-        {
-            //modify before instantiation
-            var cardBaseInstance = cardBase.Instantiate();
-            cardGameObjects.Add(cardBaseInstance);
-            
-            if(c.GetType() == typeof(Card))
-            {
-                CardFactory.CreateCard((Card)c, cardBaseInstance);
-            }
-            else if(c.GetType() == typeof(UnitCard))
-            {
-                CardFactory.CreateUnitCard((UnitCard)c, cardBaseInstance);
-            }
+	private void AddCards()
+	{
+		//instancing player cards from db 
+		//-------------------------------------------------------------------------------
+		List<ICard> cards = CardManager.LoadCardsFromDB();
+		foreach (var c in cards)
+		{
+			//modify before instantiation
+			var cardBaseInstance = cardBase.Instantiate();
+			cardGameObjects.Add(cardBaseInstance);
+			
+			if(c.GetType() == typeof(Card))
+			{
+				CardFactory.CreateCard((Card)c, cardBaseInstance);
+			}
+			else if(c.GetType() == typeof(UnitCard))
+			{
+				CardFactory.CreateUnitCard((UnitCard)c, cardBaseInstance);
+			}
 
-            Card card = cardBaseInstance.GetChild(0) as Card;
-            card.CardAlignmentType = Card.CardAlignment.Player;
+			Card card = cardBaseInstance.GetChild(0) as Card;
+			card.CardAlignmentType = Card.CardAlignment.Player;
 
-            card.Position = GetNode<Node3D>("PlayerDeck").GetChild<MeshInstance3D>(0).Position;
-            this.GetNode("PlayerDeck").AddChild(cardBaseInstance);
-            if(Hand.Count < 7)
-            {
-                Hand.Add(card);
-            }
-            else
-            {
-                PlayerDeck.Add(card);
-            }
-        }
+			card.Position = GetNode<Node3D>("PlayerDeck").GetChild<MeshInstance3D>(0).Position;
+			this.GetNode("PlayerDeck").AddChild(cardBaseInstance);
+			if(Hand.Count < 7)
+			{
+				Hand.Add(card);
+			}
+			else
+			{
+				PlayerDeck.Add(card);
+			}
+		}
 
-        //instancing enemy cards from db 
-        //-------------------------------------------------------------------------------
-        foreach (var c in Enemy.EnemyDeck)
-        {
-            //modify before instantiation
-            var cardBaseInstance = cardBase.Instantiate();
-            cardGameObjects.Add(cardBaseInstance);
+		//instancing enemy cards from db 
+		//-------------------------------------------------------------------------------
+		foreach (var c in Enemy.EnemyDeck)
+		{
+			//modify before instantiation
+			var cardBaseInstance = cardBase.Instantiate();
+			cardGameObjects.Add(cardBaseInstance);
 
-            if (c.GetType() == typeof(Card))
-            {
-                CardFactory.CreateCard((Card)c, cardBaseInstance);
-            }
-            else if (c.GetType() == typeof(UnitCard))
-            {
-                CardFactory.CreateUnitCard((UnitCard)c, cardBaseInstance);
-            }
+			if (c.GetType() == typeof(Card))
+			{
+				CardFactory.CreateCard((Card)c, cardBaseInstance);
+			}
+			else if (c.GetType() == typeof(UnitCard))
+			{
+				CardFactory.CreateUnitCard((UnitCard)c, cardBaseInstance);
+			}
 
-            Card card = cardBaseInstance.GetChild(0) as Card;
-            card.CardAlignmentType = Card.CardAlignment.Enemy;
+			Card card = cardBaseInstance.GetChild(0) as Card;
+			card.CardAlignmentType = Card.CardAlignment.Enemy;
 
-            card.Position = GetNode<Node3D>("EnemyDeck").GetChild<MeshInstance3D>(0).Position;
-            //this.GetNode("EnemyDeck").CallDeferred("add_child", cardBaseInstance);
-            this.GetNode("EnemyDeck").AddChild(cardBaseInstance);
-            if(Enemy.EnemyHand.Count < 7)
-            {
-                Enemy.EnemyHand.Add(card);
-            }
-        }
-        //-------------------------------------------------------------------------------
-    }
+			card.Position = GetNode<Node3D>("EnemyDeck").GetChild<MeshInstance3D>(0).Position;
+			//this.GetNode("EnemyDeck").CallDeferred("add_child", cardBaseInstance);
+			this.GetNode("EnemyDeck").AddChild(cardBaseInstance);
+			if(Enemy.EnemyHand.Count < 7)
+			{
+				Enemy.EnemyHand.Add(card);
+			}
+		}
+		//-------------------------------------------------------------------------------
+	}
 
-    public override void _ExitTree()
-    {
-        cardSpaceInstanceChild.QueueFree();
-        this.QueueFree();
-        foreach (var c in cardSpaceInstances)
-        {
-            c.QueueFree();
-        }
-        foreach (var c in cardGameObjects)
-        {
-            c.QueueFree();
-        }
-        base._ExitTree();
-    }
+	public override void _ExitTree()
+	{
+		cardSpaceInstanceChild.QueueFree();
+		this.QueueFree();
+		foreach (var c in cardSpaceInstances)
+		{
+			c.QueueFree();
+		}
+		foreach (var c in cardGameObjects)
+		{
+			c.QueueFree();
+		}
+		base._ExitTree();
+	}
 }
