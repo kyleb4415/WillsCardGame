@@ -9,6 +9,7 @@ using System.Linq;
 using System.Runtime.Intrinsics.Arm;
 using System.Threading.Tasks;
 
+//TODO: Create child node on card to hold tweeners so they aren't interrupted on turn changel
 public partial class MoveCard3D : Camera3D
 {
     public Dictionary colliders;
@@ -25,16 +26,23 @@ public partial class MoveCard3D : Camera3D
     public bool queueFree = false;
     public GameState currentGameState;
     public BoardController boardController;
-    public float MouseCastLength = 9.0f;
+    public float MouseCastLength = 12.0f;
     public float CardFollowDistance = 3.5f;
 
     [Signal]
     public delegate void HoverCardEventHandler(Card c);
 
+    [Signal]
+    public delegate void GameStateChangedEventHandler(GameState state);
+
     public override void _Ready()
     {
         mouse = new Vector2();
         boardController = this.GetParent<BoardController>();
+        this.GameStateChanged += boardController.ChangeGameState;
+        boardController.EnemyTurnStarted += () => currentGameState = GameState.EnemyTurn;
+        boardController.EnemyTurnEnded += () => currentGameState = GameState.PlacingCard;
+        boardController.PlayerTurnEnded += ReturnCardToHand;
     }
 
     // Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -71,7 +79,10 @@ public partial class MoveCard3D : Camera3D
                 else if (@event is InputEventMouseButton && @event.IsActionReleased("leftclick"))
                 {
                     GD.Print("placing card");
-                    PlaceCard(@event);
+                    if(RaycastHelper.GetCollisionPoint(this, mouse, MouseCastLength)["collider"].GetType() != typeof(StaticBody3D))
+                    {
+                        PlaceCard(@event);
+                    }
                 }
                 if (@event is InputEventMouseButton && @event.IsActionPressed("rightclick"))
                 {
@@ -90,9 +101,26 @@ public partial class MoveCard3D : Camera3D
                 }
                 break;
             case (GameState.AwaitingTarget):
-                if (@event is InputEventMouseButton && @event.IsActionPressed("leftclick"))
+                switch(boardController.CurrentPhase)
                 {
-                    SelectTarget(@event);
+                    case (AbilityPhase.Taunt):
+                        if (@event is InputEventMouseButton && @event.IsActionPressed("leftclick"))
+                        {
+                            SelectTargetTauntPhase(@event);
+                        }
+                        break;
+                    case (AbilityPhase.None):
+                        if (@event is InputEventMouseButton && @event.IsActionPressed("leftclick"))
+                        {
+                            SelectTarget(@event);
+                        }
+                        break;
+                    default:
+                        if (@event is InputEventMouseButton && @event.IsActionPressed("leftclick"))
+                        {
+                            SelectTarget(@event);
+                        }
+                        break;
                 }
                 break;
             case (GameState.ExecutingAction):
@@ -114,15 +142,18 @@ public partial class MoveCard3D : Camera3D
 
             if (c != null && !c.CanPickUp && !boardController.Hand.Contains(c) && c.CardAlignmentType != Card.CardAlignment.Enemy)
             {
+                this.EmitSignal(SignalName.GameStateChanged, (int)GameState.SelectingCard);
                 currentGameState = GameState.SelectingCard;
                 CardInteractNoContextMenu(@event);
             }
             else if (selectedCard != null && !boardController.Enemy.EnemyHand.Contains(c))
             {
+                this.EmitSignal(SignalName.GameStateChanged, (int)GameState.ExecutingAction);
                 currentGameState = GameState.ExecutingAction;
             }
             else if (!c.CanPickUp)
             {
+                this.EmitSignal(SignalName.GameStateChanged, (int)GameState.SelectingCard);
                 currentGameState = GameState.SelectingCard;
                 CardInteractNoContextMenu(@event);
             }
@@ -159,11 +190,12 @@ public partial class MoveCard3D : Camera3D
                         card.EmitSignal(Card.SignalName.PlaceCard, card, this.GetParent().GetNode("ManaBar"));
                         colliders = null;
                     };
-                    boardController.Hand.Remove(card);
+                    //boardController.Hand.Remove(card);
+                    this.EmitSignal(SignalName.GameStateChanged, (int)GameState.SelectingCard);
                     currentGameState = GameState.SelectingCard;
                     GD.Print("Placing");
 
-                    CardManager.DealPlayerCardAnimation(boardController.PlayerDeck[boardController.PlayerDeck.Count - 1], boardController, new Vector3(0,0,0), this.GetTree());
+                    //CardManager.DealPlayerCardAnimation(boardController.PlayerDeck[boardController.PlayerDeck.Count - 1], boardController, new Vector3(0,0,0), this.GetTree());
 
                 }
                 else
@@ -179,6 +211,7 @@ public partial class MoveCard3D : Camera3D
             if(selectedCard != null)
             {
                 GD.Print("awaitingtarget");
+                this.EmitSignal(SignalName.GameStateChanged, (int)GameState.AwaitingTarget);
                 currentGameState = GameState.AwaitingTarget;
             }
         }
@@ -207,6 +240,7 @@ public partial class MoveCard3D : Camera3D
                         Node2D contextMenu = ResourceLoader.Load<PackedScene>("res://Scenes/CardContextMenu.tscn").Instantiate<Node2D>();
                         contextMenu.GetChild(0).Set("position", mouse);
                         selectedCard.AddChild(contextMenu);
+                        this.EmitSignal(SignalName.GameStateChanged, (int)GameState.AwaitingTarget);
                         currentGameState = GameState.AwaitingTarget;
                     }
                     else
@@ -237,6 +271,7 @@ public partial class MoveCard3D : Camera3D
             UnitCard cardToBeSelected = (UnitCard)colliders["collider"];
             if(boardController.Hand.Contains(cardToBeSelected))
             {
+                this.EmitSignal(SignalName.GameStateChanged, (int)GameState.PlacingCard);
                 currentGameState = GameState.PlacingCard;
             }
             else if(selectedCard != cardToBeSelected)
@@ -245,6 +280,7 @@ public partial class MoveCard3D : Camera3D
                 if (!selectedCard.CanPickUp && !selectedCard.Selected)
                 {
                     selectedCard.EmitSignal(Card.SignalName.CardSelected, selectedCard);
+                    this.EmitSignal(SignalName.GameStateChanged, (int)GameState.AwaitingTarget);
                     currentGameState = GameState.AwaitingTarget;
                     selectedCard.State = CardState.Attacking;
                 }
@@ -253,6 +289,7 @@ public partial class MoveCard3D : Camera3D
             {
                 selectedCard.EmitSignal(Card.SignalName.CardSelected, selectedCard);
                 selectedCard = null;
+                this.EmitSignal(SignalName.GameStateChanged, (int)GameState.PlacingCard);
                 currentGameState = GameState.PlacingCard;
             }
         }
@@ -271,16 +308,18 @@ public partial class MoveCard3D : Camera3D
         {
             targetCard = (UnitCard)colliders["collider"];
             UnitCard c = (UnitCard)targetCard; 
-            if(!boardController.Hand.Contains(c))
+            if(!boardController.Hand.Contains(c) && boardController.CurrentPhase != AbilityPhase.Taunt)
             {
                 if (targetCard != selectedCard && targetCard.CardAlignmentType == Card.CardAlignment.Enemy && targetCard.CanPickUp == false && !boardController.Enemy.EnemyHand.Contains(targetCard))
                 {
+                    this.EmitSignal(SignalName.GameStateChanged, (int)GameState.ExecutingAction);
                     currentGameState = GameState.ExecutingAction;
                     colliders = null;
                 }
                 else if (targetCard == selectedCard)
                 {
                     CardInteractNoContextMenu(@event);
+                    this.EmitSignal(SignalName.GameStateChanged, (int)GameState.SelectingCard);
                     currentGameState = GameState.SelectingCard;
                 }
                 else if (targetCard.CardAlignmentType == Card.CardAlignment.Player)
@@ -292,32 +331,72 @@ public partial class MoveCard3D : Camera3D
                     //select new selectedcard
                     selectedCard.EmitSignal(Card.SignalName.CardSelected, selectedCard);
                     targetCard = null;
+                    this.EmitSignal(SignalName.GameStateChanged, (int)GameState.PlacingCard);
                     currentGameState = GameState.PlacingCard;
                 }
             }
-            else
-            {
-                currentGameState = GameState.PlacingCard;
-                colliders = RaycastHelper.GetCollisionPoint(this, mouse, MouseCastLength);
-            }
-
         }
         else if(colliders["collider"].AsGodotObject().GetType() == typeof(StaticBody3D))
         {
             StaticBody3D collider = (StaticBody3D)colliders["collider"];
-            if(collider == GetNode<StaticBody3D>("/root/GameBoard/EnemyBody/EnemyBodyObject"))
+            if(collider == GetNode<StaticBody3D>("/root/GameBoard/EnemyBody/EnemyBodyObject") && CardPositionCheck.PathClear(boardController, (Card)selectedCard))
             {
-                boardController.Enemy.Health -= selectedCard.Damage;
+                boardController.Enemy.TakeDamage(selectedCard.Damage);
                 GD.Print(boardController.Enemy.Health);
                 selectedCard.EmitSignal(Card.SignalName.CardSelected, selectedCard);
+                this.EmitSignal(SignalName.GameStateChanged, (int)GameState.PlacingCard);
                 currentGameState = GameState.PlacingCard;
                 selectedCard = null;
                 collider = null;
+                colliders = null;
             }
             else
             {
                 collider = null;
+                colliders = null;
             }
+        }
+        else
+        {
+            GD.Print("uhhh naw son");
+        }
+    }
+
+    private void SelectTargetTauntPhase(InputEvent @event)
+    {
+        colliders = RaycastHelper.GetCollisionPoint(this, mouse, MouseCastLength);
+        targetCard = (UnitCard)colliders["collider"];
+        UnitCard c = (UnitCard)targetCard;
+        if (!boardController.Hand.Contains(c) && boardController.CurrentPhase == AbilityPhase.Taunt)
+        {
+            if (targetCard != selectedCard && targetCard.CardAlignmentType == Card.CardAlignment.Enemy && targetCard.CanPickUp == false && !boardController.Enemy.EnemyHand.Contains(targetCard) && targetCard.Effects.Contains(new StatusEffect(Effect.Taunt, 9999)))
+            {
+                this.EmitSignal(SignalName.GameStateChanged, (int)GameState.ExecutingAction);
+                currentGameState = GameState.ExecutingAction;
+                colliders = null;
+            }
+            else if (targetCard == selectedCard)
+            {
+                CardInteractNoContextMenu(@event);
+                currentGameState = GameState.SelectingCard;
+            }
+            else if (targetCard.CardAlignmentType == Card.CardAlignment.Player)
+            {
+                //deselect previous selected card
+                selectedCard.EmitSignal(Card.SignalName.CardSelected, selectedCard);
+                selectedCard = targetCard;
+
+                //select new selectedcard
+                selectedCard.EmitSignal(Card.SignalName.CardSelected, selectedCard);
+                targetCard = null;
+                currentGameState = GameState.PlacingCard;
+            }
+            //TODO: maybe have another statement that writes prompt to screen
+        }
+        else
+        {
+            currentGameState = GameState.PlacingCard;
+            colliders = RaycastHelper.GetCollisionPoint(this, mouse, MouseCastLength);
         }
     }
 
@@ -331,6 +410,7 @@ public partial class MoveCard3D : Camera3D
         {
             CardAction action = new CardAction(selectedCard, targetCard);
             action.ExecuteAction();
+            this.EmitSignal(SignalName.GameStateChanged, (int)GameState.PlacingCard);
             currentGameState = GameState.PlacingCard;
             selectedCard = null;
             targetCard = null;
@@ -345,6 +425,28 @@ public partial class MoveCard3D : Camera3D
         currentGameState = GameState.PlacingCard;
     }
 
+    ///<summary>
+    /// Returns card to hand if the player is holding a card when their turn ends
+    /// </summary>
+
+    private void ReturnCardToHand()
+    {
+        if(colliders != null)
+        {
+            if (colliders["collider"].AsGodotObject().GetType() != typeof(StaticBody3D))
+            {
+                Card card = (Card)colliders["collider"];
+                card.GetGizmos();
+                Tween tween = CreateTween();
+                Tween tween2 = CreateTween();
+                tween.TweenProperty(card, "position", card.OriginPos, 0.5f).SetTrans(Tween.TransitionType.Quad);
+                tween2.TweenProperty(card, "rotation", card.OriginRot, 0.5f).SetTrans(Tween.TransitionType.Quad);
+                card.GravityScale = 0;
+                colliders = null;
+            }
+
+        }
+    }
     /// <summary>
     /// Moves card 
     /// </summary>
@@ -385,7 +487,7 @@ public partial class MoveCard3D : Camera3D
                         colliderToMove.Set("gravity_scale", 0);
                         colliderToMove.IsPickedUp = true;
                         colliderToMove.Position = colliderToMove.Position.Lerp(ProjectPosition(mouse, CardFollowDistance), (float)delta * 10);
-                        boardController.Hand.Remove(colliderToMove);
+                        //boardController.Hand.Remove(colliderToMove);
                     }
                 }
             }

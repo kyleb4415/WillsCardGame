@@ -11,6 +11,8 @@ public partial class EnemyAI : Node
 	public int Health = 10;
 	private bool _firstTurn = true;
 	private BoardController _boardController;
+	private Timer _randomTimer = new Timer();
+	private Timer _firstTurnTimer = new Timer();
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
@@ -21,7 +23,10 @@ public partial class EnemyAI : Node
 		{
 			EnemySpaces.Add((Node3D)space);
 		}
-	}
+		this.AddChild(_randomTimer);
+		this.AddChild(_firstTurnTimer);
+        _randomTimer.Timeout += EndTurn;
+    }
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
 	public override void _Process(double delta)
@@ -30,24 +35,32 @@ public partial class EnemyAI : Node
 
 	public void PlayTurn()
 	{
-		Random rnd = new Random();
-		int selection = rnd.Next(0, 101);
-		if(_firstTurn == true)
-		{
-            PlayFirstTurn(rnd);
-			_firstTurn = false;
-        }
-		else
-		{
-            switch (selection)
+        if (_boardController.gameState == GameState.EnemyTurn)
+        {
+			GD.Print("Enemy playing turn");
+            Random rnd = new Random();
+            int selection = rnd.Next(0, 101);
+            if (_firstTurn == true)
             {
-                case int n when n >= 0 && n < 50:
-					PlaceCard(rnd);
-                    break;
-				case int n when n >= 50 && n < 100:
-					Attack(rnd);
-					break;
+                _firstTurnTimer.Timeout += () => PlayFirstTurn(rnd);
+                _firstTurnTimer.Start(rnd.NextDouble() * 3);
+				_firstTurnTimer.Stop();
+                _firstTurn = false;
             }
+            else
+            {
+                switch (selection)
+                {
+                    case int n when n >= 0 && n < 50:
+                        PlaceCard(rnd);
+                        break;
+                    case int n when n >= 50 && n < 100:
+                        Attack(rnd);
+                        break;
+                }
+            }
+
+            _randomTimer.Start(rnd.Next(4, 8));
         }
 	}
 
@@ -117,7 +130,20 @@ public partial class EnemyAI : Node
 			return;
 		}
 
-		int enemyCardSelection = rnd.Next(0, EnemyCardsOnBoard.Count);
+		int enemyCardSelection;
+        if (EnemyCardsOnBoard.Count > 1)
+		{
+			enemyCardSelection = rnd.Next(0, EnemyCardsOnBoard.Count);
+        }
+		else if(EnemyCardsOnBoard.Count == 1)
+		{
+			enemyCardSelection = 0;
+		}
+		else
+		{
+			return;
+		}
+
 
         UnitCard pc = (UnitCard)playerCards[playerCardSelection];
         UnitCard ec = (UnitCard)EnemyCardsOnBoard[enemyCardSelection];
@@ -142,6 +168,16 @@ public partial class EnemyAI : Node
 		action.ExecuteAction();
     }
 
+	public void TakeDamage(int damage)
+	{
+		this.Health -= damage;
+		_boardController.EnemyHPLabel.Text = Health.ToString();
+	}
+
+	public void EndTurn()
+	{
+		_boardController._endTurnButton_Pressed();
+	}
 
 	public bool CheckEmptySpaces()
 	{

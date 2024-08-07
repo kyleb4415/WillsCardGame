@@ -15,6 +15,16 @@ public class StatusEffect
         this.Damage = damage;
         this.Boost = boost;
     }
+    public StatusEffect(Effect effect, int duration)
+    {
+        this.Effect = effect;
+        this.Duration = duration;
+    }
+    public StatusEffect(Effect effect)
+    {
+        this.Effect = effect;
+        this.Duration = -1;
+    }
     public StatusEffect(Effect effect, int duration, int damage, int health, bool boost)
     {
         this.Effect = effect;
@@ -30,6 +40,7 @@ public enum Effect
 {
     Poison,
     Fire,
-    Infection
+    Infection,
+    Taunt
 }
 
