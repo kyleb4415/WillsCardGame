@@ -1,70 +1,95 @@
-[gd_scene load_steps=7 format=3 uid="uid://bqe4y0kfsdcsm"]
+[gd_scene load_steps=9 format=3 uid="uid://bqe4y0kfsdcsm"]
 
 [ext_resource type="Script" path="res://Scripts/UnitCard.cs" id="1_f3fyc"]
 [ext_resource type="Script" path="res://Scripts/PositionControl3D.cs" id="2_1qbv1"]
+[ext_resource type="PackedScene" uid="uid://mo4ouhmg6syk" path="res://Assets/Cards/CardBase.tscn" id="2_nqvf2"]
+[ext_resource type="FontFile" uid="uid://ca34cim5cdy0m" path="res://Assets/Cards/CardAssets/windows_command_prompt.ttf" id="7_uff6s"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_62a8p"]
-size = Vector3(0.275, 0.035, 0.41)
+size = Vector3(0.275, 0.035, 0.458579)
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_4p7fh"]
+[sub_resource type="ViewportTexture" id="ViewportTexture_xc2xv"]
+viewport_path = NodePath("CardBase/CardImages/CardViewport")
 
 [sub_resource type="BoxMesh" id="BoxMesh_gic02"]
 resource_local_to_scene = true
-material = SubResource("StandardMaterial3D_4p7fh")
 size = Vector3(0.275, 0.002, 0.41)
 
-[sub_resource type="PlaneMesh" id="PlaneMesh_2u3xh"]
-size = Vector2(0.155, 0.045)
+[sub_resource type="SystemFont" id="SystemFont_plqby"]
+font_names = PackedStringArray("Windows")
 
 [node name="CardBase3d" type="Node3D"]
+transform = Transform3D(1.5, 0, 0, 0, 1.5, 0, 0, 0, 1.5, 0, 0, 0)
 
 [node name="CardBody" type="RigidBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.1443, 0)
 script = ExtResource("1_f3fyc")
 
 [node name="CardCollider" type="CollisionShape3D" parent="CardBody"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.000202626)
 shape = SubResource("BoxShape3D_62a8p")
+
+[node name="CardBack" type="Sprite3D" parent="CardBody"]
+transform = Transform3D(0.15, 0, 0, 0, -6.55671e-09, 0.15, 0, -0.15, -6.55671e-09, 0, -0.00754118, 0)
+double_sided = false
+texture = SubResource("ViewportTexture_xc2xv")
 
 [node name="CardMesh" type="MeshInstance3D" parent="CardBody"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.000343561, 0)
+visible = false
 layers = 3
 mesh = SubResource("BoxMesh_gic02")
 
 [node name="Name" type="Label3D" parent="CardBody"]
-transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0.00351089, -0.132415)
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, -0.073, 0, -0.164)
 text = "a"
+font = ExtResource("7_uff6s")
 font_size = 12
+outline_size = 0
+uppercase = true
 
 [node name="Description" type="Label3D" parent="CardBody"]
-transform = Transform3D(0.585, 0, 0, 0, -2.55712e-08, 0.585, 0, -0.585, -2.55712e-08, 0, 0.00351089, 0.0738633)
+transform = Transform3D(0.585, 0, 0, 0, -2.55712e-08, 0.585, 0, -0.585, -2.55712e-08, 0.00664369, 0.00351089, 0.110732)
 text = "a"
+font = SubResource("SystemFont_plqby")
 font_size = 12
+outline_size = 0
+autowrap_mode = 3
 
 [node name="Type" type="Label3D" parent="CardBody"]
-transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0.00351089, -0.0247653)
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0.00351089, 0.0604362)
 text = "a"
+font = ExtResource("7_uff6s")
 font_size = 12
 
 [node name="ManaCost" type="Label3D" parent="CardBody"]
-transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0.136746, 0.00351089, -0.132415)
-text = "a"
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0.105662, 0, -0.1813)
+text = "5"
+font = ExtResource("7_uff6s")
 font_size = 12
+outline_size = 0
 
 [node name="Damage" type="Label3D" parent="CardBody"]
-transform = Transform3D(0.585, 0, 0, 0, -2.55712e-08, 0.585, 0, -0.585, -2.55712e-08, -0.0859057, 0.00351089, 0.178114)
+transform = Transform3D(0.585, 0, 0, 0, -2.55712e-08, 0.585, 0, -0.585, -2.55712e-08, -0.0786626, 0.00351089, 0.0539177)
 text = "a"
-font_size = 12
+font = ExtResource("7_uff6s")
+font_size = 20
+outline_size = 0
 
 [node name="HP" type="Label3D" parent="CardBody"]
-transform = Transform3D(0.585, 0, 0, 0, -2.55712e-08, 0.585, 0, -0.585, -2.55712e-08, 0.0899721, 0.00351089, 0.174245)
+transform = Transform3D(0.585, 0, 0, 0, -2.55712e-08, 0.585, 0, -0.585, -2.55712e-08, 0.0879039, 0.00273722, 0.0518493)
 text = "a"
-font_size = 12
+font = ExtResource("7_uff6s")
+font_size = 20
+outline_size = 0
 
 [node name="SelectedLight" type="OmniLight3D" parent="CardBody"]
 layers = 0
 omni_range = 0.21309
 
-[node name="ContextMenuControl" type="Control" parent="CardBody"]
+[node name="CardBase" parent="." instance=ExtResource("2_nqvf2")]
+
+[node name="ContextMenuControl" type="Control" parent="."]
 layout_mode = 3
 anchors_preset = 7
 anchor_left = 0.5
@@ -79,7 +104,7 @@ grow_vertical = 0
 mouse_filter = 1
 script = ExtResource("2_1qbv1")
 
-[node name="ContextMenu" type="Panel" parent="CardBody/ContextMenuControl"]
+[node name="ContextMenu" type="Panel" parent="ContextMenuControl"]
 layout_mode = 1
 anchors_preset = 7
 anchor_left = 0.5
@@ -93,16 +118,14 @@ grow_horizontal = 2
 grow_vertical = 0
 mouse_filter = 1
 
-[node name="ContextMenuText" type="RichTextLabel" parent="CardBody/ContextMenuControl/ContextMenu"]
+[node name="ContextMenuText" type="RichTextLabel" parent="ContextMenuControl/ContextMenu"]
 layout_mode = 0
 offset_right = 138.0
 offset_bottom = 31.0
 text = "asdfasdfasdaasdf"
 fit_content = true
 
-[node name="Timer" type="Timer" parent="CardBody/ContextMenuControl"]
+[node name="Timer" type="Timer" parent="ContextMenuControl"]
 one_shot = true
 
-[node name="StatusEffectContainer" type="MeshInstance3D" parent="CardBody"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.177713)
-mesh = SubResource("PlaneMesh_2u3xh")
+[editable path="CardBase"]

@@ -3,16 +3,17 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://caon1f5vja7s3"
-path="res://.godot/imported/board_wood_normal.jpg-4fc3eec83520a75feb4febc22dd0510f.ctex"
+path.s3tc="res://.godot/imported/board_wood_normal.jpg-4fc3eec83520a75feb4febc22dd0510f.s3tc.ctex"
 metadata={
-"vram_texture": false
+"imported_formats": ["s3tc_bptc"],
+"vram_texture": true
 }
 generator_parameters={}
 
 [deps]
 
 source_file="res://Scenes3D/board_wood_normal.jpg"
-dest_files=["res://.godot/imported/board_wood_normal.jpg-4fc3eec83520a75feb4febc22dd0510f.ctex"]
+dest_files=["res://.godot/imported/board_wood_normal.jpg-4fc3eec83520a75feb4febc22dd0510f.s3tc.ctex"]
 
 [params]
 

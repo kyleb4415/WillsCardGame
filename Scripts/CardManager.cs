@@ -12,74 +12,74 @@ using System.Xml;
 
 public static class CardManager
 {
-    [Signal]
-    public delegate void CardInteractionEventHandler(Card c, Card d);
-    public static void InitialDealCards(BoardController b, SceneTree s)
-    {
-        InitialDealEnemyCardsAnimation(b, new Vector3(0, 0, 0), s);
-        DealCardsBezierAnimation(b, new Vector3(0,0,0), s);
+	[Signal]
+	public delegate void CardInteractionEventHandler(Card c, Card d);
+	public static void InitialDealCards(BoardController b, SceneTree s)
+	{
+		InitialDealEnemyCardsAnimation(b, new Vector3(0, 0, 0), s);
+		DealCardsBezierAnimation(b, new Vector3(0,0,0), s);
 
-    }
+	}
 
 	//dealing cards from hand
 	/*
 	public static void InitialDealCardsAnimation(BoardController b, Vector3 dealPosition, SceneTree s)
 	{
-        Vector3 fanPositionLeft = new Vector3(-0.2f, -1f, 1f);
-        Vector3 fanPositionRight = new Vector3(0.2f, -1f, 1f);
+		Vector3 fanPositionLeft = new Vector3(-0.2f, -1f, 1f);
+		Vector3 fanPositionRight = new Vector3(0.2f, -1f, 1f);
 
 		//maybe change positions to accommodate more cards if necessary?
 		if(b.Hand.Count > 4)
 		{
-            fanPositionLeft = new Vector3(-0.8f, -1f, 1f);
+			fanPositionLeft = new Vector3(-0.8f, -1f, 1f);
 			fanPositionRight = new Vector3(0.8f, -1f, 1f);
-        }
+		}
 
-        Vector3 fanRotationLeft = new Vector3(0, 0.25f, 0);
-        Vector3 fanRotationRight = new Vector3(0, -0.25f, 0);
+		Vector3 fanRotationLeft = new Vector3(0, 0.25f, 0);
+		Vector3 fanRotationRight = new Vector3(0, -0.25f, 0);
 
 		float idx = 0;
 
-        foreach (Card c in b.Hand)
+		foreach (Card c in b.Hand)
 		{
-            float alignmentWeight = CalculateCardAlignment(b.Hand, idx);
+			float alignmentWeight = CalculateCardAlignment(b.Hand, idx);
 			float timeCalculation = 0.2f * (c.Position.X - fanPositionLeft.X);
-            c.GravityScale = 0;
+			c.GravityScale = 0;
 			Tween t = s.CreateTween();
 			Tween t2 = s.CreateTween();
-            t.TweenProperty(c, "position", fanPositionLeft.Lerp(fanPositionRight, alignmentWeight), timeCalculation).SetTrans(Tween.TransitionType.Quad);
+			t.TweenProperty(c, "position", fanPositionLeft.Lerp(fanPositionRight, alignmentWeight), timeCalculation).SetTrans(Tween.TransitionType.Quad);
 			t2.TweenProperty(c, "rotation", fanRotationLeft.Lerp(fanRotationRight, alignmentWeight), 0.25f).SetTrans(Tween.TransitionType.Quad);
 			c.OriginPos = fanPositionLeft.Lerp(fanPositionRight, alignmentWeight);
 			c.OriginRot = fanRotationLeft.Lerp(fanRotationRight, alignmentWeight);
 			idx += 1;
-        }
+		}
 	}
 	*/
 
-    public static void DealCardsBezierAnimation(BoardController b, Vector3 dealPosition, SceneTree s)
-    {
-        Vector3 p0 = new Vector3(-0.2f, -1f, 1f);
+	public static void DealCardsBezierAnimation(BoardController b, Vector3 dealPosition, SceneTree s)
+	{
+		Vector3 p0 = new Vector3(-0.2f, -1f, 1f);
 		Vector3 p1 = new Vector3(0f, -1f, 0.8f);
-        Vector3 p2 = new Vector3(0.2f, -1f, 1f);
+		Vector3 p2 = new Vector3(0.2f, -1f, 1f);
 
 		//maybe change positions to accommodate more cards if necessary?
 		if (b.Hand.Count > 4)
-        {
-            p0 = new Vector3(-0.8f, -1f, 1f);
-            p1 = new Vector3(0f, -1f, 0.8f);
-            p2 = new Vector3(0.8f, -1f, 1f);
-        }
+		{
+			p0 = new Vector3(-0.8f, -1f, 1f);
+			p1 = new Vector3(0f, -1f, 0.8f);
+			p2 = new Vector3(0.8f, -1f, 1f);
+		}
 
 
-        Curve3D curve = new Curve3D();
+		Curve3D curve = new Curve3D();
 		curve.AddPoint(p0);
 		curve.SetPointOut(0, new Vector3(0, 0, 0));
 		curve.AddPoint(p1, new Vector3(-0.9f, 0f, 0f), new Vector3(0.9f, 0f, 0f));
 		curve.AddPoint(p2);
 		curve.SetPointIn(2, new Vector3(0, 0, 0));
 
-        Vector3 fanRotationLeft = new Vector3(0, 0.25f, 0);
-        Vector3 fanRotationRight = new Vector3(0, -0.25f, 0);
+		Vector3 fanRotationLeft = new Vector3(0, 0.25f, 0);
+		Vector3 fanRotationRight = new Vector3(0, -0.25f, 0);
 
 		List<Vector3> pointsOnCurve = CalculatePointsOnCurve(curve, 7);
 
@@ -127,7 +127,7 @@ public static class CardManager
 
         List<Vector3> pointsOnCurve = CalculatePointsOnCurve(curve, b.Hand.Count);
 
-        int idx = 0;
+		int idx = 0;
 
         foreach (Card c in b.Hand)
         {
@@ -145,147 +145,147 @@ public static class CardManager
     }
 
 
-    /*
-    public static void DealPlayerCardAnimation(Card card, BoardController b, Vector3 dealPosition, SceneTree s)
-    {
-        Vector3 fanPositionLeft = new Vector3(-0.4f, -1f, 1f);
-        Vector3 fanPositionRight = new Vector3(0.4f, -1f, 1f);
+	/*
+	public static void DealPlayerCardAnimation(Card card, BoardController b, Vector3 dealPosition, SceneTree s)
+	{
+		Vector3 fanPositionLeft = new Vector3(-0.4f, -1f, 1f);
+		Vector3 fanPositionRight = new Vector3(0.4f, -1f, 1f);
 
-        //maybe change positions to accommodate more cards if necessary?
-        if (b.Hand.Count > 4)
-        {
-            fanPositionLeft = new Vector3(-0.8f, -1f, 1f);
-            fanPositionRight = new Vector3(0.8f, -1f, 1f);
-        }
+		//maybe change positions to accommodate more cards if necessary?
+		if (b.Hand.Count > 4)
+		{
+			fanPositionLeft = new Vector3(-0.8f, -1f, 1f);
+			fanPositionRight = new Vector3(0.8f, -1f, 1f);
+		}
 
-        Vector3 fanRotationLeft = new Vector3(0, 0.25f, 0);
-        Vector3 fanRotationRight = new Vector3(0, -0.25f, 0);
+		Vector3 fanRotationLeft = new Vector3(0, 0.25f, 0);
+		Vector3 fanRotationRight = new Vector3(0, -0.25f, 0);
 
 		float idx = 0;
 		GD.Print("Dealing card from deck");
 
 		b.Hand.Add(card);
-        b.PlayerDeck.Remove(b.PlayerDeck[b.PlayerDeck.Count - 1]);
-        foreach (Card c in b.Hand)
-        {
-            float alignmentWeight = CalculateCardAlignment(b.Hand, idx);
-            float timeCalculation = 0.2f * (c.Position.X - fanPositionLeft.X);
-            c.GravityScale = 0;
-            Tween t = s.CreateTween();
-            Tween t2 = s.CreateTween();
-            t.TweenProperty(c, "position", fanPositionLeft.Lerp(fanPositionRight, alignmentWeight), timeCalculation).SetTrans(Tween.TransitionType.Quad);
-            t2.TweenProperty(c, "rotation", fanRotationLeft.Lerp(fanRotationRight, alignmentWeight), 0.25f).SetTrans(Tween.TransitionType.Quad);
-            c.OriginPos = fanPositionLeft.Lerp(fanPositionRight, alignmentWeight);
-            c.OriginRot = fanRotationLeft.Lerp(fanRotationRight, alignmentWeight);
-            idx += 1;
-        }
+		b.PlayerDeck.Remove(b.PlayerDeck[b.PlayerDeck.Count - 1]);
+		foreach (Card c in b.Hand)
+		{
+			float alignmentWeight = CalculateCardAlignment(b.Hand, idx);
+			float timeCalculation = 0.2f * (c.Position.X - fanPositionLeft.X);
+			c.GravityScale = 0;
+			Tween t = s.CreateTween();
+			Tween t2 = s.CreateTween();
+			t.TweenProperty(c, "position", fanPositionLeft.Lerp(fanPositionRight, alignmentWeight), timeCalculation).SetTrans(Tween.TransitionType.Quad);
+			t2.TweenProperty(c, "rotation", fanRotationLeft.Lerp(fanRotationRight, alignmentWeight), 0.25f).SetTrans(Tween.TransitionType.Quad);
+			c.OriginPos = fanPositionLeft.Lerp(fanPositionRight, alignmentWeight);
+			c.OriginRot = fanRotationLeft.Lerp(fanRotationRight, alignmentWeight);
+			idx += 1;
+		}
 
-    }
+	}
 	*/
 
-    public static void DealPlayerCardAnimation(Card card, BoardController b, Vector3 dealPosition, SceneTree s)
-    {
-        Vector3 p0 = new Vector3(-0.2f, -1f, 1f);
-        Vector3 p1 = new Vector3(0f, -1f, 0.8f);
-        Vector3 p2 = new Vector3(0.2f, -1f, 1f);
+	public static void DealPlayerCardAnimation(Card card, BoardController b, Vector3 dealPosition, SceneTree s)
+	{
+		Vector3 p0 = new Vector3(-0.2f, -1f, 1f);
+		Vector3 p1 = new Vector3(0f, -1f, 0.8f);
+		Vector3 p2 = new Vector3(0.2f, -1f, 1f);
 
-        //maybe change positions to accommodate more cards if necessary?
-        if (b.Hand.Count > 4)
-        {
-            p0 = new Vector3(-0.8f, -1f, 1f);
-            p1 = new Vector3(0f, -1f, 0.8f);
-            p2 = new Vector3(0.8f, -1f, 1f);
-        }
+		//maybe change positions to accommodate more cards if necessary?
+		if (b.Hand.Count > 4)
+		{
+			p0 = new Vector3(-0.8f, -1f, 1f);
+			p1 = new Vector3(0f, -1f, 0.8f);
+			p2 = new Vector3(0.8f, -1f, 1f);
+		}
 
 
-        Curve3D curve = new Curve3D();
-        curve.AddPoint(p0);
-        curve.SetPointOut(0, new Vector3(0, 0, 0));
-        curve.AddPoint(p1, new Vector3(-0.9f, 0f, 0f), new Vector3(0.9f, 0f, 0f));
-        curve.AddPoint(p2);
-        curve.SetPointIn(2, new Vector3(0, 0, 0));
+		Curve3D curve = new Curve3D();
+		curve.AddPoint(p0);
+		curve.SetPointOut(0, new Vector3(0, 0, 0));
+		curve.AddPoint(p1, new Vector3(-0.9f, 0f, 0f), new Vector3(0.9f, 0f, 0f));
+		curve.AddPoint(p2);
+		curve.SetPointIn(2, new Vector3(0, 0, 0));
 
-        Vector3 fanRotationLeft = new Vector3(0, 0.25f, 0);
-        Vector3 fanRotationRight = new Vector3(0, -0.25f, 0);
+		Vector3 fanRotationLeft = new Vector3(0, 0.25f, 0);
+		Vector3 fanRotationRight = new Vector3(0, -0.25f, 0);
 
         //adding one to account for the extra card that will be added
         List<Vector3> pointsOnCurve = CalculatePointsOnCurve(curve, b.Hand.Count + 1);
 
-        int idx = 0;
-        b.PlayerDeck.Remove(b.PlayerDeck[b.PlayerDeck.Count - 1]);
+		int idx = 0;
+		b.PlayerDeck.Remove(b.PlayerDeck[b.PlayerDeck.Count - 1]);
 		b.Hand.Add(card);
 
 		foreach (Card c in b.Hand)
 		{
 			if(c != card)
 			{
-                float alignmentWeight = CalculateCardAlignment(b.Hand, idx);
-                float timeCalculation = 0.4f;
-                c.GravityScale = 0;
-                Tween t = s.CreateTween();
-                Tween t2 = s.CreateTween();
-                t.TweenProperty(c, "position", pointsOnCurve[idx], timeCalculation).SetTrans(Tween.TransitionType.Quad);
-                t2.TweenProperty(c, "rotation", fanRotationLeft.Lerp(fanRotationRight, alignmentWeight), 0.25f).SetTrans(Tween.TransitionType.Quad);
-                c.OriginPos = pointsOnCurve[idx];
-                c.OriginRot = fanRotationLeft.Lerp(fanRotationRight, alignmentWeight);
-                idx += 1;
-            }
+				float alignmentWeight = CalculateCardAlignment(b.Hand, idx);
+				float timeCalculation = 0.4f;
+				c.GravityScale = 0;
+				Tween t = s.CreateTween();
+				Tween t2 = s.CreateTween();
+				t.TweenProperty(c, "position", pointsOnCurve[idx], timeCalculation).SetTrans(Tween.TransitionType.Quad);
+				t2.TweenProperty(c, "rotation", fanRotationLeft.Lerp(fanRotationRight, alignmentWeight), 0.25f).SetTrans(Tween.TransitionType.Quad);
+				c.OriginPos = pointsOnCurve[idx];
+				c.OriginRot = fanRotationLeft.Lerp(fanRotationRight, alignmentWeight);
+				idx += 1;
+			}
 			else
 			{
-                float alignmentWeight = CalculateCardAlignment(b.Hand, idx);
-                float timeCalculation = 0.2f * (c.Position.X - p0.X);
-                c.GravityScale = 0;
-                Tween t = s.CreateTween();
-                Tween t2 = s.CreateTween();
-                t.TweenProperty(c, "position", pointsOnCurve[idx], timeCalculation).SetTrans(Tween.TransitionType.Quad);
-                t2.TweenProperty(c, "rotation", fanRotationLeft.Lerp(fanRotationRight, alignmentWeight), 0.25f).SetTrans(Tween.TransitionType.Quad);
-                c.OriginPos = pointsOnCurve[idx];
-                c.OriginRot = fanRotationLeft.Lerp(fanRotationRight, alignmentWeight);
-                idx += 1;
-            }
+				float alignmentWeight = CalculateCardAlignment(b.Hand, idx);
+				float timeCalculation = 0.2f * (c.Position.X - p0.X);
+				c.GravityScale = 0;
+				Tween t = s.CreateTween();
+				Tween t2 = s.CreateTween();
+				t.TweenProperty(c, "position", pointsOnCurve[idx], timeCalculation).SetTrans(Tween.TransitionType.Quad);
+				t2.TweenProperty(c, "rotation", fanRotationLeft.Lerp(fanRotationRight, alignmentWeight), 0.25f).SetTrans(Tween.TransitionType.Quad);
+				c.OriginPos = pointsOnCurve[idx];
+				c.OriginRot = fanRotationLeft.Lerp(fanRotationRight, alignmentWeight);
+				idx += 1;
+			}
 
 		}
-    }
+	}
 
-    public static void InitialDealEnemyCardsAnimation(BoardController b, Vector3 dealPosition, SceneTree s)
-    {
-        Vector3 fanPositionLeft = new Vector3(-0.4f, -1f, -1f);
-        Vector3 fanPositionRight = new Vector3(0.4f, -1f, -1f);
+	public static void InitialDealEnemyCardsAnimation(BoardController b, Vector3 dealPosition, SceneTree s)
+	{
+		Vector3 fanPositionLeft = new Vector3(-0.4f, -1f, -1f);
+		Vector3 fanPositionRight = new Vector3(0.4f, -1f, -1f);
 
-        //maybe change positions to accommodate more cards if necessary?
-        if (b.Enemy.EnemyHand.Count > 4)
-        {
-            fanPositionLeft = new Vector3(-0.8f, -1f, -1f);
-            fanPositionRight = new Vector3(0.8f, -1f, -1f);
-        }
+		//maybe change positions to accommodate more cards if necessary?
+		if (b.Enemy.EnemyHand.Count > 4)
+		{
+			fanPositionLeft = new Vector3(-0.8f, -1f, -1f);
+			fanPositionRight = new Vector3(0.8f, -1f, -1f);
+		}
 
-        Vector3 fanRotationLeft = new Vector3(0, 0.25f, 0);
-        Vector3 fanRotationRight = new Vector3(0, -0.25f, 0);
+		Vector3 fanRotationLeft = new Vector3(0, 0.25f, 0);
+		Vector3 fanRotationRight = new Vector3(0, -0.25f, 0);
 
-        float idx = 0;
-        foreach (Card c in b.Enemy.EnemyHand)
-        {
-            float alignmentWeight = CalculateCardAlignment(b.Enemy.EnemyHand, idx);
-            float timeCalculation = 0.2f * Math.Abs((c.Position.X - fanPositionLeft.X));
-            c.GravityScale = 0;
-            Tween t3 = s.CreateTween();
-            Tween t4 = s.CreateTween();
-            t3.TweenProperty(c, "position", fanPositionLeft.Lerp(fanPositionRight, alignmentWeight), timeCalculation).SetTrans(Tween.TransitionType.Quad);
-            //t.TweenProperty(c, "position", fanPositionLeft.Lerp(fanPositionRight, alignmentWeight), timeCalculation).SetTrans(Tween.TransitionType.Quad);
-            t4.TweenProperty(c, "rotation", fanRotationLeft.Lerp(fanRotationRight, alignmentWeight), 0.25f).SetTrans(Tween.TransitionType.Quad);
-            c.OriginPos = fanPositionLeft.Lerp(fanPositionRight, alignmentWeight);
-            c.OriginRot = fanRotationLeft.Lerp(fanRotationRight, alignmentWeight);
-            idx += 1;
-        }
-    }
+		float idx = 0;
+		foreach (Card c in b.Enemy.EnemyHand)
+		{
+			float alignmentWeight = CalculateCardAlignment(b.Enemy.EnemyHand, idx);
+			float timeCalculation = 0.2f * Math.Abs((c.Position.X - fanPositionLeft.X));
+			c.GravityScale = 0;
+			Tween t3 = s.CreateTween();
+			Tween t4 = s.CreateTween();
+			t3.TweenProperty(c, "position", fanPositionLeft.Lerp(fanPositionRight, alignmentWeight), timeCalculation).SetTrans(Tween.TransitionType.Quad);
+			//t.TweenProperty(c, "position", fanPositionLeft.Lerp(fanPositionRight, alignmentWeight), timeCalculation).SetTrans(Tween.TransitionType.Quad);
+			t4.TweenProperty(c, "rotation", fanRotationLeft.Lerp(fanRotationRight, alignmentWeight), 0.25f).SetTrans(Tween.TransitionType.Quad);
+			c.OriginPos = fanPositionLeft.Lerp(fanPositionRight, alignmentWeight);
+			c.OriginRot = fanRotationLeft.Lerp(fanRotationRight, alignmentWeight);
+			idx += 1;
+		}
+	}
 
-    //gets weight by setting index over count
-    private static float CalculateCardAlignment(List<Card> cardList, float idx)
+	//gets weight by setting index over count
+	private static float CalculateCardAlignment(List<Card> cardList, float idx)
 	{
 		if(cardList.Count != 0)
 		{
-            return idx / (cardList.Count - 1f);
-        }
+			return idx / (cardList.Count - 1f);
+		}
 		return 0.5f;
 	}
 
@@ -311,7 +311,7 @@ public static class CardManager
 			GD.Print(curve.SampleBaked(i * 0.25f, false));
 			pointsOnCurve.Add(curve.SampleBaked(i * spacing, false));
 
-        }
+		}
 		return pointsOnCurve;
 	}
 
@@ -332,7 +332,7 @@ public static class CardManager
 				//command.CommandText = @"SELECT * FROM Card";
 				using (SQLiteDataReader reader = command.ExecuteReader(CommandBehavior.KeyInfo))
 				{
-                    while (reader.Read())
+					while (reader.Read())
 					{
                         GD.Print(reader.GetValue(7).ToString() == string.Empty);
                         GD.Print(reader.GetValue(7) == null);
@@ -393,7 +393,7 @@ public static class CardManager
                                     CardList.Add(new SkillCard(reader.GetInt32(0), reader.GetString(1), reader.GetBlob(2, true), reader.GetValue(3).ToString(), reader.GetValue(4).ToString(), reader.GetInt32(8), reader.GetInt32(9), reader.GetString(11), reader.GetString(12)));
                                 }
 
-                            }
+							}
 							catch(Exception e)
 							{
 								GD.Print(e.Message);
@@ -437,17 +437,17 @@ public static class CardManager
 							//if not
                             else
 							{
-                                CardList.Add(new UnitCard(reader.GetInt32(0), reader.GetString(1), reader.GetValue(3).ToString(), reader.GetValue(4).ToString(), reader.GetValue(5).ToString(), reader.GetInt32(7), reader.GetInt32(8), reader.GetInt32(9), reader.GetInt32(10), reader.GetString(11)));
-                            }
+								CardList.Add(new UnitCard(reader.GetInt32(0), reader.GetString(1), reader.GetValue(3).ToString(), reader.GetValue(4).ToString(), reader.GetValue(5).ToString(), reader.GetInt32(7), reader.GetInt32(8), reader.GetInt32(9), reader.GetInt32(10), reader.GetString(11)));
+							}
 							//UnitCard Constructor Overload w/o CardImage TypeImage
-                        }
+						}
 						if(CardList.Count > 0)
 						{
 							GD.Print("Card added!");
 						}
 						*/
 					}
-                }
+				}
 			}
 			return CardList;
 		}
@@ -535,8 +535,8 @@ public static class CardManager
 	{
 		c.Effects.Add(new StatusEffect(Effect.Fire, 1, 2, false));
 	}
-    //burner abilities end
-    //-----------------------------------------------------------------------------------------
+	//burner abilities end
+	//-----------------------------------------------------------------------------------------
 
     //infection abilities
     //-----------------------------------------------------------------------------------------
@@ -556,10 +556,10 @@ public static class CardManager
 		
 	}
 
-    public static void Sacrifice(BoardController b, UnitCard c)
-    {
+	public static void Sacrifice(BoardController b, UnitCard c)
+	{
 
-    }
+	}
 
 	public static void CombineExcess(BoardController b, UnitCard c)
 	{
@@ -568,15 +568,15 @@ public static class CardManager
 
 
 
-    //infection abilities end
-    //-----------------------------------------------------------------------------------------
+	//infection abilities end
+	//-----------------------------------------------------------------------------------------
 
 
-    //goblin abilities
-    //-----------------------------------------------------------------------------------------
+	//goblin abilities
+	//-----------------------------------------------------------------------------------------
 	//to avoid multiple cards being dubbed could add a status effect to the card "Dubbing" that prevents it from dubbing another card unless the card being dubbed dies?
-    public static void Dubbing(BoardController b, UnitCard c)
-    {
+	public static void Dubbing(BoardController b, UnitCard c)
+	{
 		RichTextLabel t = new RichTextLabel();
 		t.AppendText($"{c.Name} knighted!");
 		b.AddChild(t);
@@ -585,7 +585,7 @@ public static class CardManager
 		c.UpdateDamage();
 		c.UpdateHP();
 		c.Selected = false;
-    }
+	}
 
 	//black market special ability - return random spell card for gold
 	public static void Buy(BoardController b, UnitCard c)
