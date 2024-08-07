@@ -12,10 +12,8 @@ public static class CardFactory
 		cardInstance.ManaCost = card.ManaCost;
 		cardInstance.CardImage = card.CardImage;
 		
-		// Get the reference to the GDScript node
-		var cardNode = instance.GetNode("CardImages");
-		// Call the GDScript function to set the card name and load the image
-		cardNode.Call("set_card_name", card.CardName);
+		var cardImages = instance.GetNode<CardNode>("CardImages");
+		cardImages.SetCardName(card.CardName);
 	}
 
 	public static void CreateUnitCard(UnitCard card, Node instance)
@@ -29,10 +27,8 @@ public static class CardFactory
 		cardInstance.Damage = card.Damage;
 		cardInstance.HP = card.HP;
 		
-		// Get the reference to the GDScript node
-		var cardNode = instance.GetNode("CardImages");
-		// Call the GDScript function to set the card name and load the image
-		cardNode.Call("set_card_name", card.CardName);
+		var cardImages = instance.GetNode<CardNode>("CardImages");
+		cardImages.SetCardName(card.CardName);
 	}
 
 }
