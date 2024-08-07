@@ -1,5 +1,6 @@
 using Godot;
 using System;
+using System.Collections.Generic;
 using System.Data.SQLite;
 
 
@@ -26,6 +27,7 @@ public partial class Card : RigidBody3D, ICard
     public Timer ContextMenuTimer { get; set; }
     public CardState State { get; set; }
     public CardAlignment CardAlignmentType { get; set; }
+    public List<StatusEffect> Effects { get; set; } = new List<StatusEffect>();
 
     [Signal]
     public delegate void PlaceCardEventHandler(Card c, TextureProgressBar t);
@@ -49,7 +51,10 @@ public partial class Card : RigidBody3D, ICard
         this.InputRayPickable = true;
         this.CanPickUp = true;
         this.ContextMenu = this.GetNode("ContextMenuControl/ContextMenu") as Panel;
-        this.Name = CardName;
+        if(CardName != null)
+        {
+            this.Name = CardName;
+        }
 
         var contextMenuText = ContextMenu.GetChild(0) as RichTextLabel;
         contextMenuText.Text = Description;
@@ -92,6 +97,7 @@ public partial class Card : RigidBody3D, ICard
             {
                 this.CanPickUp = false;
                 t.Value -= c.ManaCost * 100;
+                GetNode<BoardController>("/root/GameBoard").PlayerCardsOnBoard.Add(c);
             }
             else
             {
@@ -190,6 +196,11 @@ public partial class Card : RigidBody3D, ICard
         }
 
         
+    }
+    
+    public void ApplyStatusEffect(StatusEffect effect, Card c)
+    {
+        c.Effects.Add(effect);
     }
 
     public enum CardAlignment

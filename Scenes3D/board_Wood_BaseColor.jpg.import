@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://cbghq3naryu13"
-path.s3tc="res://.godot/imported/board_Wood_BaseColor.jpg-54bc5caecdde3afda37732fce9d263c5.s3tc.ctex"
+path.s3tc="res://.godot/imported/board_wood_basecolor.jpg-649822ac7337254c9e50e3e0b9312874.s3tc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc"],
 "vram_texture": true
@@ -12,8 +12,8 @@ generator_parameters={}
 
 [deps]
 
-source_file="res://Scenes3D/board_Wood_BaseColor.jpg"
-dest_files=["res://.godot/imported/board_Wood_BaseColor.jpg-54bc5caecdde3afda37732fce9d263c5.s3tc.ctex"]
+source_file="res://Scenes3D/board_wood_basecolor.jpg"
+dest_files=["res://.godot/imported/board_wood_basecolor.jpg-649822ac7337254c9e50e3e0b9312874.s3tc.ctex"]
 
 [params]
 

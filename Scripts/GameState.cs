@@ -7,5 +7,12 @@ public enum GameState
     SelectingCard,
     AwaitingTarget,
     ExecutingAction,
-    AbilityPhase
+    Ability,
+    EnemyTurn
+}
+
+public enum AbilityPhase
+{
+    None,
+    Taunt
 }
