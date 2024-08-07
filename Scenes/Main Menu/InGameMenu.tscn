@@ -1,0 +1,60 @@
+[gd_scene load_steps=5 format=3 uid="uid://cb3mgs0rl5ah4"]
+
+[ext_resource type="FontFile" uid="uid://cew6diln7mk5e" path="res://Assets/Fonts/BirchLeaf.ttf" id="1_ji1s1"]
+[ext_resource type="Script" path="res://Scenes/Main Menu/InGameSettings.gd" id="2_li1kb"]
+[ext_resource type="Script" path="res://Scenes/Main Menu/InGameBack.gd" id="3_g1yg1"]
+[ext_resource type="Script" path="res://Scenes/Main Menu/InGameQuit.gd" id="4_oq1yp"]
+
+[node name="InGameMenu" type="Node2D"]
+
+[node name="Control" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="ColorRect" type="ColorRect" parent="Control"]
+offset_left = -2.0
+offset_top = 3.0
+offset_right = 1279.0
+offset_bottom = 715.0
+color = Color(1, 0.858824, 0.67451, 1)
+
+[node name="ColorRect2" type="ColorRect" parent="Control"]
+offset_left = 535.0
+offset_top = 110.0
+offset_right = 806.0
+offset_bottom = 581.0
+color = Color(1, 0.81252, 0.561791, 1)
+
+[node name="MarginContainer" type="MarginContainer" parent="Control"]
+layout_mode = 0
+offset_left = 599.0
+offset_top = 200.0
+offset_right = 745.0
+offset_bottom = 464.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Control/MarginContainer"]
+layout_mode = 2
+
+[node name="Settings" type="Button" parent="Control/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("1_ji1s1")
+text = "Settings"
+script = ExtResource("2_li1kb")
+
+[node name="Back" type="Button" parent="Control/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("1_ji1s1")
+text = "Back"
+script = ExtResource("3_g1yg1")
+
+[node name="Quit" type="Button" parent="Control/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("1_ji1s1")
+text = "Quit"
+script = ExtResource("4_oq1yp")
+
+[connection signal="pressed" from="Control/MarginContainer/VBoxContainer/Settings" to="Control/MarginContainer/VBoxContainer/Settings" method="_on_pressed"]
+[connection signal="pressed" from="Control/MarginContainer/VBoxContainer/Back" to="Control/MarginContainer/VBoxContainer/Back" method="_on_pressed"]
+[connection signal="pressed" from="Control/MarginContainer/VBoxContainer/Quit" to="Control/MarginContainer/VBoxContainer/Quit" method="_on_pressed"]

@@ -4,4 +4,3 @@
 
 [node name="Sfx" type="AudioStreamPlayer"]
 stream = ExtResource("1_ndw8p")
-bus = &"SFX"
