@@ -1,51 +1,65 @@
 extends Node2D
 
-
-# Called when the node enters the scene tree for the first time.
-func _ready():
-	# test_scene_rotation.gd
-
-const SCENE_PATHS = [
+# Constant array of 2D scene paths
+const SCENE_PATHS := [
 	"res://Scenes/MainMenu.tscn",
 	"res://Scenes/Audio.tscn",
 	"res://Scenes/InGameMenu.tscn",
-	"res://Scenes/GameOver.tscn"
+	"res://Scenes/Display.tscn"
 ]
 
-func before_all():
-	# Preload all scenes for faster instancing during tests
-	for path in SCENE_PATHS:
-		preload(path)
+var current_scene_index = 0  # Track the current scene index
 
-func test_scene_rotation():
+# Called when the node enters the scene tree for the first time
+func _ready():
+	# Start automated scene testing
+	_test_scene_rotation()
+
+# Rotate to the next scene in the array
+func _rotate_scene():
+	# Calculate the next scene index
+	current_scene_index = (current_scene_index + 1) % SCENE_PATHS.size()
+	var next_scene = SCENE_PATHS[current_scene_index]
+
+	# Print for debugging
+	print("Changing to scene: ", next_scene)
+
+	# Change the scene
+	get_tree().change_scene(next_scene)
+
+# Get the current scene path for testing purposes
+func _get_current_scene_path() -> String:
+	return SCENE_PATHS[current_scene_index]
+
+# Automated scene rotation testing
+func _test_scene_rotation() -> void:
+	# Loop through each scene and test transition
 	for i in range(SCENE_PATHS.size()):
-		var current_scene = SCENE_PATHS[i]
-		var next_scene = SCENE_PATHS[(i + 1) % SCENE_PATHS.size()]
+		# Wait for the scene to fully load
+		await get_tree().process_frame
 
-		# Instance the current scene
-		var scene_instance = preload(current_scene).instance()
-		add_child(scene_instance)
-		yield(get_tree(), "idle_frame")  # Wait for the scene to load
+		# Get current scene path and compare with SceneManager's record
+		var expected_scene = _get_current_scene_path()  # Correct assignment and function call
+		var current_scene = get_tree().current_scene.filename  # Get the current scene's filename
 
-		# Spy on change_scene
-		spy(get_tree(), "change_scene")
+		# Log scene information
+		_log_scene_info(expected_scene, current_scene)  # Correct placement
 
-		# Call the rotate_scene function
-		scene_instance.call("rotate_scene")
+		# Verify the scene is the expected one
+		_assert(expected_scene == current_scene, 
+			"Scene mismatch: expected %s, got %s" % [expected_scene, current_scene])
 
-		# Wait for the next frame to ensure the scene change takes effect
-		yield(get_tree(), "idle_frame")
+		# Rotate to the next scene
+		_rotate_scene()
 
-		# Assert that the next scene is loaded
-		assert_spy_called_with(get_tree(), "change_scene", [next_scene],
-			"Expected scene transition from %s to %s" % [current_scene, next_scene])
+	print("All scenes tested successfully.")
 
-		# Remove the current scene instance after the test
-		remove_child(scene_instance)
-		scene_instance.queue_free()
+# Log scene information
+func _log_scene_info(expected_scene: String, current_scene: String):
+	print("Expected Scene: %s, Current Scene: %s" % [expected_scene, current_scene])
 
-
-
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta):
-	pass
+# Simple assertion function
+func _assert(condition: bool, message: String = "Assertion failed"):
+	if not condition:
+		push_error(message)
+		# You can pause the engine

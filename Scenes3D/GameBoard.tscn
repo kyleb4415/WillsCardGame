@@ -3,7 +3,7 @@
 [ext_resource type="Script" path="res://Scripts/MoveCard3D.cs" id="1_7mhem"]
 [ext_resource type="Script" path="res://Scripts/BoardController.cs" id="1_y1f3f"]
 [ext_resource type="Script" path="res://Scripts/EnemyAI.cs" id="4_3y4ib"]
-[ext_resource type="PackedScene" path="res://Scenes3D/board.glb" id="4_d1dy4"]
+[ext_resource type="PackedScene" uid="uid://c7ls33jcksslf" path="res://Scenes3D/board.glb" id="4_d1dy4"]
 [ext_resource type="Script" path="res://Scenes3D/GamBoardSettingsButton.gd" id="5_57wl2"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_jbem2"]
