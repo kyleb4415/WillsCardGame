@@ -98,6 +98,8 @@ public partial class Card : RigidBody3D, ICard
                 this.CanPickUp = false;
                 t.Value -= c.ManaCost * 100;
                 GetNode<BoardController>("/root/GameBoard").PlayerCardsOnBoard.Add(c);
+                GetNode<BoardController>("/root/GameBoard").Hand.Remove(c);
+                CardManager.RecalculatePlayerCardAlignment(GetNode<BoardController>("/root/GameBoard"), new Vector3(0, 0, 0), this.GetTree());
             }
             else
             {

@@ -2,6 +2,7 @@ using Godot;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.Entity.ModelConfiguration.Conventions;
 using System.Data.SQLite;
 using System.Linq;
 using System.Reflection.Metadata.Ecma335;
@@ -99,6 +100,50 @@ public static class CardManager
         }
     }
 
+    public static void RecalculatePlayerCardAlignment(BoardController b, Vector3 dealPosition, SceneTree s)
+    {
+        Vector3 p0 = new Vector3(-0.2f, -1f, 1f);
+        Vector3 p1 = new Vector3(0f, -1f, 0.8f);
+        Vector3 p2 = new Vector3(0.2f, -1f, 1f);
+
+        //maybe change positions to accommodate more cards if necessary?
+        if (b.Hand.Count > 4)
+        {
+            p0 = new Vector3(-0.8f, -1f, 1f);
+            p1 = new Vector3(0f, -1f, 0.8f);
+            p2 = new Vector3(0.8f, -1f, 1f);
+        }
+
+
+        Curve3D curve = new Curve3D();
+        curve.AddPoint(p0);
+        curve.SetPointOut(0, new Vector3(0, 0, 0));
+        curve.AddPoint(p1, new Vector3(-0.9f, 0f, 0f), new Vector3(0.9f, 0f, 0f));
+        curve.AddPoint(p2);
+        curve.SetPointIn(2, new Vector3(0, 0, 0));
+
+        Vector3 fanRotationLeft = new Vector3(0, 0.25f, 0);
+        Vector3 fanRotationRight = new Vector3(0, -0.25f, 0);
+
+        List<Vector3> pointsOnCurve = CalculatePointsOnCurve(curve, b.Hand.Count);
+
+        int idx = 0;
+
+        foreach (Card c in b.Hand)
+        {
+            float alignmentWeight = CalculateCardAlignment(b.Hand, idx);
+            float timeCalculation = 0.2f * (c.Position.X - p0.X);
+            c.GravityScale = 0;
+            Tween t = s.CreateTween();
+            Tween t2 = s.CreateTween();
+            t.TweenProperty(c, "position", pointsOnCurve[idx], timeCalculation).SetTrans(Tween.TransitionType.Quad);
+            t2.TweenProperty(c, "rotation", fanRotationLeft.Lerp(fanRotationRight, alignmentWeight), 0.25f).SetTrans(Tween.TransitionType.Quad);
+            c.OriginPos = pointsOnCurve[idx];
+            c.OriginRot = fanRotationLeft.Lerp(fanRotationRight, alignmentWeight);
+            idx += 1;
+        }
+    }
+
 
     /*
     public static void DealPlayerCardAnimation(Card card, BoardController b, Vector3 dealPosition, SceneTree s)
@@ -163,7 +208,8 @@ public static class CardManager
         Vector3 fanRotationLeft = new Vector3(0, 0.25f, 0);
         Vector3 fanRotationRight = new Vector3(0, -0.25f, 0);
 
-        List<Vector3> pointsOnCurve = CalculatePointsOnCurve(curve, 7);
+        //adding one to account for the extra card that will be added
+        List<Vector3> pointsOnCurve = CalculatePointsOnCurve(curve, b.Hand.Count + 1);
 
         int idx = 0;
         b.PlayerDeck.Remove(b.PlayerDeck[b.PlayerDeck.Count - 1]);
@@ -260,8 +306,10 @@ public static class CardManager
 		List<Vector3> pointsOnCurve = new List<Vector3>();
 		for(int i = 0; i < points; i++)
 		{
+            //total distance = 2.03
+            float spacing = 2.03f / points;
 			GD.Print(curve.SampleBaked(i * 0.25f, false));
-			pointsOnCurve.Add(curve.SampleBaked(i * 0.29f, false));
+			pointsOnCurve.Add(curve.SampleBaked(i * spacing, false));
 
         }
 		return pointsOnCurve;
@@ -275,53 +323,74 @@ public static class CardManager
 			conn.Open();
 			using(var command = new SQLiteCommand(conn))
 			{
-				command.CommandText = @"SELECT * FROM Card";
+                // will have to reconfig constructors to take race name and type name at the end
+				 command.CommandText = @"SELECT c.*, r.Name as RaceName, t.Name as TypeName 
+					FROM Card c
+					INNER JOIN Type t ON c.Type_ID = t.ID
+					INNER JOIN Race r ON c.Race_ID = r.ID";
+				
+				//command.CommandText = @"SELECT * FROM Card";
 				using (SQLiteDataReader reader = command.ExecuteReader(CommandBehavior.KeyInfo))
 				{
                     while (reader.Read())
 					{
-						/*
-						 * Debugging
-                        GD.Print(reader.GetValue(0).ToString());
-                        GD.Print(reader.GetValue(1).ToString());
-                        GD.Print(reader.GetValue(2).ToString());
-                        GD.Print(reader.GetValue(3).ToString());
-                        GD.Print(reader.GetValue(4).ToString());
-                        GD.Print(reader.GetValue(5).ToString());
-                        GD.Print(reader.GetValue(6).ToString());
-                        GD.Print(reader.GetValue(7).ToString());
-                        GD.Print(reader.GetValue(8).ToString());
-                        GD.Print(reader.GetValue(9).ToString());
-                        GD.Print(reader.GetValue(10).ToString());
-                        GD.Print(reader.GetValue(11).ToString());
-						*/
-
+                        GD.Print(reader.GetValue(7).ToString() == string.Empty);
+                        GD.Print(reader.GetValue(7) == null);
                         //use factory with reader values as inputs and then put into list that is returned at the end the method
                         //rewrite GetBlobs to call a separate method that creates an appropriate buffer and loads the image
-						if(reader.GetValue(2) != null && reader.GetValue(2).ToString() != string.Empty && reader.GetValue(6) != null && reader.GetValue(6).ToString() != string.Empty)
+                        if (reader.GetValue(2) != null && reader.GetValue(2).ToString() != string.Empty)
 						{ 
 							try
 							{
-								//DB Rows
-								//0 - ID
-								//1 - CardName
-								//2 - Image
-								//3 - AbilityName
-								//4 - [ability] Description
-								//5 - Type
-								//6 - TypeImage
-								//7 - Damage
-								//8 - HP
-								//9 - ManaCost
-								//10 - UnlockedFlag
-								//11 - Race
-								if(reader.GetValue(7) != null && reader.GetValue(7).ToString() != string.Empty && reader.GetValue(8).ToString() != string.Empty && reader.GetValue(8) != null)
+                                //Old DB Rows
+                                //0 - ID
+                                //1 - CardName
+                                //2 - Image
+                                //3 - AbilityName
+                                //4 - [ability] Description
+                                //5 - Type
+                                //6 - TypeImage
+                                //7 - Damage
+                                //8 - HP
+                                //9 - ManaCost
+                                //10 - UnlockedFlag
+                                //11 - Race
+
+                                //New DB Rows
+								//Card Table
+                                //0 - ID (int)
+                                //1 - CardName (string)
+                                //2 - Image (blob)
+                                //3 - Ability (string)
+                                //4 - Ability Description (string)
+                                //5 - Type_ID (int)
+                                //6 - Damage (int)
+                                //7 - HP (int)
+                                //8 - ManaCost (int)
+                                //9 - UnlockedFlag (int)
+                                //10 - Race_ID (numeric)
+								//New Query Implementation
+								//11 - Race [Name]
+								//12 - Type [Name]
+
+								//Type Table
+								//ID - Int
+								//Name - String
+								//Image - BLOB
+
+								//Race Table
+								//ID - Int
+								//Name - String
+								//Border - BLOB
+
+								//handling card creation IF Images column is not null/empty
+                                if (reader.GetValue(6).ToString() != string.Empty && reader.GetValue(7).ToString() != string.Empty)
 								{
-                                    CardList.Add(new UnitCard(reader.GetInt32(0), reader.GetString(1), reader.GetBlob(2, true), reader.GetValue(3).ToString(), reader.GetValue(4).ToString(), reader.GetValue(5).ToString(), reader.GetBlob(6, true), reader.GetInt32(7), reader.GetInt32(8), reader.GetInt32(9), reader.GetInt32(10), reader.GetString(11)));
+                                    CardList.Add(new UnitCard(reader.GetInt32(0), reader.GetString(1), reader.GetBlob(2, true), reader.GetValue(3).ToString(), reader.GetValue(4).ToString(), reader.GetInt32(6), reader.GetInt32(7), reader.GetInt32(8), reader.GetInt32(9)));
                                 }
 								else
 								{
-                                    CardList.Add(new SkillCard(reader.GetInt32(0), reader.GetString(1), reader.GetBlob(2, true), reader.GetValue(3).ToString(), reader.GetValue(4).ToString(), reader.GetValue(5).ToString(), reader.GetBlob(6, true), reader.GetInt32(9), reader.GetInt32(10), reader.GetString(11)));
+                                    CardList.Add(new SkillCard(reader.GetInt32(0), reader.GetString(1), reader.GetBlob(2, true), reader.GetValue(3).ToString(), reader.GetValue(4).ToString(), reader.GetInt32(8), reader.GetInt32(9), reader.GetString(11), reader.GetString(12)));
                                 }
 
                             }
@@ -330,8 +399,11 @@ public static class CardManager
 								GD.Print(e.Message);
 							}
                         }
+						/*
+						//if card image is not null but type image is
 						else if(reader.GetValue(2).ToString() != string.Empty && reader.GetValue(6).ToString() == string.Empty)
 						{
+							//if damage is not empty and health not empty -> unitcard
                             if (reader.GetValue(7) != null && reader.GetValue(7).ToString() != string.Empty && reader.GetValue(8).ToString() != string.Empty && reader.GetValue(8) != null)
                             {
                                 CardList.Add(new UnitCard(reader.GetInt32(0), reader.GetString(1), reader.GetBlob(2, true), reader.GetValue(3).ToString(), reader.GetValue(4).ToString(), reader.GetValue(5).ToString(), reader.GetInt32(7), reader.GetInt32(8), reader.GetInt32(9), reader.GetInt32(10), reader.GetString(11)));
@@ -343,11 +415,27 @@ public static class CardManager
                         }
 						else
 						{
-							if(reader.GetValue(7).ToString() == string.Empty && reader.GetValue(8).ToString() == string.Empty)
+							//both images empty, if damage is empty or health is empty then progress
+							if(reader.GetValue(7).ToString() == string.Empty || reader.GetValue(8).ToString() == string.Empty)
 							{
-								CardList.Add(new SkillCard(reader.GetInt32(0), reader.GetString(1), reader.GetValue(3).ToString(), reader.GetValue(4).ToString(), reader.GetValue(5).ToString(), reader.GetInt32(9), reader.GetInt32(10), reader.GetString(11)));
+								//if damage is empty but hp is not empty
+								if(reader.GetValue(7).ToString() == string.Empty && reader.GetValue(8).ToString() != string.Empty)
+								{
+                                    CardList.Add(new SkillCard(reader.GetInt32(0), reader.GetString(1), reader.GetValue(3).ToString(), reader.GetValue(4).ToString(), reader.GetValue(5).ToString(), reader.GetInt32(9), reader.GetInt32(10), reader.GetString(11)));
+                                }
+								//if health is empty but damage is not empty
+								else if(reader.GetValue(7).ToString() != string.Empty && reader.GetValue(8) == string.Empty)
+								{
+                                    CardList.Add(new SkillCard(reader.GetInt32(0), reader.GetString(1), reader.GetValue(3).ToString(), reader.GetValue(4).ToString(), reader.GetValue(5).ToString(), reader.GetInt32(7), reader.GetInt32(9), reader.GetInt32(10), reader.GetString(11)));
+                                }
 							}
-							else
+							//if hp and health are empty
+                            else if(reader.GetValue(7).ToString() == string.Empty && reader.GetValue(8).ToString() == string.Empty)
+							{
+                                CardList.Add(new SkillCard(reader.GetInt32(0), reader.GetString(1), reader.GetValue(3).ToString(), reader.GetValue(4).ToString(), reader.GetValue(5).ToString(), reader.GetInt32(9), reader.GetInt32(10), reader.GetString(11)));
+                            }
+							//if not
+                            else
 							{
                                 CardList.Add(new UnitCard(reader.GetInt32(0), reader.GetString(1), reader.GetValue(3).ToString(), reader.GetValue(4).ToString(), reader.GetValue(5).ToString(), reader.GetInt32(7), reader.GetInt32(8), reader.GetInt32(9), reader.GetInt32(10), reader.GetString(11)));
                             }
@@ -357,6 +445,7 @@ public static class CardManager
 						{
 							GD.Print("Card added!");
 						}
+						*/
 					}
                 }
 			}
@@ -375,7 +464,7 @@ public static class CardManager
 	 * The first card in the hand has no bearing on the function of the signal, but to achieve better coupling/cohesion it may be necessary to move it since
 	 * the ability that happens depends on the card that strikes the other card (this may be easier to do once the context menu is finished)
 	 */
-	public static Dictionary<string, string> cardAbilityDescriptionDict = new Dictionary<string, string>
+    public static Dictionary<string, string> cardAbilityDescriptionDict = new Dictionary<string, string>
 	{
 		{ "Burner", "Burns enemy for one turn for one damage"},
 		{ "Boiler", "Steams one enemy for two turns for one damage" },
@@ -401,9 +490,21 @@ public static class CardManager
 		{ "Alchemist", "Cure - When empowered, this card will throw a flask that cleanse's a card of your choosing. This will remove all status effects." }
 
 	};
+
+	//ability method paradigm is to use number of params to differentiate between different abilities
+	//3 params - active ability involving another card
+	//2 param - active ability involving only this card
+	//1 params - passive ability that gets stored on the card and is used whenever appropriate
 	public static Delegate GetCardMethod(Card c)
 	{
-		return cardAttackMethodDict[c.CardName];
+		if (cardAttackMethodDict.ContainsKey(c.Name))
+		{
+			return cardAttackMethodDict[c.Name];
+		}
+		else
+		{
+			return null;
+		}
 	}
 
 	private static Dictionary<string, Delegate> cardAttackMethodDict = new Dictionary<string, Delegate>
@@ -415,7 +516,7 @@ public static class CardManager
 	};
 
 	//Status effects reference - first index is damage and second index is turns
-	public static void BurnAttack(BoardController b, UnitCard c)
+	public static void BurnAttack(BoardController b, UnitCard c, UnitCard c2)
 	{
 		c.Effects.Add(new StatusEffect(Effect.Fire, 1, 1, false));
 		GD.Print("Health reduced");
@@ -425,12 +526,12 @@ public static class CardManager
 	//burner abilities
 	//-----------------------------------------------------------------------------------------
 
-	public static void BoilAttack(BoardController b, UnitCard c)
+	public static void BoilAttack(BoardController b, UnitCard c, UnitCard c2)
 	{
 		c.Effects.Add(new StatusEffect(Effect.Fire, 2, 1, false));
 	}
 
-	public static void BakeAttack(BoardController b, UnitCard c)
+	public static void BakeAttack(BoardController b, UnitCard c, UnitCard c2)
 	{
 		c.Effects.Add(new StatusEffect(Effect.Fire, 1, 2, false));
 	}
@@ -439,19 +540,20 @@ public static class CardManager
 
     //infection abilities
     //-----------------------------------------------------------------------------------------
-    public static void InfectionSpread(BoardController b, UnitCard c)
+    public static void InfectionSpread(BoardController b, UnitCard c, UnitCard c2)
 	{
 		c.Effects.Add(new StatusEffect(Effect.Infection, 9999, 1, false));
 	}
 
 	public static void Taunt(BoardController b, UnitCard c)
 	{
-
+		c.Effects.Add(new StatusEffect(Effect.Taunt));
+		b.CurrentPhase = AbilityPhase.Taunt;
 	}
 
 	public static void DoubleTap(BoardController b, UnitCard c)
 	{
-
+		
 	}
 
     public static void Sacrifice(BoardController b, UnitCard c)
@@ -511,8 +613,13 @@ public static class CardManager
 
 	}
 
+	//may cause error with taunt because it's not marked as a boost - may need to change later
 	public static void Cure(BoardController b, UnitCard c)
 	{
-
+		IEnumerable<StatusEffect> effectsToRemove = c.Effects.Where(x => x.Boost == false);
+		foreach(var  effect in effectsToRemove)
+		{
+			c.Effects.Remove(effect);
+		}
 	}
 }

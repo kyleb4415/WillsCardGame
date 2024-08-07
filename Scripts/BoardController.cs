@@ -15,16 +15,17 @@ public partial class BoardController : Node3D
 
     //Player attributes/properties
     public List<Node> cardGameObjects = new List<Node>();
+    public List<Node3D> PlayerSpaces { get; } = new List<Node3D>();
     public List<Card> Hand { get; set; } = new List<Card>();
     public List<Card> PlayerCardsOnBoard { get; set; } = new List<Card>();
     public List<Card> PlayerDeck { get; set; } = new List<Card>();
     public AbilityPhase CurrentPhase { get; set; }
 
     public int PlayerHealth = 10;
-    
+
 
     //UI/Turns
-    public int TurnNum;
+    public int TurnNum = 1;
     private Label _turnNumberLabel;
     private Label _timerLabel;
     private Timer _timer = new Timer();
@@ -34,6 +35,7 @@ public partial class BoardController : Node3D
 
     //EnemyAI attribute
     public EnemyAI Enemy { get; set; }
+    public Label EnemyHPLabel { get; set; }
 
     //finish setting this up
     [Signal]
@@ -49,7 +51,12 @@ public partial class BoardController : Node3D
     public override void _Ready()
 	{
         Enemy = GetNode("Enemy") as EnemyAI;
+        EnemyHPLabel = GetNode("EnemyHPLabel/EnemyHP") as Label;
         PrepareBoard();
+        foreach(dynamic c in CardManager.LoadCardsFromDB())
+        {
+            GD.Print(c.GetType());
+        }
     }
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -86,7 +93,7 @@ public partial class BoardController : Node3D
         _timer.Start(12);
     }
 
-    private void _endTurnButton_Pressed()
+    public void _endTurnButton_Pressed()
     {
         _textureProgressBar.Value += 100D;
         GD.Print("Timed out!");
@@ -94,13 +101,20 @@ public partial class BoardController : Node3D
         _turnNumberLabel.Set("text", TurnNum.ToString());
         if (TurnNum % 2 != 0)
         {
+            this.gameState = GameState.PlacingCard;
+            EmitSignal(SignalName.EnemyTurnEnded);
             PlayerTurn = true;
             EmitSignal(SignalName.PlayerTurnStarted);
+            this.PlayerTurnStarted += DealPlayerCard;
+            _endTurnButton.Disabled = false;
         }
         else
         {
             GD.Print("enemy turn");
+            EmitSignal(SignalName.PlayerTurnEnded);
+            this.gameState = GameState.EnemyTurn;
             EmitSignal(SignalName.EnemyTurnStarted);
+            _endTurnButton.Disabled = true;
             PlayerTurn = false;
         }
         _timer.Start(12);
@@ -134,6 +148,7 @@ public partial class BoardController : Node3D
                 //attaches event for each cardspace
 
                 var sChild = s.GetChild(0) as Area3D;
+                PlayerSpaces.Add(s);
                 sChild.BodyEntered += ((MoveCard3D)GetNode("Camera3D")).Area_OnBodyEntered;
                 sChild.BodyExited += ((MoveCard3D)GetNode("Camera3D")).Area_OnBodyExited;
             }
@@ -152,9 +167,9 @@ public partial class BoardController : Node3D
             var cardBaseInstance = cardBase.Instantiate();
             cardGameObjects.Add(cardBaseInstance);
             
-            if(c.GetType() == typeof(Card))
+            if(c.GetType() == typeof(SkillCard))
             {
-                CardFactory.CreateCard((Card)c, cardBaseInstance);
+                CardFactory.CreateSkillCard((SkillCard)c, cardBaseInstance);
             }
             else if(c.GetType() == typeof(UnitCard))
             {
@@ -184,9 +199,9 @@ public partial class BoardController : Node3D
             var cardBaseInstance = cardBase.Instantiate();
             cardGameObjects.Add(cardBaseInstance);
 
-            if (c.GetType() == typeof(Card))
+            if (c.GetType() == typeof(SkillCard))
             {
-                CardFactory.CreateCard((Card)c, cardBaseInstance);
+                CardFactory.CreateSkillCard((SkillCard)c, cardBaseInstance);
             }
             else if (c.GetType() == typeof(UnitCard))
             {
@@ -220,5 +235,18 @@ public partial class BoardController : Node3D
             c.QueueFree();
         }
         base._ExitTree();
+    }
+
+    public void DealPlayerCard()
+    {
+        if(Hand.Count < 7)
+        {
+            CardManager.DealPlayerCardAnimation(PlayerDeck[PlayerDeck.Count - 1], this, new Vector3(0, 0, 0), this.GetTree());
+        }
+    }
+
+    public void ChangeGameState(GameState state)
+    {
+        this.gameState = state;
     }
 }

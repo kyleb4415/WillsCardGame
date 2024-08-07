@@ -25,4 +25,17 @@ public static class CardFactory
         cardInstance.HP = card.HP;
     }
 
+    public static void CreateSkillCard(SkillCard card, Node instance)
+    {
+        SkillCard cardInstance = instance.GetChild(0) as SkillCard;
+        GD.Print(cardInstance.CardName);
+        GD.Print(card.CardName);
+        cardInstance.CardName = card.CardName;
+        cardInstance.Description = card.Description;
+        cardInstance.Type = card.Type;
+        cardInstance.ManaCost = card.ManaCost;
+        cardInstance.CardImage = card.CardImage;
+
+    }
+
 }

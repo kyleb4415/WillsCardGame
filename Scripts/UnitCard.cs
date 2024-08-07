@@ -14,6 +14,7 @@ public partial class UnitCard : Card, ICard
 	public int Damage { get; set; } = 0;
 	public string Race { get; set; }
 	public string AbilityName { get; set; }
+	public object AbilityMethod { get; set; }
 
     [Signal]
     public delegate void CardHitEventHandler(int dmg);
@@ -35,6 +36,11 @@ public partial class UnitCard : Card, ICard
 			this.Ability += InvokeAbility;
 			this.OnDamaged += UpdateHP;
         }
+		if(CardManager.GetCardMethod(this) != null)
+		{
+            AbilityMethod = CardManager.GetCardMethod(this);
+        }
+
 		b.PlayerTurnStarted += ProcessStatusEffects;
 		this.CardHit += UnitCard_CardHit;
         this.CardReleased += Release;
@@ -48,23 +54,33 @@ public partial class UnitCard : Card, ICard
 	}
 
 #nullable enable
-	public UnitCard(int id, string name, SQLiteBlob? cardImage, string abilityName, string desc, string type, SQLiteBlob? typeImage, int damage, int hp, int manaCost, int unlockedFlag, string race)
+    //New DB Rows
+    //Card Table
+    //0 - ID (int)
+    //1 - CardName (string)
+    //2 - Image (blob)
+    //3 - Ability (string)
+    //4 - Ability Description (string)
+    //5 - Type_ID (int)
+    //6 - Damage (int)
+    //7 - HP (int)
+    //8 - ManaCost (int)
+    //9 - UnlockedFlag (int)
+    //10 - Race_ID (numeric)
+    public UnitCard(int id, string name, SQLiteBlob? cardImage, string abilityName, string desc, int damage, int hp, int manaCost, int unlockedFlag)
 	{
 		this.ID = id;
 		this.CardName = name;
 		this.CardImage = cardImage;
 		this.AbilityName = abilityName;
 		this.Description = desc;
-		this.Type = type;
-		this.TypeImage = typeImage;
 		this.Damage = damage;
 		this.HP = hp;
 		this.ManaCost = manaCost;
         this.UnlockedFlag = unlockedFlag;
-		this.Race = race;
 
     }
-    public UnitCard(int id, string name, SQLiteBlob? cardImage, string abilityName, string desc, string type, int damage, int hp, int manaCost, int unlockedFlag, string race)
+    public UnitCard(int id, string name, SQLiteBlob? cardImage, string abilityName, string desc, int damage, int hp, int manaCost, int unlockedFlag, string race, string type)
     {
         this.ID = id;
         this.CardName = name;
@@ -80,7 +96,7 @@ public partial class UnitCard : Card, ICard
 
     }
 
-    public UnitCard(int id, string name, string abilityName, string desc, string type, int damage, int hp, int manaCost, int unlockedFlag, string race)
+    public UnitCard(int id, string name, string abilityName, string desc, int damage, int hp, int manaCost, int unlockedFlag, string race, string type)
 	{
 		this.ID = id;
 		this.CardName = name;
@@ -107,6 +123,11 @@ public partial class UnitCard : Card, ICard
 		this.UpdateHP();
 		if(this.HP <= 0)
 		{
+			if(this.Effects.Contains(new StatusEffect(Effect.Taunt)))
+			{
+				BoardController b = GetNode("/root/GameBoard") as BoardController;
+				b.CurrentPhase = AbilityPhase.None;
+            }
 			this.Visible = false;
 			//set this to play a death animation and then shuffle it back in the deck or something
 			this.Position = new Vector3(100, 100, 100);

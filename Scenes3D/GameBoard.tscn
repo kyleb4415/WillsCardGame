@@ -51,7 +51,7 @@ transform = Transform3D(2.85714, 0, 0, 0, 2.85714, 0, 0, 0, 2.85714, -2.39509, 2
 physics_material_override = SubResource("PhysicsMaterial_jbem2")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="board/Board2"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.36969, 0)
 shape = SubResource("BoxShape3D_od776")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
