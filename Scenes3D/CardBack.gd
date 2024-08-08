@@ -1,6 +1,6 @@
 extends Sprite3D
 
-var viewport = "CardBase/CardImages/CardViewport"
+@onready var viewport = get_node("../../CardBase/CardImages/CardViewport")
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	self.texture = viewport
