@@ -109,9 +109,21 @@ public partial class UnitCard : Card, ICard
 		this.UnlockedFlag = unlockedFlag;
 		this.Race = race;
 	}
+
+    public UnitCard(int id, string name, int damage, int hp, int manaCost, int unlockedFlag, string race, string type)
+    {
+        this.ID = id;
+        this.CardName = name;
+        this.Type = type;
+        this.Damage = damage;
+        this.HP = hp;
+        this.ManaCost = manaCost;
+        this.UnlockedFlag = unlockedFlag;
+        this.Race = race;
+    }
 #nullable disable
-	// Called every frame. 'delta' is the elapsed time since the previous frame.
-	public override void _Process(double delta)
+    // Called every frame. 'delta' is the elapsed time since the previous frame.
+    public override void _Process(double delta)
 	{
 
 	}
@@ -147,7 +159,15 @@ public partial class UnitCard : Card, ICard
 	public void InvokeAbility(UnitCard c)
 	{
 		var method = CardManager.GetCardMethod(this);
-		method.DynamicInvoke( new object[] { GetNode("/root/GameBoard"), c });
+		if(CardManager.GetCardMethod(this).Method.GetParameters().Length == 2)
+		{
+            method.DynamicInvoke(new object[] { GetNode("/root/GameBoard"), c });
+        }
+		else if(CardManager.GetCardMethod(this).Method.GetParameters().Length == 3)
+		{
+			method.DynamicInvoke(new object[] { GetNode("/root/GameBoard"), c, new UnitCard() });
+		}
+
 		/*
 		BoardController b = GetNode("/root/GameBoard") as BoardController;
 		c.UpdateHP();

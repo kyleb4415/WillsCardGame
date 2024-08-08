@@ -146,37 +146,45 @@ public partial class BoardController : Node3D
 			foreach (var s in cardSpaceInstances)
 			{
 				//attaches event for each cardspace
+                var sChild = s.GetChild(0) as Area3D;
+                PlayerSpaces.Add(s);
+                sChild.BodyEntered += ((MoveCard3D)GetNode("Camera3D")).Area_OnBodyEntered;
+                sChild.BodyExited += ((MoveCard3D)GetNode("Camera3D")).Area_OnBodyExited;
+            }
+        }
+        //-------------------------------------------------------------------------------
+    }
 
-				var sChild = s.GetChild(0) as Area3D;
-				PlayerSpaces.Add(s);
-				sChild.BodyEntered += ((MoveCard3D)GetNode("Camera3D")).Area_OnBodyEntered;
-				sChild.BodyExited += ((MoveCard3D)GetNode("Camera3D")).Area_OnBodyExited;
-			}
-		}
-		//-------------------------------------------------------------------------------
-	}
+    private void AddCards()
+    {
+        //instancing player cards from db 
+        //-------------------------------------------------------------------------------
+        List<ICard> cards = CardManager.LoadCardsFromDB();
+        foreach (var c in cards)
+        {
+            //modify before instantiation
+            var cardBaseInstance = cardBase.Instantiate();
+            cardGameObjects.Add(cardBaseInstance);
+            if(c == null)
+            {
+                GD.Print("c is null");
+            }
+            if(cardBaseInstance == null)
+            {
+                GD.Print("Cardbase is null");
+            }
+            
+            if(c.GetType() == typeof(SkillCard))
+            {
+                CardFactory.CreateSkillCard((SkillCard)c, cardBaseInstance);
+            }
+            else if(c.GetType() == typeof(UnitCard))
+            {
+                CardFactory.CreateUnitCard((UnitCard)c, cardBaseInstance);
+            }
 
-	private void AddCards()
-	{
-		//instancing player cards from db 
-		//-------------------------------------------------------------------------------
-		List<ICard> cards = CardManager.LoadCardsFromDB();
-		foreach (var c in cards)
-		{
-			//modify before instantiation
-			var cardBaseInstance = cardBase.Instantiate();
-			cardGameObjects.Add(cardBaseInstance);
-			
-			if(c.GetType() == typeof(SkillCard))
-			{
-				CardFactory.CreateSkillCard((SkillCard)c, cardBaseInstance);
-			}
-			else if(c.GetType() == typeof(UnitCard))
-			{
-				CardFactory.CreateUnitCard((UnitCard)c, cardBaseInstance);
-			}
 
-			Card card = cardBaseInstance.GetChild(0) as Card;
+			Card card = cardBaseInstance.GetNode("CardBody") as Card;
 			card.CardAlignmentType = Card.CardAlignment.Player;
 
 			card.Position = GetNode<Node3D>("PlayerDeck").GetChild<MeshInstance3D>(0).Position;
@@ -220,6 +228,7 @@ public partial class BoardController : Node3D
 			}
 		}
 		//-------------------------------------------------------------------------------
+
 	}
 
 	public override void _ExitTree()

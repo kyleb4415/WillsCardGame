@@ -58,7 +58,7 @@ public partial class MoveCard3D : Camera3D
 
     public override void _Process(double delta)
     {
-        //screenSize = GetViewport().GetVisibleRect().Size;
+        screenSize = GetViewport().GetVisibleRect().Size;
 
         GameState gameState = this.GetParent<BoardController>().gameState;
     }
@@ -127,6 +127,7 @@ public partial class MoveCard3D : Camera3D
                 ExecuteAction();
                 break;
             case (GameState.EnemyTurn):
+                GD.Print("EnemyTurn!!");
                 break;
         }
         base._Input(@event);

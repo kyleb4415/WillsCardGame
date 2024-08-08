@@ -172,28 +172,28 @@ script = ExtResource("4_3y4ib")
 [node name="EnemyBoardPositions" type="Node" parent="Enemy"]
 
 [node name="Space" type="Node3D" parent="Enemy/EnemyBoardPositions"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.25164, -1.58445, -0.690724)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.25164, -1.54656, -0.690724)
 
 [node name="Space2" type="Node3D" parent="Enemy/EnemyBoardPositions"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.073, -1.584, -0.644)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.073, -1.54611, -0.644)
 
 [node name="Space3" type="Node3D" parent="Enemy/EnemyBoardPositions"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0106465, -1.584, -0.691)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0106465, -1.54611, -0.691)
 
 [node name="Space4" type="Node3D" parent="Enemy/EnemyBoardPositions"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.09438, -1.584, -0.691)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.09438, -1.54611, -0.691)
 
 [node name="Space5" type="Node3D" parent="Enemy/EnemyBoardPositions"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.17466, -1.584, -0.691)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.17466, -1.54611, -0.691)
 
 [node name="Space6" type="Node3D" parent="Enemy/EnemyBoardPositions"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.990521, -1.584, -1.68431)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.990521, -1.54611, -1.68431)
 
 [node name="Space7" type="Node3D" parent="Enemy/EnemyBoardPositions"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0580718, -1.584, -1.684)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0580718, -1.54611, -1.684)
 
 [node name="Space8" type="Node3D" parent="Enemy/EnemyBoardPositions"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.18031, -1.584, -1.684)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.18031, -1.54611, -1.684)
 
 [node name="PlayerBody" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 3.38546)

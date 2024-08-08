@@ -317,7 +317,7 @@ public static class CardManager
 
 	public static List<ICard> LoadCardsFromDB()
 	{
-		List<ICard> CardList = new();
+		List<ICard> CardList = new List<ICard>();
 		using (SQLiteConnection conn = new SQLiteConnection($"Data Source=DataStore/CardData.db"))
 		{
 			conn.Open();
@@ -341,22 +341,7 @@ public static class CardManager
 						if (reader.GetValue(2) != null && reader.GetValue(2).ToString() != string.Empty)
 						{ 
 							try
-							{
-								//Old DB Rows
-								//0 - ID
-								//1 - CardName
-								//2 - Image
-								//3 - AbilityName
-								//4 - [ability] Description
-								//5 - Type
-								//6 - TypeImage
-								//7 - Damage
-								//8 - HP
-								//9 - ManaCost
-								//10 - UnlockedFlag
-								//11 - Race
-
-								//New DB Rows
+              {
 								//Card Table
 								//0 - ID (int)
 								//1 - CardName (string)
@@ -398,54 +383,49 @@ public static class CardManager
 							{
 								GD.Print(e.Message);
 							}
-						}
-						/*
-						//if card image is not null but type image is
-						else if(reader.GetValue(2).ToString() != string.Empty && reader.GetValue(6).ToString() == string.Empty)
-						{
-							//if damage is not empty and health not empty -> unitcard
-							if (reader.GetValue(7) != null && reader.GetValue(7).ToString() != string.Empty && reader.GetValue(8).ToString() != string.Empty && reader.GetValue(8) != null)
-							{
-								CardList.Add(new UnitCard(reader.GetInt32(0), reader.GetString(1), reader.GetBlob(2, true), reader.GetValue(3).ToString(), reader.GetValue(4).ToString(), reader.GetValue(5).ToString(), reader.GetInt32(7), reader.GetInt32(8), reader.GetInt32(9), reader.GetInt32(10), reader.GetString(11)));
-							}
-							else
-							{
-								CardList.Add(new SkillCard(reader.GetInt32(0), reader.GetString(1), reader.GetBlob(2, true), reader.GetValue(3).ToString(), reader.GetValue(4).ToString(), reader.GetValue(5).ToString(), reader.GetInt32(9), reader.GetInt32(10), reader.GetString(11)));
-							}
-						}
+            }
 						else
 						{
 							//both images empty, if damage is empty or health is empty then progress
-							if(reader.GetValue(7).ToString() == string.Empty || reader.GetValue(8).ToString() == string.Empty)
+							if(reader.GetValue(6).ToString() == string.Empty || reader.GetValue(7).ToString() == string.Empty)
 							{
 								//if damage is empty but hp is not empty
-								if(reader.GetValue(7).ToString() == string.Empty && reader.GetValue(8).ToString() != string.Empty)
+								if(reader.GetValue(6).ToString() == string.Empty && reader.GetValue(7).ToString() != string.Empty)
 								{
-									CardList.Add(new SkillCard(reader.GetInt32(0), reader.GetString(1), reader.GetValue(3).ToString(), reader.GetValue(4).ToString(), reader.GetValue(5).ToString(), reader.GetInt32(9), reader.GetInt32(10), reader.GetString(11)));
-								}
+                                    //int id, string name, string ability, string desc, string type, int damage, int manaCost, int unlockedFlag, string race
+                                    CardList.Add(new SkillCard(reader.GetInt32(0), reader.GetString(1), reader.GetValue(3).ToString(), reader.GetValue(4).ToString(), reader.GetInt32(6), reader.GetInt32(8), reader.GetInt32(9), reader.GetString(11), reader.GetString(12)));
+                                }
 								//if health is empty but damage is not empty
 								else if(reader.GetValue(7).ToString() != string.Empty && reader.GetValue(8) == string.Empty)
 								{
-									CardList.Add(new SkillCard(reader.GetInt32(0), reader.GetString(1), reader.GetValue(3).ToString(), reader.GetValue(4).ToString(), reader.GetValue(5).ToString(), reader.GetInt32(7), reader.GetInt32(9), reader.GetInt32(10), reader.GetString(11)));
-								}
+                                    CardList.Add(new SkillCard(reader.GetInt32(0), reader.GetString(1), reader.GetValue(3).ToString(), reader.GetValue(4).ToString(), reader.GetInt32(6), reader.GetInt32(8), reader.GetInt32(9), reader.GetString(11), reader.GetString(12)));
+                                }
 							}
 							//if hp and health are empty
 							else if(reader.GetValue(7).ToString() == string.Empty && reader.GetValue(8).ToString() == string.Empty)
 							{
-								CardList.Add(new SkillCard(reader.GetInt32(0), reader.GetString(1), reader.GetValue(3).ToString(), reader.GetValue(4).ToString(), reader.GetValue(5).ToString(), reader.GetInt32(9), reader.GetInt32(10), reader.GetString(11)));
-							}
+                                CardList.Add(new SkillCard(reader.GetInt32(0), reader.GetString(1), reader.GetValue(3).ToString(), reader.GetValue(4).ToString(), reader.GetInt32(6), reader.GetInt32(9), reader.GetString(11), reader.GetString(12)));
+                            }
 							//if not
 							else
 							{
-								CardList.Add(new UnitCard(reader.GetInt32(0), reader.GetString(1), reader.GetValue(3).ToString(), reader.GetValue(4).ToString(), reader.GetValue(5).ToString(), reader.GetInt32(7), reader.GetInt32(8), reader.GetInt32(9), reader.GetInt32(10), reader.GetString(11)));
+                                //public UnitCard(int id, string name, string abilityName, string desc, int damage, int hp, int manaCost, int unlockedFlag, string race, string type)
+								if(reader.GetValue(3).ToString() != string.Empty && reader.GetValue(4).ToString() != string.Empty)
+								{
+                                    CardList.Add(new UnitCard(reader.GetInt32(0), reader.GetString(1), reader.GetString(3), reader.GetString(4), reader.GetInt32(6), reader.GetInt32(7), reader.GetInt32(8), reader.GetInt32(9), reader.GetString(11), reader.GetString(12)));
+                                }
+								else
+								{
+                                    CardList.Add(new UnitCard(reader.GetInt32(0), reader.GetString(1), reader.GetInt32(6), reader.GetInt32(7), reader.GetInt32(8), reader.GetInt32(9), reader.GetString(11), reader.GetString(12)));
+                                }
+
 							}
 							//UnitCard Constructor Overload w/o CardImage TypeImage
 						}
 						if(CardList.Count > 0)
 						{
-							GD.Print("Card added!");
+							GD.Print($"Cardlist up to {CardList.Count} cards");
 						}
-						*/
 					}
 				}
 			}
@@ -457,7 +437,7 @@ public static class CardManager
 	 * The following sections represent the solution for dynamically instancing cards with unique abilities
 	 * A card ability dictionary has been created that has the CardName as well as the ability as a delegate
 	 * This delegate is returned from the GetCardMethod() method that takes in a card and uses the card name to search the dictionary for the method
-	 * This GetCardMethod method is employed in the UnitCard class, where (curently) there is a StatusEffect method
+	 * This GetCardMethod method is employed in the UnitCard class, where (currently) there is a StatusEffect method
 	 * This StatusMethod effect will trigger every round (every two turns, this system can be changed)
 	 * 
 	 * The solution for now is to fire a signal off one of the first card of the hand [in the BoardController] for triggering the status effect

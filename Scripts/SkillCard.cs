@@ -8,6 +8,7 @@ using System.Linq;
 using System.Reflection.Metadata;
 using System.Security.Cryptography.X509Certificates;
 using static System.Data.Entity.Infrastructure.Design.Executor;
+using static System.Net.Mime.MediaTypeNames;
 
 public partial class SkillCard : Card, ICard
 {
@@ -52,7 +53,6 @@ public partial class SkillCard : Card, ICard
         this.ManaCost = manaCost;
         this.Race = race;
     }
-    //no image no damage
 
     public SkillCard(int id, string name, string ability, string desc, int manaCost, int unlockedFlag, string race, string type)
     {
@@ -70,7 +70,7 @@ public partial class SkillCard : Card, ICard
     }
 
     //no image and damage
-    public SkillCard(int id, string name, string ability, string desc, string type, int damage, int manaCost, int unlockedFlag, string race)
+    public SkillCard(int id, string name, string ability, string desc, int damage, int manaCost, int unlockedFlag, string race, string type)
     {
         this.ID = id;
         this.CardName = name;
@@ -82,6 +82,29 @@ public partial class SkillCard : Card, ICard
         this.Description = desc;
         this.Type = type;
         this.Damage = damage;
+        this.UnlockedFlag = unlockedFlag;
+        this.ManaCost = manaCost;
+        this.Race = race;
+    }
+
+    public SkillCard(int id, string name, string ability, string desc, int damage, int manaCost, int unlockedFlag, string race, string type, bool healthOrDamage)
+    {
+        this.ID = id;
+        this.CardName = name;
+        if (ability != null)
+        {
+            this.AbilityName = ability;
+        }
+
+        this.Description = desc;
+        this.Type = type;
+        if (healthOrDamage = true)
+        {
+        }
+        else
+        {
+            this.Damage = damage;
+        }
         this.UnlockedFlag = unlockedFlag;
         this.ManaCost = manaCost;
         this.Race = race;
