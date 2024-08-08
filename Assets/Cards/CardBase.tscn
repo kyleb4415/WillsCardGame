@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=3 uid="uid://mo4ouhmg6syk"]
+[gd_scene load_steps=15 format=3 uid="uid://mo4ouhmg6syk"]
 
 [ext_resource type="Script" path="res://Assets/Cards/CardNode.cs" id="1_ng01q"]
 [ext_resource type="Texture2D" uid="uid://bdmrr4wouev0e" path="res://Assets/Cards/CardBackgrounds/goblin-border.png" id="2_7wxdq"]
@@ -8,6 +8,7 @@
 [ext_resource type="Texture2D" uid="uid://dfpive2yl5415" path="res://Assets/Cards/CardAssets/ability-txt-box.png" id="6_4xqgb"]
 [ext_resource type="Texture2D" uid="uid://c3rlipdc0n8mh" path="res://Assets/Cards/CardAssets/mana.png" id="7_hjqwq"]
 [ext_resource type="Texture2D" uid="uid://b8kj44wmmyd56" path="res://Assets/Cards/CardAssets/atkbook.png" id="8_whux6"]
+[ext_resource type="Script" path="res://Scripts/CardLabels.cs" id="9_6nvgh"]
 [ext_resource type="FontFile" uid="uid://ca34cim5cdy0m" path="res://Assets/Cards/CardAssets/windows_command_prompt.ttf" id="9_bdlwn"]
 
 [sub_resource type="ImageTexture" id="ImageTexture_4aimb"]
@@ -79,39 +80,73 @@ position = Vector2(162, 24)
 scale = Vector2(0.0584717, 0.0584717)
 texture = ExtResource("7_hjqwq")
 
-[node name="TypesContainer" type="Control" parent="CardImages/CardViewport"]
-layout_mode = 3
-anchors_preset = 0
-offset_left = 58.0
-offset_top = 168.0
-offset_right = 129.0
-offset_bottom = 202.0
-
-[node name="Type" type="TextureRect" parent="CardImages/CardViewport/TypesContainer"]
-layout_mode = 1
+[node name="TypeImage" type="TextureRect" parent="CardImages/CardViewport"]
 anchors_preset = -1
-anchor_left = 0.31
-anchor_right = 0.775
-anchor_bottom = 1.0
-offset_left = -0.0100002
-offset_right = -0.0250053
-offset_bottom = -1.0
+anchor_left = 0.388235
+anchor_top = 0.573944
+anchor_right = 0.6
+anchor_bottom = 0.676056
+offset_left = -52.5483
+offset_top = -92.8785
+offset_right = -52.5484
+offset_bottom = -92.8785
 grow_horizontal = 2
 grow_vertical = 2
 texture = SubResource("ImageTexture_mbfcw")
 stretch_mode = 2
+metadata/_edit_use_anchors_ = true
+metadata/_edit_lock_ = true
 
-[node name="ManaNumber" type="Label" parent="."]
-visible = false
+[node name="LabelContainer" type="Control" parent="CardImages/CardViewport"]
+layout_mode = 3
+anchor_left = 0.00868056
+anchor_top = 0.0138889
+anchor_right = 0.15625
+anchor_bottom = 0.452161
+offset_left = 8.35938
+offset_top = 4.61111
+offset_right = 8.35938
+offset_bottom = 4.61111
+size_flags_horizontal = 4
+size_flags_vertical = 4
+script = ExtResource("9_6nvgh")
+metadata/_edit_use_anchors_ = true
+metadata/_edit_lock_ = true
+
+[node name="HP" type="Label" parent="CardImages/CardViewport/LabelContainer"]
+layout_mode = 1
 anchors_preset = -1
-anchor_left = 0.129
-anchor_top = 0.012
-anchor_right = 0.154
-anchor_bottom = 0.068
-offset_left = -41.275
-offset_top = -2.128
-offset_right = -40.275
-offset_bottom = 33.872
+anchor_left = 0.706
+anchor_top = 0.535
+anchor_right = 0.959
+anchor_bottom = 0.697
+offset_left = 100.309
+offset_top = 77.9058
+offset_right = 136.253
+offset_bottom = 101.47
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.12549)
+theme_override_constants/shadow_offset_y = 2
+theme_override_fonts/font = ExtResource("9_bdlwn")
+theme_override_font_sizes/font_size = 35
+text = "50"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 2
+clip_text = true
+
+[node name="ManaCost" type="Label" parent="CardImages/CardViewport/LabelContainer"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.794118
+anchor_top = -0.00352113
+anchor_right = 1.01176
+anchor_bottom = 0.123239
+offset_left = 112.852
+offset_top = -0.512346
+offset_right = 143.781
+offset_bottom = 17.9321
+pivot_offset = Vector2(19, 17)
+size_flags_horizontal = 4
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.12549)
 theme_override_constants/shadow_offset_y = 2
 theme_override_fonts/font = ExtResource("9_bdlwn")
@@ -121,86 +156,99 @@ horizontal_alignment = 1
 vertical_alignment = 1
 clip_text = true
 metadata/_edit_use_anchors_ = true
+metadata/_edit_lock_ = true
 
-[node name="AttackNumber" type="Label" parent="."]
-visible = false
+[node name="Name" type="Label" parent="CardImages/CardViewport/LabelContainer"]
+layout_mode = 1
 anchors_preset = -1
-anchor_left = 0.021
-anchor_top = 0.256
-anchor_right = 0.043
-anchor_bottom = 0.307
-offset_left = -4.975
-offset_top = -47.064
-offset_right = -3.975
-offset_bottom = -15.064
-theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.12549)
-theme_override_constants/shadow_offset_y = 2
-theme_override_fonts/font = ExtResource("9_bdlwn")
-theme_override_font_sizes/font_size = 35
-text = "5"
-horizontal_alignment = 1
-vertical_alignment = 1
-clip_text = true
-metadata/_edit_use_anchors_ = true
-
-[node name="HealthNumber" type="Label" parent="."]
-visible = false
-anchors_preset = -1
-anchor_left = 0.121
-anchor_top = 0.258
-anchor_right = 0.141
-anchor_bottom = 0.307
-offset_left = -39.475
-offset_top = -48.752
-offset_right = -38.475
-offset_bottom = -16.752
-theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.12549)
-theme_override_constants/shadow_offset_y = 2
-theme_override_fonts/font = ExtResource("9_bdlwn")
-theme_override_font_sizes/font_size = 35
-text = "5"
-horizontal_alignment = 1
-vertical_alignment = 1
-clip_text = true
-metadata/_edit_use_anchors_ = true
-
-[node name="Name" type="Label" parent="."]
-visible = false
-anchors_preset = -1
-anchor_left = 0.009
-anchor_top = 0.015
-anchor_right = 0.125
-anchor_bottom = 0.056
-offset_left = -2.275
-offset_top = -2.66
-offset_right = -1.275
-offset_bottom = -1.66
+anchor_left = 0.00795842
+anchor_top = -0.00352113
+anchor_right = 0.812958
+anchor_bottom = 0.113204
+offset_left = -11.222
+offset_top = -3.51234
+offset_right = 127.326
+offset_bottom = 19.3219
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.85, 0.85)
+pivot_offset = Vector2(82.3529, 20)
 theme = SubResource("Theme_b0xbc")
 theme_override_colors/font_color = Color(0.235294, 0.2, 0.160784, 1)
 theme_override_fonts/font = ExtResource("9_bdlwn")
 theme_override_font_sizes/font_size = 27
+text = "AAAAAAAA"
 horizontal_alignment = 1
 vertical_alignment = 1
 autowrap_mode = 3
 clip_text = true
+uppercase = true
 text_direction = 1
 metadata/_edit_use_anchors_ = true
+metadata/_edit_lock_ = true
 
-[node name="Description" type="Label" parent="."]
-visible = false
+[node name="Description" type="Label" parent="CardImages/CardViewport/LabelContainer"]
+layout_mode = 1
 anchors_preset = -1
-anchor_left = 0.019
-anchor_top = 0.326
-anchor_right = 0.145
-anchor_bottom = 0.429
-offset_left = -6.025
-offset_top = -64.144
-offset_right = 121.975
-offset_bottom = -44.144
+anchor_left = 0.0823529
+anchor_top = 0.711268
+anchor_right = 0.917647
+anchor_bottom = 0.954225
+offset_left = 11.7031
+offset_top = 103.494
+offset_right = 272.406
+offset_bottom = 207.846
+scale = Vector2(0.5, 0.5)
 theme_override_fonts/font = SubResource("SystemFont_nu3yc")
-text = "aaaaaaaaaaaaaaaa
-"
+text = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
 metadata/_edit_use_anchors_ = true
+metadata/_edit_lock_ = true
+
+[node name="Type" type="Label" parent="CardImages/CardViewport/LabelContainer"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.288235
+anchor_top = 0.588028
+anchor_right = 0.712353
+anchor_bottom = 0.691549
+offset_left = 40.9609
+offset_top = 85.5617
+offset_right = 132.132
+offset_bottom = 113.225
+scale = Vector2(0.7, 0.7)
+theme_override_fonts/font = ExtResource("9_bdlwn")
+text = "aaaaaaaa"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
+metadata/_edit_use_anchors_ = true
+metadata/_edit_lock_ = true
+
+[node name="Damage" type="Label" parent="CardImages/CardViewport/LabelContainer"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.0529412
+anchor_top = 0.566901
+anchor_right = 0.276471
+anchor_bottom = 0.679577
+offset_left = 7.52344
+offset_top = 82.4877
+offset_right = 39.2891
+offset_bottom = 98.8827
+pivot_offset = Vector2(19, 14)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.12549)
+theme_override_constants/shadow_offset_y = 2
+theme_override_fonts/font = ExtResource("9_bdlwn")
+theme_override_font_sizes/font_size = 35
+text = "5"
+horizontal_alignment = 1
+vertical_alignment = 1
+clip_text = true
+metadata/_edit_use_anchors_ = true
+metadata/_edit_lock_ = true
 
 [node name="Bars" type="VBoxContainer" parent="."]
 visible = false

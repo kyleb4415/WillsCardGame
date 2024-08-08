@@ -1,18 +1,17 @@
-[gd_scene load_steps=11 format=3 uid="uid://bqe4y0kfsdcsm"]
+[gd_scene load_steps=10 format=3 uid="uid://bqe4y0kfsdcsm"]
 
 [ext_resource type="Script" path="res://Scripts/UnitCard.cs" id="1_f3fyc"]
 [ext_resource type="Script" path="res://Scripts/PositionControl3D.cs" id="2_1qbv1"]
 [ext_resource type="PackedScene" uid="uid://mo4ouhmg6syk" path="res://Assets/Cards/CardBase.tscn" id="2_nqvf2"]
 [ext_resource type="Script" path="res://Scenes3D/CardBack.gd" id="2_r3x02"]
 [ext_resource type="FontFile" uid="uid://r7wivsdiknrf" path="res://Assets/Cards/CardAssets/Windows Regular.ttf" id="4_m082q"]
-[ext_resource type="Script" path="res://Scenes3D/Description.gd" id="5_plebk"]
 [ext_resource type="FontFile" uid="uid://ca34cim5cdy0m" path="res://Assets/Cards/CardAssets/windows_command_prompt.ttf" id="7_uff6s"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_62a8p"]
 size = Vector3(0.275, 0.035, 0.458579)
 
 [sub_resource type="ViewportTexture" id="ViewportTexture_xc2xv"]
-viewport_path = NodePath("CardBase/CardImages/CardViewport")
+viewport_path = NodePath("CardImages/CardViewport")
 
 [sub_resource type="BoxMesh" id="BoxMesh_gic02"]
 resource_local_to_scene = true
@@ -42,16 +41,20 @@ layers = 3
 mesh = SubResource("BoxMesh_gic02")
 
 [node name="Name" type="Label3D" parent="CardBody"]
-transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, -0.073, 0.005, -0.191)
+transform = Transform3D(0.4, 0, 0, 0, -1.74846e-08, 0.4, 0, -0.4, -1.74846e-08, -0.0299513, 0.0852254, -0.145642)
+visible = false
 modulate = Color(0.235294, 0.2, 0.160784, 1)
-text = "a"
+text = "aaaaaaa"
 font = ExtResource("7_uff6s")
 font_size = 12
 outline_size = 0
 uppercase = true
+autowrap_mode = 3
+width = 70.0
 
 [node name="Description" type="Label3D" parent="CardBody"]
-transform = Transform3D(0.585, 0, 0, 0, -2.55712e-08, 0.585, 0, -0.585, -2.55712e-08, 0.00664369, 0.005, 0.132689)
+transform = Transform3D(0.3, 0, 0, 0, -1.31134e-08, 0.3, 0, -0.3, -1.31134e-08, 0.00664369, 0.005, 0.132689)
+visible = false
 modulate = Color(0.235294, 0.2, 0.160784, 1)
 outline_modulate = Color(0.235294, 0.2, 0.160784, 1)
 text = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
@@ -59,11 +62,11 @@ font = ExtResource("4_m082q")
 font_size = 10
 outline_size = 3
 autowrap_mode = 3
-width = 70.0
-script = ExtResource("5_plebk")
+width = 100.0
 
 [node name="ManaCost" type="Label3D" parent="CardBody"]
-transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0.105662, 0.005, -0.19636)
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0.101299, 0.0572966, -0.158816)
+visible = false
 text = "5"
 font = ExtResource("7_uff6s")
 font_size = 12
@@ -72,24 +75,30 @@ autowrap_mode = 3
 
 [node name="Type" type="Label3D" parent="CardBody"]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0.005, 0.050757)
+visible = false
 text = "a"
 font = ExtResource("7_uff6s")
 font_size = 8
 outline_size = 3
+width = 50.0
 
 [node name="Damage" type="Label3D" parent="CardBody"]
-transform = Transform3D(0.585, 0, 0, 0, -2.55712e-08, 0.585, 0, -0.585, -2.55712e-08, -0.0829663, 0.005, 0.0341842)
+transform = Transform3D(0.585, 0, 0, 0, -2.55712e-08, 0.585, 0, -0.585, -2.55712e-08, -0.0829663, 0.005, 0.0359304)
+visible = false
 text = "a"
 font = ExtResource("7_uff6s")
 font_size = 20
 outline_size = 0
+width = 100.0
 
 [node name="HP" type="Label3D" parent="CardBody"]
-transform = Transform3D(0.585, 0, 0, 0, -2.55712e-08, 0.585, 0, -0.585, -2.55712e-08, 0.0879039, 0.005, 0.0358386)
+transform = Transform3D(0.585, 0, 0, 0, -2.55712e-08, 0.585, 0, -0.585, -2.55712e-08, 0.0879039, 0.005, 0.0371455)
+visible = false
 text = "a"
 font = ExtResource("7_uff6s")
 font_size = 20
 outline_size = 0
+width = 100.0
 
 [node name="SelectedLight" type="OmniLight3D" parent="CardBody"]
 layers = 0
