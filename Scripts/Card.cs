@@ -55,25 +55,25 @@ public partial class Card : RigidBody3D, ICard
 		{
 			this.Name = CardName;
 		}
-
+		
 		var contextMenuText = ContextMenu.GetChild(0) as RichTextLabel;
 		contextMenuText.Text = Description;
 		//change to ability desc later
 		ContextMenu.Visible = false;
 		this.ContextMenuTimer = this.GetNode("ContextMenuControl/Timer") as Timer;
 		ContextMenuTimer.Timeout += ContextMenuTimer_Timeout;
-		if (Name is not null && Description is not null)
+		if (Name is not null)
 		{
 			GetNode("Name").Set("text", CardName);
-			GetNode("Description").Set("text", Description);
-			GetNode("ManaCost").Set("text", ManaCost.ToString());
 		}
-		if(CardImage is not null)
+		if(Description is not null)
 		{
-			PngImageLoader.LoadPngFromDatabase(this, 200, 200);
-		}
+            GetNode("Description").Set("text", Description);
+        }
+        GetNode("ManaCost").Set("text", ManaCost.ToString());
 
-		(GetNode("SelectedLight") as OmniLight3D).SetLayerMaskValue(1, true);
+        (GetNode("SelectedLight") as OmniLight3D).SetLayerMaskValue(1, true);
+		
 	}
 
 	private void ContextMenuTimer_Timeout()

@@ -1,6 +1,6 @@
 [gd_scene load_steps=14 format=3 uid="uid://mo4ouhmg6syk"]
 
-[ext_resource type="Script" path="res://Assets/Cards/CardImages.cs" id="1_5wy1x"]
+[ext_resource type="Script" path="res://Assets/Cards/CardNode.cs" id="1_ng01q"]
 [ext_resource type="Texture2D" uid="uid://bdmrr4wouev0e" path="res://Assets/Cards/CardBackgrounds/goblin-border.png" id="2_7wxdq"]
 [ext_resource type="Texture2D" uid="uid://bxd60a16ufmnp" path="res://Assets/Cards/CardAssets/layer behind items test.png" id="3_ajtbf"]
 [ext_resource type="Texture2D" uid="uid://bcswqpdp7bn2y" path="res://Assets/Cards/CardAssets/name-text-box.png" id="4_0nlo5"]
@@ -23,7 +23,7 @@ subpixel_positioning = 0
 [node name="CardBase" type="Node2D"]
 
 [node name="CardImages" type="Node" parent="."]
-script = ExtResource("1_5wy1x")
+script = ExtResource("1_ng01q")
 
 [node name="CardViewport" type="SubViewport" parent="CardImages"]
 transparent_bg = true
@@ -306,4 +306,3 @@ layout_mode = 2
 
 [node name="Card" type="Sprite2D" parent="."]
 visible = false
-centered = false
