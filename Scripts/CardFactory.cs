@@ -85,6 +85,6 @@ public static class CardFactory
             GD.Print("THAT CARD IMAGE SHIT WAS NULL");
         }
 
-    }
+	}
 
 }
