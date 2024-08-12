@@ -52,7 +52,11 @@ public partial class CardNode : Node
         {
             byte[] borderBlob = ExecuteScalarQueryBlob(borderQuery);
             ImageTexture img = LoadPngFromBlob(borderBlob);
-            GetNode<Sprite2D>("CardViewport/Border").Texture = (Texture2D)img;
+            GetNode<Sprite2D>("CardViewport/Border").Texture = img;
+        }
+        else
+        {
+            GD.Print("card border null");
         }
 
         if (!string.IsNullOrEmpty(typeImageCheck))

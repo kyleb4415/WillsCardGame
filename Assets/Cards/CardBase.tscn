@@ -9,7 +9,7 @@
 [ext_resource type="Texture2D" uid="uid://b8kj44wmmyd56" path="res://Assets/Cards/CardAssets/atkbook.png" id="8_whux6"]
 [ext_resource type="FontFile" uid="uid://ca34cim5cdy0m" path="res://Assets/Cards/CardAssets/windows_command_prompt.ttf" id="9_bdlwn"]
 
-[sub_resource type="ImageTexture" id="ImageTexture_4aimb"]
+[sub_resource type="ImageTexture" id="ImageTexture_jxpjj"]
 
 [sub_resource type="Theme" id="Theme_b0xbc"]
 
@@ -30,9 +30,9 @@ render_target_update_mode = 4
 [node name="CardBorder" type="TextureRect" parent="CardImages/CardViewport"]
 offset_right = 188.0
 offset_bottom = 305.0
-texture = SubResource("ImageTexture_4aimb")
 
 [node name="Border" type="Sprite2D" parent="CardImages/CardViewport"]
+texture = SubResource("ImageTexture_jxpjj")
 centered = false
 
 [node name="LayerBehind" type="Sprite2D" parent="CardImages/CardViewport"]

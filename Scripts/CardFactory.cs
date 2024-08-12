@@ -16,10 +16,6 @@ public static class CardFactory
 		{
             cardImages.SetCardName(card.CardName);
         }
-		else
-		{
-			GD.Print("THAT CARD IMAGE SHIT WAS NULL");
-		}
 
 	}
 
@@ -32,22 +28,24 @@ public static class CardFactory
 
         Node3D cardBodyInstance = GodotObject.InstanceFromId(objId) as Node3D;
         UnitCard cardInstance = cardBodyInstance.GetChild(0) as UnitCard;
-        GD.Print(cardInstance.GetType());
 
 
         cardInstance.CardName = card.CardName;
 		cardInstance.Description = card.Description;
 		cardInstance.Type = card.Type;
 		cardInstance.ManaCost = card.ManaCost;
-		//cardInstance.CardImage = card.CardImage;
 		cardInstance.Damage = card.Damage;
 		cardInstance.HP = card.HP;
 
-        CardNode cardImages = cardInstance.GetNodeOrNull<CardNode>("CardBase/CardImages");
+        CardNode cardImages = instance.GetNodeOrNull<CardNode>("CardBase/CardImages");
 
         if (cardImages != null)
         {
             cardImages.SetCardName(card.CardName);
+        }
+        else
+        {
+            GD.Print("cardimages null");
         }
         
     }
@@ -60,24 +58,17 @@ public static class CardFactory
 
         Node3D cardBodyInstance = GodotObject.InstanceFromId(objId) as Node3D;
         SkillCard cardInstance = cardBodyInstance.GetChild(0) as SkillCard;
-        GD.Print(cardInstance.GetType());
 
         cardInstance.CardName = card.CardName;
         cardInstance.Description = card.Description;
         cardInstance.Type = card.Type;
         cardInstance.ManaCost = card.ManaCost;
-        //cardInstance.CardImage = card.CardImage;
-
 
         CardNode cardImages = instance.GetNodeOrNull<CardNode>("CardBase/CardImages");
+
         if (cardImages != null)
         {
             cardImages.SetCardName(card.CardName);
-            GD.Print("Setcardname worked!");
-        }
-        else
-        {
-            GD.Print("Null cardimages!");
         }
     }
 

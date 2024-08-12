@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3 uid="uid://kvmg0uqfcasa"]
+[gd_scene load_steps=9 format=3 uid="uid://kvmg0uqfcasa"]
 
 [ext_resource type="Script" path="res://Scripts/PositionControl3D.cs" id="2_1qbv1"]
 [ext_resource type="PackedScene" uid="uid://mo4ouhmg6syk" path="res://Assets/Cards/CardBase.tscn" id="2_nqvf2"]
@@ -12,6 +12,8 @@ viewport_path = NodePath("CardBase/CardImages/CardViewport")
 
 [sub_resource type="SystemFont" id="SystemFont_plqby"]
 font_names = PackedStringArray("Windows")
+
+[sub_resource type="ImageTexture" id="ImageTexture_efsvv"]
 
 [sub_resource type="ViewportTexture" id="ViewportTexture_gov8b"]
 viewport_path = NodePath("CardBase/CardImages/CardViewport")
@@ -130,7 +132,7 @@ one_shot = true
 expand_mode = 5
 
 [node name="Border" parent="CardBase/CardImages/CardViewport" index="1"]
-visible = true
+texture = SubResource("ImageTexture_efsvv")
 
 [node name="Type" parent="CardBase/CardImages/CardViewport/TypesContainer" index="0"]
 expand_mode = 3

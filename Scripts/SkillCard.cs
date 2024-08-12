@@ -138,9 +138,9 @@ public partial class SkillCard : Card, ICard
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
 	public override void _Process(double delta)
 	{
-        GD.Print("processing");
+        //GD.Print("processing");
         CardUnder = ReturnCardUnderSkillCard();
-        GD.Print(CardUnder["collider"].AsStringName());
+        //GD.Print(CardUnder["collider"].AsStringName());
     }
 
     public override void _PhysicsProcess(double delta)
@@ -155,7 +155,7 @@ public partial class SkillCard : Card, ICard
         var space = GetWorld3D().DirectSpaceState;
         var query = PhysicsRayQueryParameters3D.Create(this.Position, new Vector3(this.Position.X, this.Position.Y - 9f, this.Position.Z));
         query.Exclude.Add(this.GetRid());
-        GD.Print("calculating");
+       // GD.Print("calculating");
         var result = space.IntersectRay(query);
         return result;
     }
