@@ -1,7 +1,6 @@
-[gd_scene load_steps=14 format=3 uid="uid://mo4ouhmg6syk"]
+[gd_scene load_steps=12 format=3 uid="uid://mo4ouhmg6syk"]
 
 [ext_resource type="Script" path="res://Assets/Cards/CardNode.cs" id="1_ng01q"]
-[ext_resource type="Texture2D" uid="uid://bdmrr4wouev0e" path="res://Assets/Cards/CardBackgrounds/goblin-border.png" id="2_7wxdq"]
 [ext_resource type="Texture2D" uid="uid://bxd60a16ufmnp" path="res://Assets/Cards/CardAssets/layer behind items test.png" id="3_ajtbf"]
 [ext_resource type="Texture2D" uid="uid://bcswqpdp7bn2y" path="res://Assets/Cards/CardAssets/name-text-box.png" id="4_0nlo5"]
 [ext_resource type="Texture2D" uid="uid://pvrqd744o6o2" path="res://Assets/Cards/CardAssets/heart.png" id="5_qb5st"]
@@ -11,8 +10,6 @@
 [ext_resource type="FontFile" uid="uid://ca34cim5cdy0m" path="res://Assets/Cards/CardAssets/windows_command_prompt.ttf" id="9_bdlwn"]
 
 [sub_resource type="ImageTexture" id="ImageTexture_4aimb"]
-
-[sub_resource type="ImageTexture" id="ImageTexture_mbfcw"]
 
 [sub_resource type="Theme" id="Theme_b0xbc"]
 
@@ -36,8 +33,6 @@ offset_bottom = 305.0
 texture = SubResource("ImageTexture_4aimb")
 
 [node name="Border" type="Sprite2D" parent="CardImages/CardViewport"]
-visible = false
-texture = ExtResource("2_7wxdq")
 centered = false
 
 [node name="LayerBehind" type="Sprite2D" parent="CardImages/CardViewport"]
@@ -56,8 +51,6 @@ offset_left = 21.0
 offset_top = 38.0
 offset_right = 162.0
 offset_bottom = 179.0
-texture = SubResource("ImageTexture_mbfcw")
-stretch_mode = 3
 
 [node name="Heart" type="Sprite2D" parent="CardImages/CardViewport"]
 position = Vector2(149.931, 184.465)
@@ -98,11 +91,9 @@ offset_right = -0.0250053
 offset_bottom = -1.0
 grow_horizontal = 2
 grow_vertical = 2
-texture = SubResource("ImageTexture_mbfcw")
 stretch_mode = 2
 
 [node name="ManaNumber" type="Label" parent="."]
-visible = false
 anchors_preset = -1
 anchor_left = 0.129
 anchor_top = 0.012
@@ -123,7 +114,6 @@ clip_text = true
 metadata/_edit_use_anchors_ = true
 
 [node name="AttackNumber" type="Label" parent="."]
-visible = false
 anchors_preset = -1
 anchor_left = 0.021
 anchor_top = 0.256
@@ -144,7 +134,6 @@ clip_text = true
 metadata/_edit_use_anchors_ = true
 
 [node name="HealthNumber" type="Label" parent="."]
-visible = false
 anchors_preset = -1
 anchor_left = 0.121
 anchor_top = 0.258
@@ -165,7 +154,6 @@ clip_text = true
 metadata/_edit_use_anchors_ = true
 
 [node name="Name" type="Label" parent="."]
-visible = false
 anchors_preset = -1
 anchor_left = 0.009
 anchor_top = 0.015
@@ -187,7 +175,6 @@ text_direction = 1
 metadata/_edit_use_anchors_ = true
 
 [node name="Description" type="Label" parent="."]
-visible = false
 anchors_preset = -1
 anchor_left = 0.019
 anchor_top = 0.326
@@ -262,7 +249,7 @@ layout_mode = 2
 
 [node name="Desc" type="RichTextLabel" parent="Bars/CardDesc/DescContainer/CenterContainer"]
 layout_mode = 2
-text = "Burn stuff"
+text = "orange poansdfonasdpfaksopdfaksd"
 
 [node name="LowerGap" type="MarginContainer" parent="Bars"]
 custom_minimum_size = Vector2(0, 20)

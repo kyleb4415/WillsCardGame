@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://kvmg0uqfcasa"]
+[gd_scene load_steps=8 format=3 uid="uid://kvmg0uqfcasa"]
 
 [ext_resource type="Script" path="res://Scripts/PositionControl3D.cs" id="2_1qbv1"]
 [ext_resource type="PackedScene" uid="uid://mo4ouhmg6syk" path="res://Assets/Cards/CardBase.tscn" id="2_nqvf2"]
@@ -10,14 +10,8 @@ size = Vector3(0.275, 0.035, 0.458579)
 [sub_resource type="ViewportTexture" id="ViewportTexture_xc2xv"]
 viewport_path = NodePath("CardBase/CardImages/CardViewport")
 
-[sub_resource type="BoxMesh" id="BoxMesh_gic02"]
-resource_local_to_scene = true
-size = Vector3(0.275, 0.002, 0.41)
-
 [sub_resource type="SystemFont" id="SystemFont_plqby"]
 font_names = PackedStringArray("Windows")
-
-[sub_resource type="ImageTexture" id="ImageTexture_6fbeb"]
 
 [sub_resource type="ViewportTexture" id="ViewportTexture_gov8b"]
 viewport_path = NodePath("CardBase/CardImages/CardViewport")
@@ -36,22 +30,20 @@ transform = Transform3D(0.15, 0, 0, 0, -6.55671e-09, 0.15, 0, -0.15, -6.55671e-0
 double_sided = false
 texture = SubResource("ViewportTexture_xc2xv")
 
-[node name="CardMesh" type="MeshInstance3D" parent="CardBody"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.000343561, 0)
-visible = false
-layers = 3
-mesh = SubResource("BoxMesh_gic02")
-
 [node name="Name" type="Label3D" parent="CardBody"]
-transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, -0.073, 0.0101791, -0.164)
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, -0.073, 0.0409177, -0.118894)
+sorting_offset = 1.0
+extra_cull_margin = 96.94
 text = "a"
 font = ExtResource("7_uff6s")
 font_size = 12
 outline_size = 0
 uppercase = true
+autowrap_mode = 3
 
 [node name="Description" type="Label3D" parent="CardBody"]
 transform = Transform3D(0.585, 0, 0, 0, -2.55712e-08, 0.585, 0, -0.585, -2.55712e-08, 0.00664369, 0.00351089, 0.110732)
+sorting_offset = 1.0
 text = "a"
 font = SubResource("SystemFont_plqby")
 font_size = 12
@@ -59,13 +51,15 @@ outline_size = 0
 autowrap_mode = 3
 
 [node name="Type" type="Label3D" parent="CardBody"]
-transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0.00351089, 0.0604362)
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0.0091302, 0.0604362)
+sorting_offset = 1.0
 text = "a"
 font = ExtResource("7_uff6s")
 font_size = 12
 
 [node name="ManaCost" type="Label3D" parent="CardBody"]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0.105662, 0, -0.1813)
+sorting_offset = 1.0
 text = "5"
 font = ExtResource("7_uff6s")
 font_size = 12
@@ -73,13 +67,15 @@ outline_size = 0
 
 [node name="Damage" type="Label3D" parent="CardBody"]
 transform = Transform3D(0.585, 0, 0, 0, -2.55712e-08, 0.585, 0, -0.585, -2.55712e-08, -0.0786626, 0.00351089, 0.0539177)
+sorting_offset = 1.0
 text = "a"
 font = ExtResource("7_uff6s")
 font_size = 20
 outline_size = 0
 
 [node name="HP" type="Label3D" parent="CardBody"]
-transform = Transform3D(0.585, 0, 0, 0, -2.55712e-08, 0.585, 0, -0.585, -2.55712e-08, 0.0879039, 0.00273722, 0.0518493)
+transform = Transform3D(0.585, 0, 0, 0, -2.55712e-08, 0.585, 0, -0.585, -2.55712e-08, 0.0879039, 0.00834614, 0.0518493)
+sorting_offset = 1.0
 text = "a"
 font = ExtResource("7_uff6s")
 font_size = 20
@@ -131,10 +127,29 @@ one_shot = true
 [node name="CardBase" parent="." instance=ExtResource("2_nqvf2")]
 
 [node name="CardBorder" parent="CardBase/CardImages/CardViewport" index="0"]
-texture = SubResource("ImageTexture_6fbeb")
+expand_mode = 5
 
 [node name="Border" parent="CardBase/CardImages/CardViewport" index="1"]
 visible = true
+
+[node name="Type" parent="CardBase/CardImages/CardViewport/TypesContainer" index="0"]
+expand_mode = 3
+stretch_mode = 0
+
+[node name="ManaNumber" parent="CardBase" index="1"]
+visible = false
+
+[node name="AttackNumber" parent="CardBase" index="2"]
+visible = false
+
+[node name="HealthNumber" parent="CardBase" index="3"]
+visible = false
+
+[node name="Name" parent="CardBase" index="4"]
+visible = false
+
+[node name="Description" parent="CardBase" index="5"]
+visible = false
 
 [node name="Card" parent="CardBase" index="7"]
 texture = SubResource("ViewportTexture_gov8b")
