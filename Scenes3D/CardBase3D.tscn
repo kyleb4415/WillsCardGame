@@ -1,6 +1,5 @@
-[gd_scene load_steps=11 format=3 uid="uid://bqe4y0kfsdcsm"]
+[gd_scene load_steps=10 format=3 uid="uid://kvmg0uqfcasa"]
 
-[ext_resource type="Script" path="res://Scripts/UnitCard.cs" id="1_f3fyc"]
 [ext_resource type="Script" path="res://Scripts/PositionControl3D.cs" id="2_1qbv1"]
 [ext_resource type="PackedScene" uid="uid://mo4ouhmg6syk" path="res://Assets/Cards/CardBase.tscn" id="2_nqvf2"]
 [ext_resource type="FontFile" uid="uid://ca34cim5cdy0m" path="res://Assets/Cards/CardAssets/windows_command_prompt.ttf" id="7_uff6s"]
@@ -27,7 +26,6 @@ viewport_path = NodePath("CardBase/CardImages/CardViewport")
 
 [node name="CardBody" type="RigidBody3D" parent="."]
 transform = Transform3D(1.5, 0, 0, 0, 1.5, 0, 0, 0, 1.5, 0, 0, 0)
-script = ExtResource("1_f3fyc")
 
 [node name="CardCollider" type="CollisionShape3D" parent="CardBody"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.000202626)

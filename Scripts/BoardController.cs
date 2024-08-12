@@ -185,8 +185,8 @@ public partial class BoardController : Node3D
 
 
 			Card card = cardBaseInstance.GetNode("CardBody") as Card;
-			card.CardAlignmentType = Card.CardAlignment.Player;
 
+			card.CardAlignmentType = Card.CardAlignment.Player;
 			card.Position = GetNode<Node3D>("PlayerDeck").GetChild<MeshInstance3D>(0).Position;
 			this.GetNode("PlayerDeck").AddChild(cardBaseInstance);
 			if(Hand.Count < 7)

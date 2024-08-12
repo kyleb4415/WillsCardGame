@@ -1,6 +1,5 @@
 using Godot;
 using System;
-
 public static class CardFactory
 {
 	public static void CreateCard(Card card, Node instance)
@@ -26,8 +25,17 @@ public static class CardFactory
 
 	public static void CreateUnitCard(UnitCard card, Node instance)
 	{
-		UnitCard cardInstance = instance.GetChild(0) as UnitCard;
-		cardInstance.CardName = card.CardName;
+
+        var cardBodyInstancePreScript = instance.GetChild(0) as RigidBody3D;
+        ulong objId = instance.GetInstanceId();
+        cardBodyInstancePreScript.SetScript(ResourceLoader.Load<Script>("res://Scripts/UnitCard.cs"));
+
+        Node3D cardBodyInstance = GodotObject.InstanceFromId(objId) as Node3D;
+        UnitCard cardInstance = cardBodyInstance.GetChild(0) as UnitCard;
+        GD.Print(cardInstance.GetType());
+
+
+        cardInstance.CardName = card.CardName;
 		cardInstance.Description = card.Description;
 		cardInstance.Type = card.Type;
 		cardInstance.ManaCost = card.ManaCost;
@@ -41,13 +49,19 @@ public static class CardFactory
         {
             cardImages.SetCardName(card.CardName);
         }
+        
     }
 
     public static void CreateSkillCard(SkillCard card, Node instance)
     {
-        SkillCard cardInstance = instance.GetChild(0) as SkillCard;
-        GD.Print(cardInstance.CardName);
-        GD.Print(card.CardName);
+        var cardBodyInstancePreScript = instance.GetChild(0) as RigidBody3D;
+        ulong objId = instance.GetInstanceId();
+        cardBodyInstancePreScript.SetScript(ResourceLoader.Load<Script>("res://Scripts/SkillCard.cs"));
+
+        Node3D cardBodyInstance = GodotObject.InstanceFromId(objId) as Node3D;
+        SkillCard cardInstance = cardBodyInstance.GetChild(0) as SkillCard;
+        GD.Print(cardInstance.GetType());
+
         cardInstance.CardName = card.CardName;
         cardInstance.Description = card.Description;
         cardInstance.Type = card.Type;

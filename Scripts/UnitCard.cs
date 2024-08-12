@@ -110,6 +110,45 @@ public partial class UnitCard : Card, ICard
 		this.Race = race;
 	}
 
+    public UnitCard(int id, string name, SQLiteBlob cardImage, string abilityName, int damage, int hp, int manaCost, int unlockedFlag, string race, string type)
+    {
+        this.ID = id;
+        this.CardName = name;
+		this.CardImage = cardImage;
+		this.AbilityName = abilityName;
+        this.Type = type;
+        this.Damage = damage;
+        this.HP = hp;
+        this.ManaCost = manaCost;
+        this.UnlockedFlag = unlockedFlag;
+        this.Race = race;
+    }
+
+    public UnitCard(int id, string name, SQLiteBlob cardImage, int damage, int hp, int manaCost, int unlockedFlag, string race, string type)
+    {
+        this.ID = id;
+        this.CardName = name;
+        this.CardImage = cardImage;
+        this.Type = type;
+        this.Damage = damage;
+        this.HP = hp;
+        this.ManaCost = manaCost;
+        this.UnlockedFlag = unlockedFlag;
+        this.Race = race;
+    }
+
+    public UnitCard(int id, string name, string abilityName, int damage, int hp, int manaCost, int unlockedFlag, string race, string type)
+    {
+        this.ID = id;
+        this.CardName = name;
+        this.AbilityName = abilityName;
+        this.Type = type;
+        this.Damage = damage;
+        this.HP = hp;
+        this.ManaCost = manaCost;
+        this.UnlockedFlag = unlockedFlag;
+        this.Race = race;
+    }
     public UnitCard(int id, string name, int damage, int hp, int manaCost, int unlockedFlag, string race, string type)
     {
         this.ID = id;
