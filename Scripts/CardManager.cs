@@ -17,13 +17,13 @@ public static class CardManager
     public static void InitialDealCards(BoardController b, SceneTree s)
     {
         InitialDealEnemyCardsAnimation(b, new Vector3(0, 0, 0), s);
-        DealCardsBezierAnimation(b, new Vector3(0, 0, 0), s);
+        CalculatePlayerCardAlignmentAnimation(b, new Vector3(0, 0, 0), s);
 
     }
 
     //dealing cards from hand
-    /*
-	public static void InitialDealCardsAnimation(BoardController b, Vector3 dealPosition, SceneTree s)
+    
+	public static void CalculatePlayerCardAlignmentAnimation(BoardController b, Vector3 dealPosition, SceneTree s)
 	{
 		Vector3 fanPositionLeft = new Vector3(-0.2f, -1f, 1f);
 		Vector3 fanPositionRight = new Vector3(0.2f, -1f, 1f);
@@ -35,117 +35,21 @@ public static class CardManager
 			fanPositionRight = new Vector3(0.8f, -1f, 1f);
 		}
 
-		Vector3 fanRotationLeft = new Vector3(0, 0.25f, 0);
+
+        float[] points = HeightCurve(b.Hand);
+
+        Vector3 fanRotationLeft = new Vector3(0, 0.25f, 0);
 		Vector3 fanRotationRight = new Vector3(0, -0.25f, 0);
 
 		float idx = 0;
 
-		foreach (Card c in b.Hand)
-		{
-			float alignmentWeight = CalculateCardAlignment(b.Hand, idx);
-			float timeCalculation = 0.2f * (c.Position.X - fanPositionLeft.X);
-			c.GravityScale = 0;
-			Tween t = s.CreateTween();
-			Tween t2 = s.CreateTween();
-			t.TweenProperty(c, "position", fanPositionLeft.Lerp(fanPositionRight, alignmentWeight), timeCalculation).SetTrans(Tween.TransitionType.Quad);
-			t2.TweenProperty(c, "rotation", fanRotationLeft.Lerp(fanRotationRight, alignmentWeight), 0.25f).SetTrans(Tween.TransitionType.Quad);
-			c.OriginPos = fanPositionLeft.Lerp(fanPositionRight, alignmentWeight);
-			c.OriginRot = fanRotationLeft.Lerp(fanRotationRight, alignmentWeight);
-			idx += 1;
-		}
-	}
-	*/
-
-    public static void DealCardsBezierAnimation(BoardController b, Vector3 dealPosition, SceneTree s)
-    {
-        Vector3 p0 = new Vector3(-0.2f, -1f, 1f);
-        Vector3 p1 = new Vector3(0f, -1f, 0.8f);
-        Vector3 p2 = new Vector3(0.2f, -1f, 1f);
-
-        //maybe change positions to accommodate more cards if necessary?
-        if (b.Hand.Count > 4)
-        {
-            p0 = new Vector3(-0.8f, -1f, 1f);
-            p1 = new Vector3(0f, -1f, 0.8f);
-            p2 = new Vector3(0.8f, -1f, 1f);
-        }
-
-
-        Curve3D curve = new Curve3D();
-        curve.AddPoint(p0);
-        curve.SetPointOut(0, new Vector3(0, 0, 0));
-        curve.AddPoint(p1, new Vector3(-0.9f, 0f, 0f), new Vector3(0.9f, 0f, 0f));
-        curve.AddPoint(p2);
-        curve.SetPointIn(2, new Vector3(0, 0, 0));
-
-        Vector3 fanRotationLeft = new Vector3(0, 0.25f, 0);
-        Vector3 fanRotationRight = new Vector3(0, -0.25f, 0);
-
-        List<Vector3> pointsOnCurve = CalculatePointsOnCurve(curve, 7);
-
-        int idx = 0;
-
         foreach (Card c in b.Hand)
         {
-            float alignmentWeight = CalculateCardAlignment(b.Hand, idx);
-            float timeCalculation = 0.2f * (c.Position.X - p0.X);
-            c.GravityScale = 0;
-            Tween t = s.CreateTween();
-            Tween t2 = s.CreateTween();
-            t.TweenProperty(c, "position", pointsOnCurve[idx], timeCalculation).SetTrans(Tween.TransitionType.Quad);
-            t2.TweenProperty(c, "rotation", fanRotationLeft.Lerp(fanRotationRight, alignmentWeight), 0.25f).SetTrans(Tween.TransitionType.Quad);
-            c.OriginPos = pointsOnCurve[idx];
-            c.OriginRot = fanRotationLeft.Lerp(fanRotationRight, alignmentWeight);
-            idx += 1;
+            PlayerSingleCardAnimation(c, idx, b, fanPositionLeft, fanPositionRight, fanRotationLeft, fanRotationRight, points);
+            idx++;
         }
     }
-
-    public static void RecalculatePlayerCardAlignment(BoardController b, Vector3 dealPosition, SceneTree s)
-    {
-        Vector3 p0 = new Vector3(-0.2f, -1f, 1f);
-        Vector3 p1 = new Vector3(0f, -1f, 0.8f);
-        Vector3 p2 = new Vector3(0.2f, -1f, 1f);
-
-        //maybe change positions to accommodate more cards if necessary?
-        if (b.Hand.Count > 4)
-        {
-            p0 = new Vector3(-0.8f, -1f, 1f);
-            p1 = new Vector3(0f, -1f, 0.8f);
-            p2 = new Vector3(0.8f, -1f, 1f);
-        }
-
-
-        Curve3D curve = new Curve3D();
-        curve.AddPoint(p0);
-        curve.SetPointOut(0, new Vector3(0, 0, 0));
-        curve.AddPoint(p1, new Vector3(-0.9f, 0f, 0f), new Vector3(0.9f, 0f, 0f));
-        curve.AddPoint(p2);
-        curve.SetPointIn(2, new Vector3(0, 0, 0));
-
-        Vector3 fanRotationLeft = new Vector3(0, 0.25f, 0);
-        Vector3 fanRotationRight = new Vector3(0, -0.25f, 0);
-
-        List<Vector3> pointsOnCurve = CalculatePointsOnCurve(curve, b.Hand.Count);
-
-        int idx = 0;
-
-        foreach (Card c in b.Hand)
-        {
-            float alignmentWeight = CalculateCardAlignment(b.Hand, idx);
-            float timeCalculation = 0.2f * (c.Position.X - p0.X);
-            c.GravityScale = 0;
-            Tween t = s.CreateTween();
-            Tween t2 = s.CreateTween();
-            t.TweenProperty(c, "position", pointsOnCurve[idx], timeCalculation).SetTrans(Tween.TransitionType.Quad);
-            t2.TweenProperty(c, "rotation", fanRotationLeft.Lerp(fanRotationRight, alignmentWeight), 0.25f).SetTrans(Tween.TransitionType.Quad);
-            c.OriginPos = pointsOnCurve[idx];
-            c.OriginRot = fanRotationLeft.Lerp(fanRotationRight, alignmentWeight);
-            idx += 1;
-        }
-    }
-
-
-    /*
+	
 	public static void DealPlayerCardAnimation(Card card, BoardController b, Vector3 dealPosition, SceneTree s)
 	{
 		Vector3 fanPositionLeft = new Vector3(-0.4f, -1f, 1f);
@@ -166,86 +70,15 @@ public static class CardManager
 
 		b.Hand.Add(card);
 		b.PlayerDeck.Remove(b.PlayerDeck[b.PlayerDeck.Count - 1]);
-		foreach (Card c in b.Hand)
+        float[] points = HeightCurve(b.Hand);
+        foreach (Card c in b.Hand)
 		{
-			float alignmentWeight = CalculateCardAlignment(b.Hand, idx);
-			float timeCalculation = 0.2f * (c.Position.X - fanPositionLeft.X);
-			c.GravityScale = 0;
-			Tween t = s.CreateTween();
-			Tween t2 = s.CreateTween();
-			t.TweenProperty(c, "position", fanPositionLeft.Lerp(fanPositionRight, alignmentWeight), timeCalculation).SetTrans(Tween.TransitionType.Quad);
-			t2.TweenProperty(c, "rotation", fanRotationLeft.Lerp(fanRotationRight, alignmentWeight), 0.25f).SetTrans(Tween.TransitionType.Quad);
-			c.OriginPos = fanPositionLeft.Lerp(fanPositionRight, alignmentWeight);
-			c.OriginRot = fanRotationLeft.Lerp(fanRotationRight, alignmentWeight);
-			idx += 1;
-		}
+            PlayerSingleCardAnimation(c, idx, b, fanPositionLeft, fanPositionRight, fanRotationLeft, fanRotationRight, points);
+            idx++;
+        }
 
 	}
-	*/
-
-    public static void DealPlayerCardAnimation(Card card, BoardController b, Vector3 dealPosition, SceneTree s)
-    {
-        Vector3 p0 = new Vector3(-0.2f, -1f, 1f);
-        Vector3 p1 = new Vector3(0f, -1f, 0.8f);
-        Vector3 p2 = new Vector3(0.2f, -1f, 1f);
-
-        //maybe change positions to accommodate more cards if necessary?
-        if (b.Hand.Count > 4)
-        {
-            p0 = new Vector3(-0.8f, -1f, 1f);
-            p1 = new Vector3(0f, -1f, 0.8f);
-            p2 = new Vector3(0.8f, -1f, 1f);
-        }
-
-
-        Curve3D curve = new Curve3D();
-        curve.AddPoint(p0);
-        curve.SetPointOut(0, new Vector3(0, 0, 0));
-        curve.AddPoint(p1, new Vector3(-0.9f, 0f, 0f), new Vector3(0.9f, 0f, 0f));
-        curve.AddPoint(p2);
-        curve.SetPointIn(2, new Vector3(0, 0, 0));
-
-        Vector3 fanRotationLeft = new Vector3(0, 0.25f, 0);
-        Vector3 fanRotationRight = new Vector3(0, -0.25f, 0);
-
-        //adding one to account for the extra card that will be added
-        List<Vector3> pointsOnCurve = CalculatePointsOnCurve(curve, b.Hand.Count + 1);
-
-        int idx = 0;
-        b.PlayerDeck.Remove(b.PlayerDeck[b.PlayerDeck.Count - 1]);
-        b.Hand.Add(card);
-
-        foreach (Card c in b.Hand)
-        {
-            if (c != card)
-            {
-                float alignmentWeight = CalculateCardAlignment(b.Hand, idx);
-                float timeCalculation = 0.4f;
-                c.GravityScale = 0;
-                Tween t = s.CreateTween();
-                Tween t2 = s.CreateTween();
-                t.TweenProperty(c, "position", pointsOnCurve[idx], timeCalculation).SetTrans(Tween.TransitionType.Quad);
-                t2.TweenProperty(c, "rotation", fanRotationLeft.Lerp(fanRotationRight, alignmentWeight), 0.25f).SetTrans(Tween.TransitionType.Quad);
-                c.OriginPos = pointsOnCurve[idx];
-                c.OriginRot = fanRotationLeft.Lerp(fanRotationRight, alignmentWeight);
-                idx += 1;
-            }
-            else
-            {
-                float alignmentWeight = CalculateCardAlignment(b.Hand, idx);
-                float timeCalculation = 0.2f * (c.Position.X - p0.X);
-                c.GravityScale = 0;
-                Tween t = s.CreateTween();
-                Tween t2 = s.CreateTween();
-                t.TweenProperty(c, "position", pointsOnCurve[idx], timeCalculation).SetTrans(Tween.TransitionType.Quad);
-                t2.TweenProperty(c, "rotation", fanRotationLeft.Lerp(fanRotationRight, alignmentWeight), 0.25f).SetTrans(Tween.TransitionType.Quad);
-                c.OriginPos = pointsOnCurve[idx];
-                c.OriginRot = fanRotationLeft.Lerp(fanRotationRight, alignmentWeight);
-                idx += 1;
-            }
-
-        }
-    }
+   
 
     public static void InitialDealEnemyCardsAnimation(BoardController b, Vector3 dealPosition, SceneTree s)
     {
@@ -331,6 +164,37 @@ public static class CardManager
         }
     }
 
+    private static float[] HeightCurve(List<Card> cardList)
+    {
+        Vector2 p0 = new Vector2(0, 0);
+        Vector2 p1 = new Vector2(0.5f, 0.5f);
+        Vector2 p2 = new Vector2(1f, 0);
+        Curve curve = new Curve();
+        curve.AddPoint(p0);
+        curve.AddPoint(p1);
+        curve.AddPoint(p2);
+        curve.SetPointLeftTangent(1, -1f);
+        curve.SetPointRightTangent(1, 1f);
+
+        float[] points = new float[cardList.Count];
+        curve.BakeResolution = cardList.Count * 10;
+        curve.Bake();
+        if(cardList.Count > 1)
+        {
+            for (int i = 0; i < cardList.Count; i++)
+            {
+                points[i] = curve.SampleBaked(i * (1f / (cardList.Count - 1)));
+            }
+        }
+        else
+        {
+            points[0] = curve.SampleBaked(0.5f);
+        }
+
+
+        return points;
+    }
+
     //gets weight by setting index over count
     private static float CalculateCardAlignment(List<Card> cardList, float idx)
     {
@@ -339,6 +203,24 @@ public static class CardManager
             return idx / (cardList.Count - 1f);
         }
         return 0.5f;
+    }
+
+    private static void PlayerSingleCardAnimation(Card c, float idx, BoardController b, Vector3 fanPositionLeft, Vector3 fanPositionRight, Vector3 fanRotationLeft, Vector3 fanRotationRight, float[] points)
+    {
+
+        float alignmentWeight = CalculateCardAlignment(b.Hand, idx);
+        float timeCalculation = 0.2f * (c.Position.X - fanPositionLeft.X);
+        c.GravityScale = 0;
+        foreach(var point in points)
+        {
+            GD.Print(point);
+        }
+        Tween t = c.CreateTween();
+        Tween t2 = c.CreateTween();
+        t.TweenProperty(c, "position", new Vector3(fanPositionLeft.Lerp(fanPositionRight, alignmentWeight).X, fanPositionLeft.Lerp(fanPositionRight, alignmentWeight).Y, (-points[(int)idx]) * 0.3f), timeCalculation).SetTrans(Tween.TransitionType.Quad);
+        t2.TweenProperty(c, "rotation", fanRotationLeft.Lerp(fanRotationRight, alignmentWeight), 0.25f).SetTrans(Tween.TransitionType.Quad);
+        c.OriginPos = new Vector3(fanPositionLeft.Lerp(fanPositionRight, alignmentWeight).X, fanPositionLeft.Lerp(fanPositionRight, alignmentWeight).Y, (-points[(int)idx]) * 0.3f);
+        c.OriginRot = fanRotationLeft.Lerp(fanRotationRight, alignmentWeight);
     }
 
 
@@ -353,19 +235,22 @@ public static class CardManager
         }
     }
 
-    private static List<Vector3> CalculatePointsOnCurve(Curve3D curve, int points)
+    /*
+    private static List<Vector3> CalculatePointsOnCurve(Curve2D curve, int points)
     {
         List<Vector3> pointsOnCurve = new List<Vector3>();
+        GD.Print(curve.GetBakedLength());
         for (int i = 0; i < points; i++)
         {
             //total distance = 2.03
-            float spacing = 2.03f / points;
+            float spacing = (curve.GetBakedLength() + 0.25f) / points;
             GD.Print(curve.SampleBaked(i * 0.25f, false));
-            pointsOnCurve.Add(curve.SampleBaked(i * spacing, false));
+            //pointsOnCurve.Add(curve.SampleBaked(i * spacing, false));
 
         }
         return pointsOnCurve;
     }
+    */
 
     public static List<ICard> LoadCardsFromDB()
     {

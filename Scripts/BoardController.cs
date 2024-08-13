@@ -50,14 +50,17 @@ public partial class BoardController : Node3D
 	public delegate void AbilityPhaseFinishedEventHandler();
 	public override void _Ready()
 	{
+		//assigning attributes, preparing board, etc.
 		Enemy = GetNode("Enemy") as EnemyAI;
 		EnemyHPLabel = GetNode("EnemyHPLabel/EnemyHP") as Label;
-		PrepareBoard();
-		foreach(dynamic c in CardManager.LoadCardsFromDB())
+        //assigning events
+        PrepareBoard();
+        this.PlayerTurnStarted += DealPlayerCard;
+        foreach (dynamic c in CardManager.LoadCardsFromDB())
 		{
 			GD.Print(c.GetType());
 		}
-	}
+    }
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
 	// possibly add card attack thingy in here
@@ -91,6 +94,7 @@ public partial class BoardController : Node3D
 		_timer = this.GetNode("TimerDisplay").GetChild(0) as Timer;
 		_timer.Timeout += _endTurnButton_Pressed;
 		_timer.Start(12);
+		TurnNum = 1;
 	}
 
 	public void _endTurnButton_Pressed()
@@ -105,7 +109,6 @@ public partial class BoardController : Node3D
 			EmitSignal(SignalName.EnemyTurnEnded);
 			PlayerTurn = true;
 			EmitSignal(SignalName.PlayerTurnStarted);
-			this.PlayerTurnStarted += DealPlayerCard;
 			_endTurnButton.Disabled = false;
 		}
 		else
@@ -231,7 +234,14 @@ public partial class BoardController : Node3D
 
 	}
 
-	public override void _ExitTree()
+    public void DealPlayerCard()
+    {
+        if (Hand.Count < 7)
+        {
+            CardManager.DealPlayerCardAnimation(PlayerDeck[PlayerDeck.Count - 1], this, new Vector3(0, 0, 0), this.GetTree());
+        }
+    }
+    public override void _ExitTree()
 	{
 		cardSpaceInstanceChild.QueueFree();
 		this.QueueFree();
@@ -244,14 +254,6 @@ public partial class BoardController : Node3D
 			c.QueueFree();
 		}
 		base._ExitTree();
-	}
-
-	public void DealPlayerCard()
-	{
-		if(Hand.Count < 7)
-		{
-			CardManager.DealPlayerCardAnimation(PlayerDeck[PlayerDeck.Count - 1], this, new Vector3(0, 0, 0), this.GetTree());
-		}
 	}
 
 	public void ChangeGameState(GameState state)

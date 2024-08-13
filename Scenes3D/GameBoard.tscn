@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=3 uid="uid://c37ukuwq6so48"]
+[gd_scene load_steps=14 format=3 uid="uid://c37ukuwq6so48"]
 
 [ext_resource type="Script" path="res://Scripts/MoveCard3D.cs" id="1_7mhem"]
 [ext_resource type="Script" path="res://Scripts/BoardController.cs" id="1_y1f3f"]
@@ -28,13 +28,6 @@ size = Vector3(0.59, 0.205, 0.755)
 [sub_resource type="BoxShape3D" id="BoxShape3D_77a2g"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_hgecj"]
-
-[sub_resource type="Curve3D" id="Curve3D_eyf4i"]
-_data = {
-"points": PackedVector3Array(2.70605e-05, 5.40018e-05, 0.00809705, 0, 0, 0, -1.12067, -0.142452, 1.07635, -0.907863, 0.00615585, 0.00212324, 0.907863, -0.00615585, -0.00212324, 0.0249707, -0.0373911, 1.3183, 0, 0, 0, 0.444418, 0.00832045, -0.0896896, 1.09171, -0.0573674, 1.08205),
-"tilts": PackedFloat32Array(0, 0, 0)
-}
-point_count = 3
 
 [node name="GameBoard" type="Node3D"]
 script = ExtResource("1_y1f3f")
@@ -220,7 +213,3 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.23175, 1.07844)
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="EnemyBody/EnemyBodyObject"]
 shape = SubResource("BoxShape3D_hgecj")
-
-[node name="Path3D" type="Path3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.274273, 0.0291913, -0.377312)
-curve = SubResource("Curve3D_eyf4i")

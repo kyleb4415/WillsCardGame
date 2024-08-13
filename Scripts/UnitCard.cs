@@ -174,16 +174,29 @@ public partial class UnitCard : Card, ICard
 		this.UpdateHP();
 		if(this.HP <= 0)
 		{
-			if(this.Effects.Contains(new StatusEffect(Effect.Taunt)))
-			{
-				BoardController b = GetNode("/root/GameBoard") as BoardController;
-				b.CurrentPhase = AbilityPhase.None;
-			}
-			this.Visible = false;
-			//set this to play a death animation and then shuffle it back in the deck or something
-			this.Position = new Vector3(100, 100, 100);
+			Death();
 		}
 	}
+
+	public void Death()
+	{
+        BoardController b = GetNode("/root/GameBoard") as BoardController;
+        if (this.Effects.Contains(new StatusEffect(Effect.Taunt)))
+        {
+            b.CurrentPhase = AbilityPhase.None;
+        }
+		if(this.Effects.Count > 0)
+		{
+			this.Effects.Clear();
+		}
+        this.Visible = false;
+		//set this to play a death animation and then shuffle it back in the deck or something, after animation make it visible?
+		this.Position = GetNode<MeshInstance3D>("/root/GameBoard/PlayerDeck/MeshInstance3D").Position;
+		this.PlacedPos = new Vector3(0, 0, 0);
+		this.CanPickUp = true;
+		b.PlayerCardsOnBoard.Remove(this);
+		b.Hand.Insert(0, this);
+    }
 
 	public void UpdateHP()
 	{

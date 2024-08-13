@@ -1,45 +1,48 @@
-[gd_scene load_steps=9 format=3 uid="uid://kvmg0uqfcasa"]
+[gd_scene load_steps=10 format=3 uid="uid://kvmg0uqfcasa"]
 
 [ext_resource type="Script" path="res://Scripts/PositionControl3D.cs" id="2_1qbv1"]
 [ext_resource type="PackedScene" uid="uid://mo4ouhmg6syk" path="res://Assets/Cards/CardBase.tscn" id="2_nqvf2"]
 [ext_resource type="FontFile" uid="uid://ca34cim5cdy0m" path="res://Assets/Cards/CardAssets/windows_command_prompt.ttf" id="7_uff6s"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_62a8p"]
-size = Vector3(0.275, 0.035, 0.458579)
+size = Vector3(0.376202, 0.035, 0.607287)
 
-[sub_resource type="ViewportTexture" id="ViewportTexture_xc2xv"]
+[sub_resource type="ViewportTexture" id="ViewportTexture_7diot"]
 viewport_path = NodePath("CardBase/CardImages/CardViewport")
 
 [sub_resource type="SystemFont" id="SystemFont_plqby"]
 font_names = PackedStringArray("Windows")
 
+[sub_resource type="BoxMesh" id="BoxMesh_lk8uj"]
+size = Vector3(0.315, 0.02, 0.54)
+
 [sub_resource type="ImageTexture" id="ImageTexture_efsvv"]
 
 [sub_resource type="ViewportTexture" id="ViewportTexture_gov8b"]
-viewport_path = NodePath("CardBase/CardImages/CardViewport")
+viewport_path = NodePath("CardImages/CardViewport")
 
 [node name="CardBase3d" type="Node3D"]
 
 [node name="CardBody" type="RigidBody3D" parent="."]
-transform = Transform3D(1.5, 0, 0, 0, 1.5, 0, 0, 0, 1.5, 0, 0, 0)
 
 [node name="CardCollider" type="CollisionShape3D" parent="CardBody"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.000202626)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.000540301, 0, -0.00903368)
 shape = SubResource("BoxShape3D_62a8p")
 
 [node name="CardBack" type="Sprite3D" parent="CardBody"]
-transform = Transform3D(0.15, 0, 0, 0, -6.55671e-09, 0.15, 0, -0.15, -6.55671e-09, 0, -0.00754118, 0)
+transform = Transform3D(0.2, 0, 0, 0, -8.74228e-09, 0.2, 0, -0.2, -8.74228e-09, 0, -0.00754118, 0)
 double_sided = false
-texture = SubResource("ViewportTexture_xc2xv")
+texture = SubResource("ViewportTexture_7diot")
 
 [node name="Name" type="Label3D" parent="CardBody"]
-transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, -0.073, 0.0409177, -0.118894)
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, -0.138589, 0.00262972, -0.255461)
 sorting_offset = 1.0
 extra_cull_margin = 96.94
 text = "a"
 font = ExtResource("7_uff6s")
 font_size = 12
 outline_size = 0
+horizontal_alignment = 0
 uppercase = true
 autowrap_mode = 3
 
@@ -60,7 +63,7 @@ font = ExtResource("7_uff6s")
 font_size = 12
 
 [node name="ManaCost" type="Label3D" parent="CardBody"]
-transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0.105662, 0, -0.1813)
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0.138846, 0, -0.262152)
 sorting_offset = 1.0
 text = "5"
 font = ExtResource("7_uff6s")
@@ -68,7 +71,7 @@ font_size = 12
 outline_size = 0
 
 [node name="Damage" type="Label3D" parent="CardBody"]
-transform = Transform3D(0.585, 0, 0, 0, -2.55712e-08, 0.585, 0, -0.585, -2.55712e-08, -0.0786626, 0.00351089, 0.0539177)
+transform = Transform3D(0.585, 0, 0, 0, -2.55712e-08, 0.585, 0, -0.585, -2.55712e-08, -0.108325, 0.00351089, 0.0539177)
 sorting_offset = 1.0
 text = "a"
 font = ExtResource("7_uff6s")
@@ -76,7 +79,7 @@ font_size = 20
 outline_size = 0
 
 [node name="HP" type="Label3D" parent="CardBody"]
-transform = Transform3D(0.585, 0, 0, 0, -2.55712e-08, 0.585, 0, -0.585, -2.55712e-08, 0.0879039, 0.00834614, 0.0518493)
+transform = Transform3D(0.585, 0, 0, 0, -2.55712e-08, 0.585, 0, -0.585, -2.55712e-08, 0.114076, 0.00834614, 0.0518493)
 sorting_offset = 1.0
 text = "a"
 font = ExtResource("7_uff6s")
@@ -126,6 +129,10 @@ fit_content = true
 [node name="Timer" type="Timer" parent="CardBody/ContextMenuControl"]
 one_shot = true
 
+[node name="MeshInstance3D" type="MeshInstance3D" parent="CardBody"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.0221238, 0)
+mesh = SubResource("BoxMesh_lk8uj")
+
 [node name="CardBase" parent="." instance=ExtResource("2_nqvf2")]
 
 [node name="CardBorder" parent="CardBase/CardImages/CardViewport" index="0"]
@@ -133,6 +140,9 @@ expand_mode = 5
 
 [node name="Border" parent="CardBase/CardImages/CardViewport" index="1"]
 texture = SubResource("ImageTexture_efsvv")
+
+[node name="CardImage" parent="CardBase/CardImages/CardViewport" index="4"]
+expand_mode = 3
 
 [node name="Type" parent="CardBase/CardImages/CardViewport/TypesContainer" index="0"]
 expand_mode = 3

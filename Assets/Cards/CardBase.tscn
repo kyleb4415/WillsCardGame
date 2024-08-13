@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3 uid="uid://mo4ouhmg6syk"]
+[gd_scene load_steps=13 format=3 uid="uid://mo4ouhmg6syk"]
 
 [ext_resource type="Script" path="res://Assets/Cards/CardNode.cs" id="1_ng01q"]
 [ext_resource type="Texture2D" uid="uid://bxd60a16ufmnp" path="res://Assets/Cards/CardAssets/layer behind items test.png" id="3_ajtbf"]
@@ -10,6 +10,12 @@
 [ext_resource type="FontFile" uid="uid://ca34cim5cdy0m" path="res://Assets/Cards/CardAssets/windows_command_prompt.ttf" id="9_bdlwn"]
 
 [sub_resource type="ImageTexture" id="ImageTexture_jxpjj"]
+
+[sub_resource type="Curve2D" id="Curve2D_a383i"]
+_data = {
+"points": PackedVector2Array(0, 0, 0, 0, 100, 0, 50, 0, -50, 0, 49, -20, 0, 0, 0, 0, 1, 0)
+}
+point_count = 3
 
 [sub_resource type="Theme" id="Theme_b0xbc"]
 
@@ -92,6 +98,10 @@ offset_bottom = -1.0
 grow_horizontal = 2
 grow_vertical = 2
 stretch_mode = 2
+
+[node name="Path2D" type="Path2D" parent="CardImages"]
+scale = Vector2(1, 0.75)
+curve = SubResource("Curve2D_a383i")
 
 [node name="ManaNumber" type="Label" parent="."]
 anchors_preset = -1

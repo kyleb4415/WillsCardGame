@@ -79,7 +79,7 @@ public partial class MoveCard3D : Camera3D
                 else if (@event is InputEventMouseButton && @event.IsActionReleased("leftclick"))
                 {
                     GD.Print("placing card");
-                    if(RaycastHelper.GetCollisionPoint(this, mouse, MouseCastLength)["collider"].GetType() != typeof(StaticBody3D))
+                    if(RaycastHelper.GetCollisionPoint(this, mouse, MouseCastLength)["collider"].AsGodotObject().GetType() != typeof(StaticBody3D))
                     {
                         PlaceCard(@event);
                     }
@@ -191,13 +191,8 @@ public partial class MoveCard3D : Camera3D
                         card.EmitSignal(Card.SignalName.PlaceCard, card, this.GetParent().GetNode("ManaBar"));
                         colliders = null;
                     };
-                    //boardController.Hand.Remove(card);
                     this.EmitSignal(SignalName.GameStateChanged, (int)GameState.SelectingCard);
                     currentGameState = GameState.SelectingCard;
-                    GD.Print("Placing");
-
-                    //CardManager.DealPlayerCardAnimation(boardController.PlayerDeck[boardController.PlayerDeck.Count - 1], boardController, new Vector3(0,0,0), this.GetTree());
-
                 }
                 else
                 {
@@ -437,13 +432,15 @@ public partial class MoveCard3D : Camera3D
             if (colliders["collider"].AsGodotObject().GetType() != typeof(StaticBody3D))
             {
                 Card card = (Card)colliders["collider"];
-                card.GetGizmos();
-                Tween tween = CreateTween();
-                Tween tween2 = CreateTween();
-                tween.TweenProperty(card, "position", card.OriginPos, 0.5f).SetTrans(Tween.TransitionType.Quad);
-                tween2.TweenProperty(card, "rotation", card.OriginRot, 0.5f).SetTrans(Tween.TransitionType.Quad);
-                card.GravityScale = 0;
-                colliders = null;
+                if(card.CanPickUp)
+                {
+                    Tween tween = card.CreateTween();
+                    Tween tween2 = card.CreateTween();
+                    tween.TweenProperty(card, "position", card.OriginPos, 0.5f).SetTrans(Tween.TransitionType.Quad);
+                    tween2.TweenProperty(card, "rotation", card.OriginRot, 0.5f).SetTrans(Tween.TransitionType.Quad);
+                    card.GravityScale = 0;
+                    colliders = null;
+                }
             }
 
         }
