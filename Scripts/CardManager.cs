@@ -25,14 +25,14 @@ public static class CardManager
     
 	public static void CalculatePlayerCardAlignmentAnimation(BoardController b, Vector3 dealPosition, SceneTree s)
 	{
-		Vector3 fanPositionLeft = new Vector3(-0.2f, -1f, 1f);
-		Vector3 fanPositionRight = new Vector3(0.2f, -1f, 1f);
+		Vector3 fanPositionLeft = new Vector3(-0.2f, -0.8f, 1f);
+		Vector3 fanPositionRight = new Vector3(0.2f, -0.8f, 1f);
 
 		//maybe change positions to accommodate more cards if necessary?
 		if(b.Hand.Count > 4)
 		{
-			fanPositionLeft = new Vector3(-0.8f, -1f, 1f);
-			fanPositionRight = new Vector3(0.8f, -1f, 1f);
+			fanPositionLeft = new Vector3(-0.8f, -0.8f, 1f);
+			fanPositionRight = new Vector3(0.8f, -0.8f, 1f);
 		}
 
 
@@ -52,14 +52,14 @@ public static class CardManager
 	
 	public static void DealPlayerCardAnimation(Card card, BoardController b, Vector3 dealPosition, SceneTree s)
 	{
-		Vector3 fanPositionLeft = new Vector3(-0.4f, -1f, 1f);
-		Vector3 fanPositionRight = new Vector3(0.4f, -1f, 1f);
+		Vector3 fanPositionLeft = new Vector3(-0.4f, -0.8f, 1f);
+		Vector3 fanPositionRight = new Vector3(0.4f, -0.8f, 1f);
 
 		//maybe change positions to accommodate more cards if necessary?
 		if (b.Hand.Count > 4)
 		{
-			fanPositionLeft = new Vector3(-0.8f, -1f, 1f);
-			fanPositionRight = new Vector3(0.8f, -1f, 1f);
+			fanPositionLeft = new Vector3(-0.8f, -0.8f, 1f);
+			fanPositionRight = new Vector3(0.8f, -0.8f, 1f);
 		}
 
 		Vector3 fanRotationLeft = new Vector3(0, 0.25f, 0);
@@ -211,15 +211,11 @@ public static class CardManager
         float alignmentWeight = CalculateCardAlignment(b.Hand, idx);
         float timeCalculation = 0.2f * (c.Position.X - fanPositionLeft.X);
         c.GravityScale = 0;
-        foreach(var point in points)
-        {
-            GD.Print(point);
-        }
         Tween t = c.CreateTween();
         Tween t2 = c.CreateTween();
-        t.TweenProperty(c, "position", new Vector3(fanPositionLeft.Lerp(fanPositionRight, alignmentWeight).X, fanPositionLeft.Lerp(fanPositionRight, alignmentWeight).Y, (-points[(int)idx]) * 0.3f), timeCalculation).SetTrans(Tween.TransitionType.Quad);
+        t.TweenProperty(c, "position", new Vector3(fanPositionLeft.Lerp(fanPositionRight, alignmentWeight).X, fanPositionLeft.Lerp(fanPositionRight, alignmentWeight).Y, 1.8f + (-points[(int)idx]) * 0.3f), timeCalculation).SetTrans(Tween.TransitionType.Quad);
         t2.TweenProperty(c, "rotation", fanRotationLeft.Lerp(fanRotationRight, alignmentWeight), 0.25f).SetTrans(Tween.TransitionType.Quad);
-        c.OriginPos = new Vector3(fanPositionLeft.Lerp(fanPositionRight, alignmentWeight).X, fanPositionLeft.Lerp(fanPositionRight, alignmentWeight).Y, (-points[(int)idx]) * 0.3f);
+        c.OriginPos = new Vector3(fanPositionLeft.Lerp(fanPositionRight, alignmentWeight).X, fanPositionLeft.Lerp(fanPositionRight, alignmentWeight).Y, 1.8f + (-points[(int)idx]) * 0.3f);
         c.OriginRot = fanRotationLeft.Lerp(fanRotationRight, alignmentWeight);
     }
 

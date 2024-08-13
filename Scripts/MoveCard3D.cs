@@ -78,11 +78,12 @@ public partial class MoveCard3D : Camera3D
                 }
                 else if (@event is InputEventMouseButton && @event.IsActionReleased("leftclick"))
                 {
-                    GD.Print("placing card");
-                    if(RaycastHelper.GetCollisionPoint(this, mouse, MouseCastLength)["collider"].AsGodotObject().GetType() != typeof(StaticBody3D))
-                    {
+                    //if(RaycastHelper.GetCollisionPoint(this, mouse, MouseCastLength)["collider"].AsGodotObject().GetType() != typeof(StaticBody3D))
+                    //{
+                        GD.Print(RaycastHelper.GetCollisionPoint(this, mouse, MouseCastLength)["collider"].AsGodotObject().GetType());
+                        GD.Print("placing card");
                         PlaceCard(@event);
-                    }
+                    //}
                 }
                 if (@event is InputEventMouseButton && @event.IsActionPressed("rightclick"))
                 {
@@ -127,7 +128,6 @@ public partial class MoveCard3D : Camera3D
                 ExecuteAction();
                 break;
             case (GameState.EnemyTurn):
-                GD.Print("EnemyTurn!!");
                 break;
         }
         base._Input(@event);
@@ -138,6 +138,7 @@ public partial class MoveCard3D : Camera3D
     {
         if (RaycastHelper.GetCollisionPoint(this, mouse, MouseCastLength)["collider"].AsGodotObject().GetType() != typeof(StaticBody3D))
         {
+            colliders = new Dictionary();
             colliders = RaycastHelper.GetCollisionPoint(this, mouse, MouseCastLength);
             Card c = (Card)colliders["collider"];
 
@@ -161,6 +162,7 @@ public partial class MoveCard3D : Camera3D
         }
         else
         {
+            GD.Print(RaycastHelper.GetCollisionPoint(this, mouse, MouseCastLength).GetType());
             playerColliders = RaycastHelper.GetCollisionPoint(this, mouse, MouseCastLength);
             //try logic here for player collider stuff like get node name and such
         }
@@ -179,10 +181,12 @@ public partial class MoveCard3D : Camera3D
         if (colliders != null)
         {
             Card card = (Card)colliders["collider"];
+
             if (card.CanPickUp && card.CardAlignmentType != Card.CardAlignment.Enemy)
             {
-                //card.EmitSignal(Card.SignalName.PlaceCard, card);
-                if(card.PlacedPos != new Vector3(0, 0, 0) && this.GetParent().GetNode<TextureProgressBar>("ManaBar").Value >= card.ManaCost * 100)
+                GD.Print(card.CardName);
+                GD.Print(card.PlacedPos);
+                if (card.PlacedPos != new Vector3(0,0,0) && this.GetParent().GetNode<TextureProgressBar>("ManaBar").Value >= card.ManaCost * 100)
                 {
                     Tween tween = CreateTween();
                     tween.TweenProperty(card, "position", card.PlacedPos, 0.5f).SetTrans(Tween.TransitionType.Quad);
@@ -508,11 +512,12 @@ public partial class MoveCard3D : Camera3D
         {
             Area3D area = s.GetChild(0) as Area3D;
 
-            if (area.GetOverlappingBodies().Count > 1 && area.GetOverlappingBodies().Count < 3)
+            if (area.GetOverlappingBodies().Count > 0 && area.GetOverlappingBodies().Count < 2)
             {
-                Card bodyAsCard = area.GetOverlappingBodies()[1] as Card;
+                Card bodyAsCard = area.GetOverlappingBodies()[0] as Card;
                 if (bodyAsCard.CanPickUp == true)
                 {
+                    GD.Print("overlapping body detected");
                     bodyAsCard.PlacedPos = new Vector3(area.GetParentNode3D().GetParentNode3D().Position.X, -1.5f, area.GetParentNode3D().GetParentNode3D().Position.Z);
                 }
             }
@@ -526,7 +531,7 @@ public partial class MoveCard3D : Camera3D
     public void Area_OnBodyExited(Node3D body)
     {
         Card cardBody = (Card)body;
-        cardBody.PlacedPos = default;
+        cardBody.PlacedPos = new Vector3(0,0,0);
         cardBody.CanPickUp = true;
     }
 

@@ -115,8 +115,9 @@ public partial class BoardController : Node3D
 		{
 			GD.Print("enemy turn");
 			EmitSignal(SignalName.PlayerTurnEnded);
-			this.gameState = GameState.EnemyTurn;
-			EmitSignal(SignalName.EnemyTurnStarted);
+
+            this.gameState = GameState.EnemyTurn;
+            EmitSignal(SignalName.EnemyTurnStarted);
 			_endTurnButton.Disabled = true;
 			PlayerTurn = false;
 		}

@@ -35,9 +35,9 @@ public partial class EnemyAI : Node
 
 	public void PlayTurn()
 	{
+        GD.Print("Enemy playing turn");
         if (_boardController.gameState == GameState.EnemyTurn)
         {
-			GD.Print("Enemy playing turn");
             Random rnd = new Random();
             int selection = rnd.Next(0, 101);
             if (_firstTurn == true)
@@ -51,10 +51,10 @@ public partial class EnemyAI : Node
             {
                 switch (selection)
                 {
-                    case int n when n >= 0 && n < 50:
+                    case int n when n >= 0 && n < 80:
                         PlaceCard(rnd);
                         break;
-                    case int n when n >= 50 && n < 100:
+                    case int n when n >= 80 && n < 100:
                         Attack(rnd);
                         break;
                 }
@@ -77,8 +77,9 @@ public partial class EnemyAI : Node
         EnemyHand.Remove(card);
 		card.CanPickUp = false;
         EnemyCardsOnBoard.Add(card);
-        Tween tween = GetTree().CreateTween();
-        tween.TweenProperty(card, "position", card.PlacedPos, 2f).SetTrans(Tween.TransitionType.Quad);
+		GD.Print("Dealing initial card now");
+        Tween tween = card.CreateTween();
+        tween.TweenProperty(card, "position", card.PlacedPos, 1f).SetTrans(Tween.TransitionType.Quad);
 
 		RotationHelper.ResetRotation(card, this.GetTree());
 
@@ -88,6 +89,7 @@ public partial class EnemyAI : Node
     {
         if (EnemyHand.Count > 0 && CheckEmptySpaces() == true)
         {
+			GD.Print("Attempting to place card");
             int cardSelection = rnd.Next(0, EnemyHand.Count);
             Card card = EnemyHand[cardSelection];
             int spaceSelection = rnd.Next(0, EnemySpaces.Count);
@@ -98,7 +100,7 @@ public partial class EnemyAI : Node
                 card.CanPickUp = false;
 
                 Tween tween = GetTree().CreateTween();
-                tween.TweenProperty(card, "position", card.PlacedPos, 2f).SetTrans(Tween.TransitionType.Quad);
+                tween.TweenProperty(card, "position", card.PlacedPos, 1f).SetTrans(Tween.TransitionType.Quad);
                 RotationHelper.ResetRotation(card, this.GetTree());
 				EnemyCardsOnBoard.Add(card);
             }
@@ -112,6 +114,7 @@ public partial class EnemyAI : Node
 
 	public void Attack(Random rnd)
 	{
+		GD.Print("Enemy attack");
 		List<Card> playerCards = GetNode<BoardController>("/root/GameBoard").PlayerCardsOnBoard;
 		int playerCardSelection;
 		GD.Print(playerCards.Count);

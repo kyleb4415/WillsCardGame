@@ -33,8 +33,10 @@ size = Vector3(0.59, 0.205, 0.755)
 script = ExtResource("1_y1f3f")
 
 [node name="Camera3D" type="Camera3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 2.24975, 0)
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 1.92804, 0)
 script = ExtResource("1_7mhem")
+
+[node name="MoveCard3D" type="Node" parent="Camera3D"]
 
 [node name="board" parent="." instance=ExtResource("4_d1dy4")]
 transform = Transform3D(0.28, 0, 0, 0, 0.28, 0, 0, 0, 0.28, 0.515587, -1.8911, -0.279811)
@@ -159,7 +161,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.258, -1.448, 1.536)
 mesh = SubResource("BoxMesh_jcvsn")
 
 [node name="Enemy" type="Node3D" parent="."]
-transform = Transform3D(0.999945, 0, 0.0104718, 0, 1, 0, -0.0104718, 0, 0.999945, 0, 0, 0)
+transform = Transform3D(0.999945, 0, 0.0104718, 0, 1, 0, -0.0104718, 0, 0.999945, 0, -0.0173676, 0)
 script = ExtResource("4_3y4ib")
 
 [node name="EnemyBoardPositions" type="Node" parent="Enemy"]

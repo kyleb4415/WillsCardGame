@@ -11,7 +11,7 @@ public partial class Card : RigidBody3D, ICard
 	public bool Released { get; set; }
 	public bool Selected { get; set; } = false;
 	public bool MouseOver { get; set; } = false;
-	public Vector3 PlacedPos { get; set; } = new Vector3();
+	public Vector3 PlacedPos { get; set; }
 	//storing rotation and position information for card in fan so it can go back if released outside of a space
 	public Vector3 OriginPos { get; set; } = new Vector3();
 	public Vector3 OriginRot { get; set; } = new Vector3();
@@ -45,6 +45,7 @@ public partial class Card : RigidBody3D, ICard
 	public override void _Ready()
 	{
 		this.GravityScale = 0;
+		this.PlacedPos = new Vector3(0, 0, 0);
 		this.PlaceCard += Place;
 		this.MouseExited += Card_MouseExited;
 		this.MouseEntered += Card_MouseEntered;
